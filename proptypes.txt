@@ -1,0 +1,114 @@
+Data Schema
+
+variant: {  
+    title: string,
+    price: string,
+    UPC:string,
+    sku: string,
+    numUnits: ,
+    unit: ,
+    images:[],
+    supplier: {id:string, title:string},
+    categories: [{id:string, title:string}],
+    matchID: ,
+}
+
+product: {     
+    title: string,
+    description: string,
+    displayImage: string,
+    UPC: string,
+    sku: string,
+    variants: [:variants],    //ACTUAL PRODUCT IS ALWAYS STORED AS FIRST VARIANT
+    supplier: {id:string, title:string},
+    categories: [{id:string, title:string}],
+    matchID: ,
+}
+
+list: {
+    type: (list, order, product, variant)
+    style: string,
+    title: ,
+    image ,
+    listItems: []
+}
+
+user: {
+    userID: string,
+    isLoggedIn: boolean
+    email: string ,
+    password: string,
+    phoneNumber: string,
+    restaurant: string,
+    logo: ,
+    myList: list,
+
+    //EXPLORE
+    searchFullProductList: list,
+    exploreLists: [list]
+}
+
+supplier: {
+    supplierId:string, (unique to each user?)
+    userID: string,
+    title: string,
+    image: string,
+    placeOrderMethod: string,
+    orderContactInfo: string,
+    shippingOptions:[shipppingOptions]
+    email: ,
+    contact: ,
+    lists: [],
+}
+
+shippingOption: {
+    id: ,
+    title:string, 
+    time: number or na
+    cutoffTime: number
+    availableToW = [{day, time, }]     
+    flatFee:  ,
+    variableFee: ,
+    orderMinimum: ,   
+}
+
+category: {
+    title:string,
+    image:string,
+    categoryID: string,
+    list: list
+}
+
+cart: [{item:variant ,quantity:number, fulfillmentStatus:string}]
+
+order: {
+    orderIDs: string
+    supplierID: string,
+    cart: cart
+    orderDate: date, 
+    deliveryDetails: 
+    shippingOption: shippingOption,
+    estimatedDeliveryDate: date
+    paymentMethod: string,
+    orderStatus: string,   
+    invoice: string,
+    subtotal: number,
+    taxes: number,
+    total: number,    
+    messages: [message]
+}
+
+message: {
+    user: ,
+    media: ,
+    text-message: ,
+    time: ,
+}
+
+
+
+
+
+
+
+
