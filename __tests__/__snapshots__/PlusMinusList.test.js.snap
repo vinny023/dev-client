@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlusMinus renders the component 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "flexDirection": "column",
+      "justifyContent": "start",
+    }
+  }
+>
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Avocados",
+        "price": 2000,
+        "sku": "avoc123",
+      }
+    }
+    key="0"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Chiasdfsdcken",
+        "price": 2000,
+        "sku": "chic123",
+      }
+    }
+    key="1"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Pork",
+        "price": 2000,
+        "sku": "pork123",
+      }
+    }
+    key="2"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Bananas",
+        "price": 2000,
+        "sku": "banan123",
+      }
+    }
+    key="3"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Hummus",
+        "price": 2000,
+        "sku": "humm123",
+      }
+    }
+    key="4"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Chips",
+        "price": 2000,
+        "sku": "chip123",
+      }
+    }
+    key="5"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Paper Plates (100 ct)",
+        "price": 2000,
+        "sku": "pap100123",
+      }
+    }
+    key="6"
+    style="verticalList"
+  />
+  <Connect(ProductListItem)
+    item={
+      Object {
+        "name": "Packaging",
+        "price": 2000,
+        "sku": "pack123",
+      }
+    }
+    key="7"
+    style="verticalList"
+  />
+</View>
+`;

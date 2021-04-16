@@ -5,18 +5,59 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": [
+      "<rootDir>__tests__/setup/setupEnzyme.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/__tests__/setup/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+    ]
   },
   "dependencies": {
+    "@eva-design/eva": "^2.0.0",
+    "@react-native-community/masked-view": "0.1.10",
+    "@react-native-picker/picker": "1.9.2",
+    "@react-navigation/bottom-tabs": "^5.11.2",
+    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/stack": "^5.12.8",
+    "@ui-kitten/components": "^5.0.0",
+    "@ui-kitten/eva-icons": "^5.0.0",
+    "axios": "^0.21.1",
+    "enzyme-adapter-react-15": "^1.4.2",
     "expo": "~40.0.0",
     "expo-status-bar": "~1.0.3",
+    "firebase": "7.9.0",
+    "firebase-tools": "^9.1.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-web": "~0.13.12"
+    "react-native-dotenv": "^2.5.5",
+    "react-native-gesture-handler": "~1.8.0",
+    "react-native-screens": "~2.15.0",
+    "react-native-svg": "12.1.0",
+    "react-native-web": "~0.13.12",
+    "react-redux": "^7.2.2",
+    "react-test-renderer": "^17.0.1",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "strapi-sdk-javascript": "^0.3.3"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "enzyme-to-json": "^3.6.1",
+    "jest-expo": "^40.0.1"
   },
   "private": true
 }
