@@ -26,12 +26,12 @@ const myScreenOptions = {
 
 const PlaceOrderTab = () => {
     return (
-        <OrderTabStack.Navigator screenOptions={{headerShown:true}}>
-        <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={myScreenOptions}/>                          
-        <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions}/>                   
+      <OrderTabStack.Navigator screenOptions={{headerShown:true}}>              
+      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={myScreenOptions}/>                          
+        <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions}/>                           
           <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions}/>           
           <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions}/>                 
-          <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions}/>         
+          
         </OrderTabStack.Navigator>
     )
 }
@@ -39,8 +39,10 @@ const PlaceOrderTab = () => {
 const ManageOrderTab = () => {
   return (
       <OrderTabStack.Navigator screenOptions={{headerShown:true}}>
+        <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions}/>           
         <OrderTabStack.Screen name="View All Orders" component={ViewOrderScreen} options={myScreenOptions}/>  
-        <OrderabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions}/>         
+        <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions}/>                           
+        
       </OrderTabStack.Navigator>
   )
 }
@@ -51,8 +53,8 @@ export default function Navigation() {
     return (
         <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Shop" component={PlaceOrderTab}/>            
-          <Tab.Screen name="Track & Manage" component={ManageOrderTab}/>            
+        <Tab.Screen name="Track & Manage" component={ManageOrderTab}/>     
+          <Tab.Screen name="Shop" component={PlaceOrderTab}/>                           
         </Tab.Navigator>
       </NavigationContainer>
 

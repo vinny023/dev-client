@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Text, View, Image, Button, ScrollView} from 'react-native'
 import SupplierCart from '../../components/CartScreen/SupplierCart'
 import Banner from '../../components/Global/Banner'
-import {getSuppliers, placeOrder} from '../../apis/apis'
+import {getCartSuppliers, placeOrder} from '../../apis/apis'
 import _ from 'lodash';
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 import { ThemeProvider } from '@react-navigation/native';
@@ -29,14 +29,14 @@ const setOrderDetails = ({masterCart, account}) => {
     })
 }
 
-const calcTotals = ({masterOrder, supplierDetail}) => {   
+const calcTotalsAddSupplier = ({masterOrder, supplierDetail}) => {   
     //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
      return  masterOrder.map((supplierOrder, index) => {
          const orderTotal = supplierOrder.cart.reduce((total, item) => total + item.price * item.quantity)
          const deliveryFee = 0
          if (orderTotal < supplierDetail.orderMinimum) {deliveryFee = supplierDetail.deliveryFee}
          return (
-             {...supplierOrder, 
+             {...supplierOrder, ...supplierDetail,
                  orderTotal: orderTotal + deliveryFee,
                  deliveryFee: deliveryFee                
              }
@@ -53,9 +53,12 @@ export class CartScreen extends React.Component {
         console.log(this.props)
 
         this.state = {
-            supplierLoading: true,
+            getSuppliersLoading: true,
             supplierDetail: [],                       
             masterOrder: setOrderDetails(this.props),
+            getSuppliersError: false,
+            placeOrderLoading: Array(100).fill(false),
+            placeOrderError: Array(100).fill(false),
             banner: {show:true, type:'', message: 'Banner'},
 
         }
@@ -79,19 +82,19 @@ export class CartScreen extends React.Component {
             return supplierCart.supplierId
         })
         try {           
-            const supplierDetail = await getSuppliers({suppliers: suppliers})
+            const supplierDetail = await getCartSuppliers({suppliers: suppliers})
             console.log(supplierDetail)
             this.setState({        
                 supplierDetail: supplierDetail,
-                supplierLoading: false,
-                masterOrder:setOrderDetails({masterCart: calcTotals({masterOrder: this.props.masterCart,supplierDetail: supplierDetail}), 
+                getSuppliersLoading: false,
+                masterOrder:setOrderDetails({masterCart: calcTotalsAddSupplier({masterOrder: this.props.masterCart,supplierDetail: supplierDetail}), 
                                              account: this.props.account})            
             })              
         }
         catch(error) {
             console.log(error)
             this.setState({
-                supplierLoading: false,
+                getSuppliersLoading: false,
                 getSupplierError:true
             })
         }
@@ -140,24 +143,15 @@ export class CartScreen extends React.Component {
         const response = await placeOrder({supplierOrder: order})
 
         console.log(response)            
-        const body = response.data
-        if (response.status === 200 || (response.status === 500 && response.data.emailSent)) {  
-             //SUCCESS ONLY MEANS EMAIL WAS QUEUED with SENDGRID - functoin may still return error code
-            console.log('Success')
-            this.props.removeOrderedCart(order.supplierId)
-            this.setState({
-                banner: {show: true, type:'success' , 
-                message:'Your order to '+order.supplierId+'was placed!' }
-            })
-        } else {
-            //EMAIL WAS NOT SENT YET - PROMPT USER TO TRY AGAIN
-            this.setState({
-                banner: {show: true, type:'error' , 
-                message:'There was an issue processing your order. Please try again. If the error persists please contact support.' }
-            })
-        }
+        const body = response.data    
+        console.log('Success')
+        this.props.removeOrderedCart(order.supplierId)
+        this.setState({
+            banner: {show: true, type:'success' , 
+            message:'Your order to '+order.supplierId+'was placed!' }
+        })
+        
     } catch(err) {
-
         this.setState({
             banner: {show: true, type:'error' , 
             message:'There was an issue processing your order. Please try again. If the error persists please contact support.' }
@@ -242,7 +236,7 @@ export class CartScreen extends React.Component {
                     <SupplierCart                             
                             navigation={navigation} 
                             supplierOrder={supplierOrder} 
-                            supplierLoading={this.state.supplierLoading} 
+                            getSupplierLoading={this.state.getSuppliersLoading} 
                             supplierDetail={this.state.supplierDetail[index]} 
                             index={index}
                             placeOrder = {this.placeOrder}

@@ -1,18 +1,46 @@
 import axios from 'axios'
 import { NETLIFY, headers} from '../env.js'
 
+export const setOrder = async({id, update}) => { 
+    console.log(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    const returnval = await axios.get(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    if (returnval.status === 200) {
+        return returnval.data.response             
+    }  else {
+        throw 500
+    } 
+}
+
+export const getOrders = async({query}) => { 
+    console.log(NETLIFY+'getOrders?query='+encodeURI(JSON.stringify(query)))
+    const returnval = await axios.get(NETLIFY+'getOrders?query='+encodeURI(JSON.stringify(query)))    
+    if (returnval.status === 200) {
+        return returnval.data.orders             
+    }  else {
+        throw 500
+    } 
+}
+
 
 export const placeOrder = async({supplierOrder})  => {
     console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
     const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
-    return returnval
+    if (returnval.status === 200) {
+        return returnval.data.emailSent             
+    }  else {
+        throw 500
+    }    
 }
 
-export const getSuppliers = async({suppliers}) => {
+export const getCartSuppliers = async({suppliers}) => {
 
-    console.log(NETLIFY+'getSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)))
-    const supplierList = await axios.get(NETLIFY+'getSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)), headers)
-    return supplierList.data
+    console.log(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)))
+    const supplierList = await axios.get(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)), headers)
+    if (supplierList.status === 200) {
+        return supplierList.data
+    } else {
+        throw 500       
+    }    
 }
 
 export const getProducts = async({search, filter, sort, initialFilter, accountId}) => {
@@ -35,6 +63,11 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
 
     //GET PRODUCTS BASED ON QUERY   
     const productList = await axios.get(NETLIFY+'getProducts'+queryString, headers)
+    if (productList.status === 200) {
+        return productList.data.products
+    } else {
+        throw 500     
+    }
 
-    return productList.data.products
+    
 }
