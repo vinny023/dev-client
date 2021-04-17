@@ -7,6 +7,7 @@ import FilterModal from '../../components/OrderScreen/FilterModal'
 import Search from '../../components/OrderScreen/Search'
 import ProductListItem from '../../components/Global/ProductListItem'
 import ProductList from '../../components/Global/ProductList'
+import Banner from '../../components/Global/Banner'
 // import CartButton from '../../components/Global/CartButton'
 import {getProducts} from '../../apis/apis'
 import _ from 'lodash' 
@@ -28,7 +29,9 @@ export class OrderScreen extends React.Component {
         productList: [],
         loading: true,   
         accountId: this.props.account.id,
-        isError: false   
+        isError: false,
+        banner: {show: false, type:'', message: ''},
+
       }
 
       //HANDLE STATE INITIALIZATION     
@@ -63,6 +66,9 @@ export class OrderScreen extends React.Component {
       // this.setProductList = this.setProductList.bind(this)
       }     
           
+
+  //HELPER METHODS
+
    setMode(newMode) {
       if (newMode === 'Order Guide') {
         this.setState({
@@ -108,7 +114,7 @@ export class OrderScreen extends React.Component {
               isNew = (valuesMatchIndex === -1)              
               let newValues = [...filter.values]             
          
-              if (isNew && !newSort.remove) {
+              if (isNew && !newFilter.remove) {
                 newValues.push(newFilter.values[0])
                 isNew = false
               }
@@ -172,21 +178,30 @@ export class OrderScreen extends React.Component {
       }
       this.setState({sort: sortList})          
     }   
+
+    hideBanner = () => {
+      this.setState({banner: {...this.state.banner, show: false}})
+  }
+
+  //LIFECYCLE METHODS
     
     async componentDidMount() {      
       try {          
         this.setState({
             loading: false,
             productList: await getProducts(this.state)
-        })             
-      }  
-      
+        })           
+      }        
       catch (error) {
-        this.setState({isError:true})
+        this.setState({
+          isError:true,
+          banner: {show:true, type:'error', message: 'Error Loading Products - please try searching or switching lists'},
+        })
         console.log(error)
       }   
     }
 
+    //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
     async componentDidUpdate(prevProps, prevState) {     
       if (!_.isEqual([prevState.search, prevState.initialFilter, prevState.filter, prevState.sort], 
             [this.state.search, this.state.initialFilter, this.state.filter, this.state.sort])) {
@@ -200,7 +215,10 @@ export class OrderScreen extends React.Component {
         console.log('FINSIHED SETTING STATE')    
       }      
       catch (error) {
-        this.setState({isError:true})
+        this.setState({
+          isError:true,
+          banner: {show:true, type:'error', message: 'Error Loading Products - please try searching or switching lists'},
+        })
         console.log(error)
       }   
       }
@@ -210,7 +228,8 @@ export class OrderScreen extends React.Component {
     render() {
       return(
         <View>
-        
+          <Banner banner={this.state.banner} hideBanner={this.hideBanner}/>
+          
           <SwitchMode setMode={this.setMode}/>
           <Text>{this.state.title}</Text>        
           <Search setSearch={this.setSearch} account={this.props.account}/> 
