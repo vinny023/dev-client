@@ -10,18 +10,18 @@ import { ThemeProvider } from '@react-navigation/native';
 import axios from 'axios';
 import * as actions from '../../redux/actions.js'
 
-const setOrderDetails = ({masterCart, account}) => {
+const setOrderDetails = ({masterCart, account}) => {    
 
-    const {accountId, accountDisplayName, accountConfirmationEmail, supplierContact} = account
+    const {id, displayName, confirmationEmail, supplierContact} = account
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
     .map(supplierOrder => 
         {
             return (
                 {
-                    accountId: accountId,
-                    accountDisplayName : accountDisplayName,
-                    accountConfirmationEmail: accountConfirmationEmail,
+                    accountId: id,
+                    accountDisplayName : displayName,
+                    accountConfirmationEmail: confirmationEmail,
                     supplierContact: {contact: supplierContact[supplierOrder.supplierId].contact, 
                                       contactType:supplierContact[supplierOrder.supplierId].supplierContactType},                                
                     ...supplierOrder
@@ -32,11 +32,14 @@ const setOrderDetails = ({masterCart, account}) => {
 const calcTotalsAddSupplier = ({masterOrder, supplierDetail}) => {   
     //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
      return  masterOrder.map((supplierOrder, index) => {
-         const orderTotal = supplierOrder.cart.reduce((total, item) => total + item.price * item.quantity)
-         const deliveryFee = 0
-         if (orderTotal < supplierDetail.orderMinimum) {deliveryFee = supplierDetail.deliveryFee}
+        //  const orderTotal = supplierOrder.cart.reduce((item,total) => item.price*item.quantity + total, 0)
+        const orderTotal = 100
+         console.log('CaLCED ORDER TOTAL')
+         console.log(orderTotal)         
+         let deliveryFee = 0
+         if (orderTotal < supplierDetail[index].orderMinimum) {deliveryFee = supplierDetail[index].deliveryFee}
          return (
-             {...supplierOrder, ...supplierDetail,
+             {...supplierOrder, supplierDetail: supplierDetail[index],
                  orderTotal: orderTotal + deliveryFee,
                  deliveryFee: deliveryFee                
              }
@@ -89,7 +92,9 @@ export class CartScreen extends React.Component {
                 getSuppliersLoading: false,
                 masterOrder:setOrderDetails({masterCart: calcTotalsAddSupplier({masterOrder: this.props.masterCart,supplierDetail: supplierDetail}), 
                                              account: this.props.account})            
-            })              
+            })  
+            console.log('FINAL PROCESSED MASTER ORDER')
+            console.log(this.state.masterOrder)
         }
         catch(error) {
             console.log(error)
@@ -142,8 +147,7 @@ export class CartScreen extends React.Component {
         
         const response = await placeOrder({supplierOrder: order})
 
-        console.log(response)            
-        const body = response.data    
+        console.log(response)                        
         console.log('Success')
         this.props.removeOrderedCart(order.supplierId)
         this.setState({
@@ -180,7 +184,16 @@ export class CartScreen extends React.Component {
                 console.log("UPDATING WITH SUPPLIER CHANGED")
                 return await this.pullSuppliersAndSetOrders()
             } else {
-                
+                //ONLY IF CHANGE IN CART
+                console.log(this.props.masterCart)
+                this.setState({                           
+                    masterOrder: setOrderDetails(
+                        {masterCart: calcTotalsAddSupplier(
+                            {masterOrder: this.props.masterCart,supplierDetail: this.state.supplierDetail}), 
+                                                 account: this.props.account})            
+                })  
+                console.log('only cart item change')                
+                console.log(this.props.masterCart)
             }
 
         }
@@ -202,7 +215,8 @@ export class CartScreen extends React.Component {
     render() {
 
     const {navigation} = this.props
- 
+    console.log("New Master Order")
+    console.log(this.state.masterOrder)
     // console.log('RENDER FUNCTION')
     // console.log(this.props.masterCart)
     // console.log(this.state)    
@@ -229,8 +243,7 @@ export class CartScreen extends React.Component {
         {
           this.state.masterOrder.map((supplierOrder, index) => {
 
-                return (
-                
+                return (                
                     <View key={index} style={{flex: 1, flexDirection: 'column', backgroundColor: 'red', marginBottom:10, justifyContent: "flex-start"}}>
                    <Text>Supplier</Text>
                     <SupplierCart                             

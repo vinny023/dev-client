@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import * as actions from '../../redux/actions'
 // import {placeOrder} from '../../apis/apis'
 import ProductList from '../Global/ProductList'
+import OrderTotal from '../Global/OrderTotal'
 
 const createDaySelection = ({shippingDoW, shippingCutoff, shippingDays }) => {
     const weekdays =['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -88,16 +89,7 @@ export class SupplierCart extends React.Component {
          }                            
 
             { (this.props.supplierDetail && this.props.supplierOrder) &&  
-                <View>
-                 <Text>{deliveryFee > 0 ? "Subtotal" : "Total"} : {orderTotal - deliveryFee}</Text>
-                       {deliveryFee > 0 && 
-                <View>
-                <Text>Delivery Fee: {this.props.supplier.deliveryFee} </Text>
-                <Text>Total: {this.props.supplier.orderTotal} </Text>
-                <Text>Add {this.props.supplierDetail.orderMinimum - tiorderTotal - deliveryFee}</Text> 
-                </View>
-            }
-                </View>
+                    <OrderTotal order={this.props.supplierOrder} showAdd={true}/>
             }                    
             
             <TextInput placeholder="Enter any special notes or requests" 
