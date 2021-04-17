@@ -38,7 +38,6 @@ render() {
         return (
             <ScrollView>        
                 {this.props.productList.map((product, index) => {
-                    console.log(product)   
                     return (<ProductListItem 
                         hideZero={true} item={product} key={index} navigation={this.props.navigation} reorderOnly={this.props.reorderOnly}/>
                     )

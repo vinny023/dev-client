@@ -79,8 +79,8 @@ class ProductListItem extends React.PureComponent  {
         
         const {item} = this.props
 
-         console.log('PRODUCT LIST ITEM RENDERING')
-        console.log(item)
+        //  console.log('PRODUCT LIST ITEM RENDERING')
+        // console.log(item)
         // console.log(item.displayName)
 
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
