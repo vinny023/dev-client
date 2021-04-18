@@ -8,6 +8,7 @@ import {getOrders, setOrder} from '../../apis/apis'
 import * as actions from '../../redux/actions'
 import _ from 'lodash' 
 import { ThemeService } from '@ui-kitten/components/theme/theme/theme.service';
+import { commonStyles } from '../../theme';
 
 export class OrderDetailScreen extends React.Component {
     
@@ -114,7 +115,7 @@ export class OrderDetailScreen extends React.Component {
       console.log(this.state.order.cart)
       console.log(this.state.order)
       return (
-      <View>
+      <View style={commonStyles.container}>
       <Banner banner={this.state.banner} hideBanner={this.hideBanner}/>      
       <Button title = 'Confirm Delivery' onPress={() => this.setOrderDetail({status:"Delivered"})}/>     
      { !_.isEqual(this.state.order,{}) && 
