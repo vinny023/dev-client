@@ -1,6 +1,14 @@
 import fetch from 'isomorphic-fetch'
 import { AsyncStorage } from 'react-native';
 
+//ACCOUNT ACTIONS
+export const setAccount = account => {
+    return ({
+        type: 'SET_ACCOUNT',
+        payload: account
+    })
+}
+
 //CART ACTIONS
 export const setShippingOption = ({supplierId, option}) => {
     return ({

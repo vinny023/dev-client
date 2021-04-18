@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 //Place Order Tab SCREENS
+import LoginScreen from '../screens/placeOrderTab/LoginScreen'
 import OrderScreen from '../screens/placeOrderTab/OrderScreen'
 import TestPropsScreen from '../screens/placeOrderTab/TestPropsScreen'
 import ProductDetailScreen from '../screens/placeOrderTab/ProductDetailScreen'
@@ -27,11 +28,11 @@ const myScreenOptions = {
 const PlaceOrderTab = () => {
     return (
       <OrderTabStack.Navigator screenOptions={{headerShown:true}}>              
+      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}/>                          
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={myScreenOptions}/>                          
         <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions}/>                           
           <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions}/>           
-          <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions}/>                 
-          
+          <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions}/>                           
         </OrderTabStack.Navigator>
     )
 }
@@ -53,8 +54,8 @@ export default function Navigation() {
     return (
         <NavigationContainer>
         <Tab.Navigator>
-        <Tab.Screen name="Track & Manage" component={ManageOrderTab}/>     
           <Tab.Screen name="Shop" component={PlaceOrderTab}/>                           
+          <Tab.Screen name="Track & Manage" component={ManageOrderTab}/>               
         </Tab.Navigator>
       </NavigationContainer>
 
