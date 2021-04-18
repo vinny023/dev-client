@@ -1,6 +1,16 @@
 import axios from 'axios'
 import { NETLIFY, headers} from '../env.js'
 
+export const getAccount = async({query}) => { 
+    console.log(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))
+    const returnval = await axios.get(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))    
+    if (returnval.status === 200) {
+        return returnval.data.account
+    }  else {
+        throw 500
+    } 
+}
+
 export const setOrder = async({id, update}) => { 
     console.log(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
     const returnval = await axios.get(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
@@ -37,7 +47,7 @@ export const getCartSuppliers = async({suppliers}) => {
     console.log(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)))
     const supplierList = await axios.get(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)), headers)
     if (supplierList.status === 200) {
-        return supplierList.data
+        return supplierList.data.suppliers
     } else {
         throw 500       
     }    

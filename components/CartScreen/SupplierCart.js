@@ -74,7 +74,8 @@ export class SupplierCart extends React.Component {
                 <View>
              
                 </View>    
-            : <View>
+            : 
+            <View>
             {!this.props.supplierDetail ? 
                 <Text>Loading Supplier Detail</Text> :                
                 this.props.supplierDetail.logo && 
