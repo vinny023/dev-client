@@ -5,7 +5,7 @@ export const getAccount = async({query}) => {
     console.log(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))
     const returnval = await axios.get(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))    
     if (returnval.status === 200) {
-        return returnval.data.account
+        return returnval.data.account[0]
     }  else {
         throw 500
     } 

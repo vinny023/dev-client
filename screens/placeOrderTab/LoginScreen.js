@@ -43,20 +43,22 @@ if (!data.val() || !data.val().state ) {
 }
 
 const storeData = async (key, value) => {
-    // try {
-    //   await AsyncStorage.setItem(key,value)      
-    // } catch (e) {
-    //   return {error:e}
-    // }
+    try {
+      await AsyncStorage.setItem(key,value)  
+      return {success:'success'}    
+    } catch (e) {
+    console.log('store data error')
+      return {error:e}
+    }
   }
 
 const getData = async (key) => {
-    // try {
-    //   return await AsyncStorage.getItem(key)         
-    // } catch(e) {
-    //   return {errro:e}
-    // }
-    return undefined
+    try {
+      return await AsyncStorage.getItem(key)         
+    } catch(e) {
+      return undefined
+    }
+   
   }
 
 
@@ -81,25 +83,39 @@ export class LoginScreen extends React.Component {
 
         try {         
             this.setState({ getAccountLoading: true,
-                banner: {...this.state.banner, type:'message', message:"Verifying your unique codee... "}
+                banner: {show: true, type:'message', message:"Verifying your unique codee... "}
             })
             const account = await getAccount({query: {code: this.state.code}})  //query for id by code
+            console.log("CDD")
+            console.log(this.state.code)
+            console.log("ACCOUNT")
+            console.log(account)
 
-            if (!_.isEqual(account,{})) { //if code query returns non-empty array
+            if (account) { //if code query returns non-empty array
                 //set redux store
                 this.props.setAccount(account)
                 //store data to asyncstorage
-                await storeData('accountId',account.id)                   
+                const storeResponse = await storeData('accountId',account.id)
+                console.log('STore Data repsose')
+                console.log(storeResponse)
+                if (storeResponse.error) {
+                    this.setState({ getAccountLoading: false,
+                        banner: {show:true, type:'message', message:"Account found, but login not saved to device. Please login again"}
+                    })  
+                    return                    
+                }
                 //success message
                 this.setState({ getAccountLoading: false,
-                    banner: {...this.state.banner, type:'message', message:"Success. Logging in... "}
+                    banner: {show:true, type:'message', message:"Success. Logging in "+account.displayName+"..."}
                 })          
-                this.props.navigation.navigate('OrderScreen')       
+                
+                this.login(account.id)
+                
                 //nav to order page                
                 
             } else {
                 this.setState({ getAccountLoading: false,
-                    banner: {...this.state.banner, type:'error', message:"Incorrect code, please try again"}
+                    banner: {show:true, type:'error', message:"Incorrect code, please try again"}
                 })
             }
             
@@ -107,81 +123,85 @@ export class LoginScreen extends React.Component {
         } catch(error) {
             console.log(error)
             this.setState({ getAccountLoading: false,
-                banner: {...this.state.banner, type:'error', message:"Incorrect code, please try again"}
+                banner: {show: true, type:'error', message:"Incorrect code, please try again"}
             })
             }
         }
 
-    login = async () => {
+
+    login = async(accountId) => {
+
+         //SYNC ACCOUNT ID WITH FIREBASE         
+         try {
+             this.setState({banner: {show: true, type:'error', message: 'Syncing Store'}}) 
+             syncStore({accountId: accountId})
+         } catch {
+
+         }                  
+          
+         //PULL ACCOUNT ID FROM MONGO (SSINGLE SOURCE OF TRUTH FOR ACCOUNT INFO)
+             try {         
+                 this.setState({ getAccountLoading: true,
+                     banner: {show: true, type:'message', message:"Loading account details... "}
+                 })
+                 const account = await getAccount({query: {id: accountId}})                        
+                 this.props.setAccount(account)
+         } catch {
+             this.setState({
+                 banner: {show: true, 
+                         type: 'error', 
+                         message: 'Trouble logging in. Please close and reopen app'}
+             })
+             //2 more times - then show issue with accountId itself?
+
+             return
+             }      
+         
+         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
+         this.props.navigation.navigate('OrderScreen') 
+        
+    }
+
+    autoLogin = async () => {
         //check id
         //if true than login with all try catches
         const accountId = await getData('accountId')
 
         if (!accountId) { //IF NO ACCOUNT FOUND
             this.setState({ //TELL USER TO ENTER IN CODE => GETS SENT TO MANUAL LOGIN
-                banner: {show: true, type: 'success', message: 'First Time. Use your unique code to log in'}
+                banner: {show: true, type: 'success', message: 'Device not recongized. Use your unique code to log in'}
             })
-        } else {
-            //SYNC WITH FIREBASE
-            this.setState({banner: {...this.state.banner, message: 'First Time. Use your unique code to log in'}})  
-            try {
-                this.setState({banner: {...this.state.banner, message: 'Syncing Store'}}) 
-                syncStore({accountId: accountId})
-            } catch {
-
-            }
-            //IF ACCOUNT IS STILL EMPTY (OR FIRST TIME LOGIN) - PULL FROM DATABASE
-            if (_.isEqual(this.props.account,{})) {    
-                this.setState({banner: {...this.state.banner, message: "No account found"}})         
-                try {         
-                    this.setState({ getAccountLoading: true,
-                        banner: {...this.state.banner, type:'message', message:"Loading account details... "}
-                    })
-                    const account = await getAccount({query: {id: accountId}})                        
-                    this.props.setAccount(account[0])
-            } catch {
-                this.setState({
-                    banner: {show: true, 
-                            type: 'success', 
-                            message: 'Trouble logging in. Please close and reopen app'}
-                })
-                //2 more times - then show issue with accountId itself?
-
-                return
-                }
-            }      
-            
-            //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
-            this.props.navigation.navigate('OrderScreen') 
-            
-
+        } else {       
+            await this.login(accountId)
         }
         
     }
     async componentDidMount() {
-
+        this.autoLogin()
     }
 
 
     hideBanner = () => {
-        
+        this.setState({banner: {...this.state.banner, show: false}})
     }
+
+//     <Button 
+//     title ="Automatic Login"
+//     onPress={this.autoLogin}
+// />
 
     render() {
       return (
        <View>
        <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
         <Text>Login Screen</Text>
-        <TextInput onSubmitEditing={text => this.setState({code: text})} />
+        <TextInput onChangeText={text => this.setState({code: text})} />
         <Button 
-            title ="Manual Login"
+            title ="Login"
             onPress={this.manualLogin}
         />
         
-        <Button 
-            title ="Automatic Login"
-            onPress={this.login}
-        />
+      
         <Button
             title="Remove Key"
             onPress={async() => AsyncStorage.removeItem('accountId')}
