@@ -1,15 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Button, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { colors } from '../../theme';
 
 const SearchSuggestion = ({ suggestion, select }) => {
     return (
-        <Button
-            title={suggestion}
-            onPress={() => select(suggestion)}
-        />
+        <TouchableOpacity style={styles.container} onPress={() => select(suggestion)}>
+            <Text>{suggestion}</Text>
+            <Ionicons name="search-outline" color={colors.grey.primary} />
+        </TouchableOpacity>
+
     )
 }
 
@@ -27,7 +28,7 @@ class Search extends React.Component {
         this.updateSuggestions = this.updateSuggestions.bind(this)
         this.setSearch = this.setSearch.bind(this)
     }
-    
+
     updateSuggestions(searchTerm) {
 
         if (searchTerm.length < 3) {
@@ -66,7 +67,7 @@ class Search extends React.Component {
     render() {
         return (
             <View>
-                <View style={styles.container}>
+                <View style={[styles.container,{marginTop:10,borderRadius:10}]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
@@ -75,17 +76,21 @@ class Search extends React.Component {
                         onFocus={() => this.setState({ showSuggestions: true })}
                     />
                     {this.state.showSuggestions ?
-                    <TouchableOpacity onPress={() => this.clearSearch()}>
-                            <Ionicons name="close-outline" color={colors.text}  />
+                        <TouchableOpacity onPress={() => this.clearSearch()}>
+                            <Ionicons name="close-outline" color={colors.text} />
                         </TouchableOpacity>
-                    :
-                    <Ionicons name="search-outline" color={colors.grey.primary} />
+                        :
+                        <Ionicons name="search-outline" color={colors.grey.primary} />
                     }
                 </View>
 
+
                 {this.state.showSuggestions &&
-                    this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)
+                    <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white,marginTop:30 }}>
+                        {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
+                    </View>
                 }
+
             </View>
         )
     }
@@ -94,12 +99,10 @@ class Search extends React.Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.white,
-        borderRadius: 10,
         paddingHorizontal: 11,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 10,
         height: 45
 
     },

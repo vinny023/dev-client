@@ -25,7 +25,7 @@ const myScreenOptions = {
   headerRight: () => <CartButton />,
  
 }
-const headerStyling={backgroundColor:colors.background,elevation:0}
+const headerStyling={backgroundColor:colors.background.primary,elevation:0}
 const PlaceOrderTab = () => {
     return (
       <OrderTabStack.Navigator screenOptions={{headerShown:true,headerStyle:headerStyling}}>              

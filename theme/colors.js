@@ -9,7 +9,10 @@ const colors ={
     grey:{
         primary: '#939393',
     },
-    background:'#E5E5E5'
+    background:{
+        primary:'#E5E5E5',
+        light:'#F0F2F5'
+    }
 } 
 
 export default colors

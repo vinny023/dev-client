@@ -228,7 +228,7 @@ export class OrderScreen extends React.Component {
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
     return (
-      <View style={commonStyles.container}>
+      <ScrollView contentContainerStyle={commonStyles.container}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
 
         <SwitchMode setMode={this.setMode} />
@@ -236,10 +236,10 @@ export class OrderScreen extends React.Component {
         <Search setSearch={this.setSearch} account={this.props.account} />
         <Text>{this.state.search}</Text>
         <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
-          <Text style={{color:colors.blue,fontSize:sizes.s15,fontFamily:'regular',alignSelf:'flex-end'}}>Filter & Sort</Text>
+          <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
         </TouchableOpacity>
         {this.state.showFilter &&
-          <ScrollView>
+          <View style={{ marginTop: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
             <FilterModal
               close={this.toggleFilterModal}
               sort={this.state.sort}
@@ -248,19 +248,23 @@ export class OrderScreen extends React.Component {
               setSort={this.setSort}
               productList={this.state.productList}
             />
-          </ScrollView>
+          </View>
         }
-
+        {/* 
         <Text>SORT</Text>
         <Text>{JSON.stringify(this.state.sort)}</Text>
         <Text>FILTER</Text>
-        <Text>{JSON.stringify(this.state.filter)}</Text>
+        <Text>{JSON.stringify(this.state.filter)}</Text> */}
         {this.state.loading ? <Text>Loading...</Text> :
-          <ProductList
-            navigation={this.props.navigation}
-            productList={this.state.productList}
-          />}
-      </View>
+          <View style={{padding:10,backgroundColor:colors.white,borderRadius:10,marginTop:10}}>
+
+            <ProductList
+              navigation={this.props.navigation}
+              productList={this.state.productList}
+            />
+            </View>
+            }
+      </ScrollView>
     )
   }
 }
