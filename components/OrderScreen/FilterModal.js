@@ -20,9 +20,9 @@ const sortOptions = [
 const filterOptions = [
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
     { 'title': 'Units', 'field': 'units', 'options': [] },
-    { 'title': 'Price', 'field': 'price', 'min': 999999, 'max': -999999 },
-    { 'title': 'Size', 'field': 'size', 'min': 999999, 'max': -999999 },
-    { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 999999, 'max': -999999 }
+    { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
+    { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
+    { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
 
 const getFilters = (productList) => {
@@ -168,13 +168,22 @@ export default class FilterModal extends React.Component {
                                 </Text> */}<View style={commonStyles.row}>
 
                                                 <Text style={styles.text}>Min </Text>
+                                                {!!(title=="Size") && 
                                                 <TextInput
                                                     style={styles.input}
                                                     keyboardType='number-pad'
                                                     placeholder={`$ ${min}`}
                                                     placeholderTextColor={colors.blue.primary}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
-
+                                                }
+                                                {title!="Size" &&
+                                                    <TextInput
+                                                    style={styles.input}
+                                                    keyboardType='number-pad'
+                                                    placeholder={`${min}`}
+                                                    placeholderTextColor={colors.blue.primary}
+                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
+}
                                                 <Text style={styles.text}>Max</Text>
                                                 <TextInput
                                                     keyboardType='number-pad'
