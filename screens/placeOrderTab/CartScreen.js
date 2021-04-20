@@ -10,8 +10,9 @@ import { ThemeProvider } from '@react-navigation/native';
 import axios from 'axios';
 import * as actions from '../../redux/actions.js'
 import { colors, commonStyles, sizes } from '../../theme';
-import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AppButton from '../../components/AppButton';
+//import { Ionicons } from '@expo/vector-icons';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const setOrderDetails = ({ masterCart, account }) => {
 
@@ -219,26 +220,23 @@ export class CartScreen extends React.Component {
         const { navigation } = this.props
         return (
 
-            <View style={commonStyles.container}>
+            <View style={[commonStyles.container,{flex:1,paddingBottom:0}]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
 
                 {/* <Button 
                       title="Go Back"
                       onPress={() => navigation.navigate('OrderScreen')}
-                /> */}
+                /> 
                 <Text>Cart</Text>
+*/}
 
-                <Button
-                    title="Place Full Order"
-                    onPress={this.placeFullOrder}
-                />
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false} >
                     {
                         this.state.masterOrder.map((supplierOrder, index) => {
 
                             return (
                                 <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 10, justifyContent: "flex-start" }}>
-                                    <Text style={styles.text}>Supplier </Text>
+                                    {/* <Text style={styles.text}>Supplier </Text> */}
                                     <SupplierCart
                                         navigation={navigation}
                                         supplierOrder={supplierOrder}
@@ -253,6 +251,11 @@ export class CartScreen extends React.Component {
                         })}
 
                 </ScrollView>
+                <AppButton
+                    text="Place Full Order"
+                    onPress={this.placeFullOrder}
+                   
+                />
             </View>
         )
     }
@@ -274,10 +277,6 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(CartScreen)
 
 const styles = StyleSheet.create({
-    text: {
-        fontFamily: 'medium',
-        fontSize: sizes.s17,
-        color: colors.grey.primary
-    }
+  
 })
 

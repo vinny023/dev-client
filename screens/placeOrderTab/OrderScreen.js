@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Layout, Text } from '@ui-kitten/components';
-import { View, Text, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Button, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux'
 import SwitchMode from '../../components/OrderScreen/SwitchMode'
 import FilterModal from '../../components/OrderScreen/FilterModal'
@@ -228,18 +228,18 @@ export class OrderScreen extends React.Component {
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
     return (
-      <ScrollView contentContainerStyle={commonStyles.container}>
+      <ScrollView contentContainerStyle={[commonStyles.container,{flex:1}]}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
 
-        <SwitchMode setMode={this.setMode} />
-        <Text>{this.state.title}</Text>
+        <SwitchMode setMode={this.setMode} mode={this.state.title}/>
+        {/* <Text>{this.state.title}</Text> */}
         <Search setSearch={this.setSearch} account={this.props.account} />
         <Text>{this.state.search}</Text>
-        <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
-          <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
+        <TouchableOpacity onPress={() => this.toggleFilterModal(true)} style={{paddingBottom:10}}>
+          <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontWeight: 'normal', alignSelf: 'flex-end' }}>Filter & Sort</Text>
         </TouchableOpacity>
         {this.state.showFilter &&
-          <View style={{ marginTop: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+          <View>
             <FilterModal
               close={this.toggleFilterModal}
               sort={this.state.sort}
@@ -255,8 +255,8 @@ export class OrderScreen extends React.Component {
         <Text>{JSON.stringify(this.state.sort)}</Text>
         <Text>FILTER</Text>
         <Text>{JSON.stringify(this.state.filter)}</Text> */}
-        {this.state.loading ? <Text>Loading...</Text> :
-          <View style={{padding:10,backgroundColor:colors.white,borderRadius:10,marginTop:10}}>
+        {this.state.loading ?  <ActivityIndicator size="small" color={colors.blue.primary} style={{flex:1,alignSelf:'center'}}  />:
+          <View style={{padding:10,backgroundColor:colors.white,borderRadius:10,}}>
 
             <ProductList
               navigation={this.props.navigation}

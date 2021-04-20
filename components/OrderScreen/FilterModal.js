@@ -2,9 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 import React from 'react';
 // import { Layout, Text } from '@ui-kitten/components';
-import { View, Button, Text, TextInput, Modal, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Button, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { RadioButton } from 'react-native-paper'
-import { colors, sizes } from '../../theme';
+import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
 
 const sortOptions = [
@@ -69,14 +69,15 @@ export default class FilterModal extends React.Component {
             <Modal
                 animationType="slide"
                 transparent={true}
+            // backdropOpacity={.9}
             >
-                <View style={styles.modalView}>
+                <View style={commonStyles.modalView}>
                     <ScrollView contentContainerStyle={{ padding: 15 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <TouchableOpacity style={{ paddingLeft: 15, flex: 0.5 }} onPress={() => this.props.close(false)}>
                                 <Ionicons name="arrow-back" color={colors.text} />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1 }}>Filter & Sort</Text>
+                            <Text style={{ fontSize: sizes.s20, fontWeight: 'normal', color: colors.text, flex: 1 }}>Filter & Sort</Text>
                         </View>
 
                         {/* <Text>Filter</Text> */}
@@ -101,7 +102,7 @@ export default class FilterModal extends React.Component {
                                                         filterValue = { ...filterValue, 'remove': true }
                                                     }
                                                     return (
-                                                        <View key={k} style={styles.row}>
+                                                        <View key={k} style={commonStyles.row}>
                                                             <RadioButton
 
                                                                 value={label}
@@ -164,7 +165,7 @@ export default class FilterModal extends React.Component {
                                                     defaultValue={maxValue}
                                                 />
                                                 <Button title="X" onPress={() => this.props.setFilter({ 'field': field, 'comparison': lt, 'remove': true })} />
-                                </Text> */}<View style={styles.row}>
+                                </Text> */}<View style={commonStyles.row}>
 
                                                 <Text style={styles.text}>Min </Text>
                                                 <TextInput
@@ -203,7 +204,7 @@ export default class FilterModal extends React.Component {
                                 }
                                 return (
 
-                                    <View key={i} style={styles.row}>
+                                    <View key={i} style={commonStyles.row}>
                                         <RadioButton
                                             value={title}
                                             label={title}
@@ -212,7 +213,7 @@ export default class FilterModal extends React.Component {
                                             status={title.includes("Selected") ? 'checked' : 'unchecked'}
                                             onPress={() => this.props.setSort(value)}
                                         />
-                                        <Text style={styles.text}>{title.replace('(Selected)', '')}</Text>
+                                        <Text style={commonStyles.text}>{title.replace('(Selected)', '')}</Text>
                                     </View>
 
 
@@ -220,7 +221,7 @@ export default class FilterModal extends React.Component {
                             })}
                         </View>
                     </ScrollView>
-                    <AppButton text={"APPLY"} style={{ marginHorizontal: 10 }} onPress={() => this.props.close(false)}/>
+                    <AppButton text={"APPLY"} style={{ marginHorizontal: 10 }} onPress={() => this.props.close(false)} />
 
                 </View>
             </Modal>
@@ -229,26 +230,20 @@ export default class FilterModal extends React.Component {
 
 }
 const styles = StyleSheet.create({
-    modalView: {
-        backgroundColor: colors.background.light,
-        flex: 1,
-        paddingTop: 20,
-        marginTop: 70,
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
 
-    },
+
     container: {
         backgroundColor: colors.white,
         padding: 15,
         borderRadius: 10,
         marginTop: 10
     },
-    heading: { paddingTop: 10, fontSize: sizes.s17, fontFamily: 'medium', color: colors.grey.primary },
-    text: { fontSize: sizes.s16, fontFamily: 'medium', color: colors.text },
+    heading: {
+        paddingTop: 10,
+        fontSize: sizes.s17,
+        //fontFamily: 'medium',
+        color: colors.grey.primary
+    },
+
     input: { backgroundColor: colors.blue.light, marginHorizontal: 20, paddingHorizontal: 20, padding: 5, borderRadius: 10, color: colors.blue.primary }
 })

@@ -19,7 +19,23 @@ const commonStyles = {
   btnText: {
     color: colors.white,
     fontSize: sizes.s18,
-    fontFamily: 'bold'
-  }
+  //  fontFamily: 'bold'
+  },
+  modalView: {
+    backgroundColor: colors.background.light,
+    flex: 1,
+    paddingTop: 20,
+    marginTop: 70,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20
+},
+row: {
+  flexDirection: 'row',
+  alignItems: 'center',
+
+},
+text: { fontSize: sizes.s16,
+  // fontFamily: 'medium',
+    color: colors.text },
 }
 export default commonStyles;

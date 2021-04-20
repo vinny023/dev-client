@@ -105,12 +105,12 @@ class ProductListItem extends React.PureComponent {
                         </View>
                         {!this.props.reorderOnly &&
                             <View>
-                                {
+                                {/* {
                                     (item.quantity >= 1) && (<Button
                                         title="Remove"
                                         onPress={this.removeItem}
                                     />)
-                                }
+                                } */}
                                 <View style={styles.counterContainer}>
 
                                     {/* MINUS BUTTON */}
@@ -166,7 +166,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProductListItem)
 const styles = StyleSheet.create({
     productItem: {
         backgroundColor: colors.white,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        paddingBottom:15,
+       
     },
     row: {
         flexDirection: 'row',
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     ,
     text: {
         fontSize: sizes.s16,
-        fontFamily: 'medium',
+       // fontFamily: 'medium',
         color: colors.text,
 
 
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
     },
     boldText:{
         fontSize:sizes.s20,
-        fontFamily:'bold',
+       // fontFamily:'bold',
         color:colors.blue.primary
     }
 

@@ -36,7 +36,7 @@ render() {
     if (this.props.listType && this.props.listType === 'noFlatList') {
         
         return (
-            <ScrollView>        
+            <ScrollView showsVerticalScrollIndicator={false}>        
                 {this.props.productList.map((product, index) => {
                     return (<ProductListItem 
                         hideZero={true} item={product} key={index} navigation={this.props.navigation} reorderOnly={this.props.reorderOnly}/>

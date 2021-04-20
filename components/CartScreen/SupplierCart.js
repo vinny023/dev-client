@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableOpacity, Image, TextInput } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux'
 import * as actions from '../../redux/actions'
-import { colors, sizes } from '../../theme';
+import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
 // import {placeOrder} from '../../apis/apis'
 import ProductList from '../Global/ProductList'
 import OrderTotal from '../Global/OrderTotal'
-
+import { RadioButton } from 'react-native-paper';
+//import Modal from 'react-native-modal'
+import { Icon } from "native-base";
 const createDaySelection = ({ shippingDoW, shippingCutoff, shippingDays }) => {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const availableDays = weekdays.filter((val, i) => shippingDoW.indexOf(i) !== -1)
@@ -37,6 +39,7 @@ export class SupplierCart extends React.Component {
             placingOrder: false,
             orderPlaced: false,
             placeOrderError: false,
+            toggleDateFilter: false
         }
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
@@ -69,32 +72,46 @@ export class SupplierCart extends React.Component {
 
         return (
             <View>
-                <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
+
                 {this.props.supplierOrder.placed ?
                     <></>
-                    : <View style={{paddingBottom:20,borderRadius:10}}>
+                    : <View style={{ paddingBottom: 20, borderRadius: 10 }}>
                         {!this.props.supplierDetail ?
-                            <Text>Loading Supplier Detail</Text> :
+                            <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                             this.props.supplierDetail.logo ?
-                                <View>
-                                    <Image
+                                <View style={{padding:10}}>
+                                    {/* <Image
                                         source={{ uri: this.props.supplierDetail.logo }}
                                         style={{ width: 100, height: 100 }}
                                     />
-                                    <Text>{this.props.supplierDetail.displayName}</Text>
-                                    <Text>{this.props.supplierOrder.supplierId}</Text>
+                                    <Text >{this.props.supplierOrder.supplierId}</Text> */}
+                                    <Text style={styles.text}>{this.props.supplierDetail.displayName}</Text>
                                 </View> : <></>
                         }
-
+                        <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginTop: 5 }}>
+                            <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
+                        </View>
+                        <View style={styles.container}>
+                            <View style={styles.row}>
+                                <Text style={styles.heading}>Delivery</Text>
+                                <Text style={styles.boldText}>Monday - 4/12</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })}>
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, }}>Tap to Edit</Text>
+                                </TouchableOpacity>
+                                <Text st={styles.boldText}>12AM - 5AM</Text>
+                            </View>
+                        </View>
                         {(this.props.supplierDetail && this.props.supplierOrder) ?
                             <View style={{ backgroundColor: colors.white, padding: 20, borderRadius: 10 }} >
                                 <View style={styles.row}>
                                     <Text>{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
                                     <Text>{orderTotal - deliveryFee}</Text>
                                 </View>
-                                {deliveryFee > 0 ?
+                                {/*   {deliveryFee > 0 ?
                                     <View>
-                                        <View style={styles.row}>
+                                         <View style={styles.row}>
                                             <Text style={styles.lightText}>Delivery Fee: </Text>
                                             <Text style={styles.boldText}>{this.props.supplier.deliveryFee} </Text>
                                         </View>
@@ -105,9 +122,24 @@ export class SupplierCart extends React.Component {
                                         <View style={styles.row}>
                                             <Text style={styles.lightText}>Add </Text>
                                             <Text style={styles.boldText}>{this.props.supplierDetail.orderMinimum - tiorderTotal - deliveryFee}</Text>
-                                        </View>
+                                        </View> 
+                                       
                                     </View> : <></>
-                                }
+                                }*/}
+                                <View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.lightText}>Delivery Fee: </Text>
+                                        <Text style={styles.boldText}>$ 20</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.lightText}>Total: </Text>
+                                        <Text style={styles.boldText}>$ 300</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.lightText}>Add </Text>
+                                        <Text style={styles.boldText}>$ 320</Text>
+                                    </View>
+                                </View>
                             </View> : <></>
                         }
 
@@ -115,42 +147,68 @@ export class SupplierCart extends React.Component {
                             onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }, index: index })} />
 
                         {!this.props.supplierDetail ?
-                            <Text>Loading shipping options</Text> :
+                            <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
+                            this.state.toggleDateFilter &&
+                            <Modal transparent={true}>
+                                <View style={commonStyles.modalView}>
+                                    <ScrollView contentContainerStyle={{ padding: 20 }}>
 
-                            <View>
-                                {this.props.supplierDetail.shippingTimeSlots.map(val => {
-                                    const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
-                                    return (
-                                        <View>
-                                            <Text>{val}</Text>
-                                            <Button
-                                                title={label}
-                                                onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })}
-                                            />
+
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <TouchableOpacity style={{ paddingLeft: 15, flex: 0.5 }} onPress={() => this.setState({ toggleDateFilter: false })}>
+                                                <Icon name="arrow-back" color={colors.text} />
+                                            </TouchableOpacity>
+                                            <Text style={{ fontSize: sizes.s20, fontWeight: 'normal', color: colors.text, flex: 1 }}>Select Delivery</Text>
+                                        </View>
+                                        <Text style={styles.heading}>Select Day</Text>
+                                        <View style={styles.container}>
+                                            {createDaySelection(this.props.supplierDetail).map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
+                                                return (
+
+                                                    <View style={commonStyles.row}>
+                                                        <RadioButton
+                                                            value={label}
+                                                            label={label}
+                                                            uncheckedColor={'#E6F0FD'}
+                                                            color={colors.blue.primary}
+                                                            status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
+                                                        />
+                                                        <Text style={commonStyles.text}>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>
+                                                    </View>
+
+                                                )
+                                            })
+                                            }
                                         </View>
 
-                                    )
+                                        <Text style={styles.heading}>Select Time</Text>
+                                        <View style={styles.container}>
+                                            {this.props.supplierDetail.shippingTimeSlots.map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
+                                                return (
 
-                                })
+                                                    <View style={commonStyles.row}>
+                                                        <RadioButton
+                                                            //value={label}
+                                                            //label={label}
+                                                            uncheckedColor={'#E6F0FD'}
+                                                            color={colors.blue.primary}
+                                                            status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
+                                                        <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
+                                                    </View>
 
-                                }
+                                                )
+                                            })
 
-                                {createDaySelection(this.props.supplierDetail).map(val => {
-                                    const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
-                                    return (
-                                        <View>
-                                            <Text>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>
-                                            <Button
-                                                title={label}
-                                                onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
-                                            />
+                                            }
                                         </View>
-                                    )
-                                })
-                                }
-
-
-                            </View>
+                                    </ScrollView>
+                                    <AppButton text="APPLY" style={{ marginHorizontal: 10 }} />
+                                </View>
+                            </Modal>
                         }
 
 
@@ -160,17 +218,18 @@ export class SupplierCart extends React.Component {
                     {this.props.supplierOrder.placed ?
                         <View>
                             <Text>Order Placed!</Text>
-                            <Button
-                                title="View and Manage Order ->"
+                            <AppButton
+                                text="View and Manage Order ->"
                                 onPress={() => navigation.navigate("OrderDetailScreen", supplierCart)}
                             />
                         </View>
                         : <View>
                             {this.state.placingOrder ?
-                                <Text>Loading Place Order</Text> :
+                                <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                                 <AppButton
                                     text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                     onPress={() => this.props.placeOrder({ index: this.props.index })}
+                                    style={{ marginTop: 0, backgroundColor: colors.black }}
                                 />
                             }
                         </View>
@@ -195,12 +254,27 @@ const styles = StyleSheet.create({
     },
     lightText: {
         fontSize: sizes.s17,
-        fontFamily: 'medium',
+        // fontFamily: 'medium',
         color: colors.grey.primary
     },
     boldText: {
-        fontFamily: 'medium',
+        //fontFamily: 'medium',
         fontSize: sizes.s19,
         color: colors.text
+    },
+    heading: { paddingTop: 10, fontSize: sizes.s17,
+        // fontFamily: 'medium',
+         color: colors.grey.primary },
+    container: {
+        backgroundColor: colors.white,
+        padding: 15,
+        borderRadius: 10,
+        marginVertical: 10
+    },
+    text: {
+      //  fontFamily: 'medium',
+        fontSize: sizes.s17,
+        color: colors.grey.primary
     }
+
 })
