@@ -97,8 +97,8 @@ class ProductListItem extends React.PureComponent {
                             textStyle={{ fontSize: sizes.s14 }}
                         />
                         <View>
-                            <Text style={styles.text}>{item.price}</Text>
-                            <Text style={commonStyles.lightText}>15K count</Text>
+                            <Text style={styles.text,{textAlign:"right",fontWeight:"bold"}}>${item.price}</Text>
+                            <Text style={commonStyles.lightText,{textAlign:"right"}}>40 Lbs</Text>
                         </View>
                     </View>
 

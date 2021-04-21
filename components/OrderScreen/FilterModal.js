@@ -194,13 +194,22 @@ export default class FilterModal extends React.Component {
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
 }
                                                 <Text style={styles.text}>Max</Text>
+                                                {!!(title=="Price") && 
                                                 <TextInput
                                                     keyboardType='number-pad'
                                                     placeholder={`$ ${round(max, 0)}`}
                                                     placeholderTextColor={colors.blue.primary}
                                                     style={styles.input}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
-                                                />
+                                                />}
+                                                 {title!="Price" &&
+                                                <TextInput
+                                                    keyboardType='number-pad'
+                                                    placeholder={`${round(max, 0)}`}
+                                                    placeholderTextColor={colors.blue.primary}
+                                                    style={styles.input}
+                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
+                                                />}
                                             </View>
 
                                         </View>
