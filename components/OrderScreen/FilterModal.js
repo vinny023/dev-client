@@ -168,7 +168,7 @@ export default class FilterModal extends React.Component {
                                 </Text> */}<View style={commonStyles.row}>
 
                                                 <Text style={styles.text}>Min </Text>
-                                                {!!(title=="Size") && 
+                                                {!!(title=="Price") && 
                                                 <TextInput
                                                     style={styles.input}
                                                     keyboardType='number-pad'
@@ -176,7 +176,7 @@ export default class FilterModal extends React.Component {
                                                     placeholderTextColor={colors.blue.primary}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
                                                 }
-                                                {title!="Size" &&
+                                                {title!="Price" &&
                                                     <TextInput
                                                     style={styles.input}
                                                     keyboardType='number-pad'
