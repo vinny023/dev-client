@@ -1,12 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
-import _ from 'lodash';
+import _, { floor, round } from 'lodash';
 import React from 'react';
 // import { Layout, Text } from '@ui-kitten/components';
-import { View, Button, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Button, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
 import { RadioButton } from 'react-native-paper'
 import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
+//import { Modal } from '@ui-kitten/components';
+import Modal from 'react-native-modal'
 
+const dimensions = Dimensions.get('window')
 const sortOptions = [
     { 'title': 'Price Low To High', 'value': { 'price': 1 } },
     { 'title': 'Price High To Low', 'value': { 'price': -1 } },
@@ -55,6 +58,9 @@ export default class FilterModal extends React.Component {
     constructor(props) {
         super(props)
         // this.getFilters = this.getFilters.bind(this)
+        this.state = {
+            visible: true
+        }
     }
 
     render() {
@@ -69,15 +75,16 @@ export default class FilterModal extends React.Component {
             <Modal
                 animationType="slide"
                 transparent={true}
-            // backdropOpacity={.9}
+                isVisible={true}
+                backdropOpacity={.5}
+                coverScreen={true}
+                style={commonStyles.modalView}
+
             >
-                <View style={commonStyles.modalView}>
+                <View style={commonStyles.centeredView} >
                     <ScrollView contentContainerStyle={{ padding: 15 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TouchableOpacity style={{ paddingLeft: 15, flex: 0.5 }} onPress={() => this.props.close(false)}>
-                                <Ionicons name="arrow-back" color={colors.text} />
-                            </TouchableOpacity>
-                            <Text style={{ fontSize: sizes.s20, fontWeight: 'normal', color: colors.text, flex: 1 }}>Filter & Sort</Text>
+                        <View style={{  alignItems: 'center' }}>
+                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, }}>Filter & Sort</Text>
                         </View>
 
                         {/* <Text>Filter</Text> */}
@@ -112,7 +119,9 @@ export default class FilterModal extends React.Component {
                                                                 status={label.includes("Selected") ? 'checked' : 'unchecked'}
                                                                 onPress={() => this.props.setFilter(filterValue)}
                                                             />
-                                                            <Text style={styles.text}>{label.replace('(Selected)', '')}</Text>
+                                                            <View style={{ marginLeft: 7 }}>
+                                                                <Text style={commonStyles.text}>{label.replace('(Selected)', '')}</Text>
+                                                            </View>
                                                         </View>
 
                                                     )
@@ -146,7 +155,7 @@ export default class FilterModal extends React.Component {
 
                                 return (
                                     <View >
-                                        <Text style={styles.heading}>{title}</Text>
+                                        <Text style={styles.heading}>Filter by {title}</Text>
                                         <View style={[styles.container, { alignItems: 'center' }]}>
                                             {/* <Text style={styles.text}>Min ({min}):
                                              <TextInput
@@ -172,7 +181,7 @@ export default class FilterModal extends React.Component {
                                                 <TextInput
                                                     style={styles.input}
                                                     keyboardType='number-pad'
-                                                    placeholder={`$ ${min}`}
+                                                    placeholder={`$ ${round(min, 0)}`}
                                                     placeholderTextColor={colors.blue.primary}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
                                                 }
@@ -187,7 +196,7 @@ export default class FilterModal extends React.Component {
                                                 <Text style={styles.text}>Max</Text>
                                                 <TextInput
                                                     keyboardType='number-pad'
-                                                    placeholder={`$ ${max}`}
+                                                    placeholder={`$ ${round(max, 0)}`}
                                                     placeholderTextColor={colors.blue.primary}
                                                     style={styles.input}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
@@ -200,7 +209,7 @@ export default class FilterModal extends React.Component {
                             }
                         })}
 
-                        <Text style={styles.heading}>Sort</Text>
+                        <Text style={styles.heading}>Sort By</Text>
                         <View style={styles.container}>
                             {sortOptions.map((option, i) => {
 
@@ -222,7 +231,9 @@ export default class FilterModal extends React.Component {
                                             status={title.includes("Selected") ? 'checked' : 'unchecked'}
                                             onPress={() => this.props.setSort(value)}
                                         />
-                                        <Text style={commonStyles.text}>{title.replace('(Selected)', '')}</Text>
+                                        <View style={{ marginLeft: 7 }}>
+                                            <Text style={commonStyles.text}>{title.replace('(Selected)', '')}</Text>
+                                        </View>
                                     </View>
 
 
@@ -250,9 +261,16 @@ const styles = StyleSheet.create({
     heading: {
         paddingTop: 10,
         fontSize: sizes.s17,
-        //fontFamily: 'medium',
+        fontFamily: 'medium',
         color: colors.grey.primary
     },
 
-    input: { backgroundColor: colors.blue.light, marginHorizontal: 20, paddingHorizontal: 20, padding: 5, borderRadius: 10, color: colors.blue.primary }
+    input: {
+        backgroundColor: colors.blue.light,
+        marginHorizontal: 20,
+        paddingHorizontal: 20,
+        padding: 5,
+        borderRadius: 10,
+        color: colors.blue.primary
+    }
 })
