@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // padding:10,
         marginTop: 15,
-       marginBottom:5
+      
     },
     switchModeContainer: {
         width: '48%',
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
     switchMode: {
         fontSize: sizes.s15,
-        //fontFamily: 'medium',
+        fontFamily: 'medium',
         
     },
     

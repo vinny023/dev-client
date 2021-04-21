@@ -21,7 +21,7 @@ export default class Banner extends React.Component {
                         <TouchableOpacity onPress={() => this.props.hideBanner()} style={{ alignSelf: 'flex-end' }}>
                             <Ionicons name={'close'} color={colors.text} />
                         </TouchableOpacity>
-                        <Text style={{ alignSelf: 'center' }}>{message}</Text>
+                        <Text style={{ alignSelf: 'center',fontFamily:'regular' }}>{message}</Text>
 
                         {/* <Button
                             title="X"

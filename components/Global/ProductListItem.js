@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import * as actions from '../../redux/actions'
 import { connect } from 'react-redux'
 import _ from 'lodash';
-import { colors, sizes } from '../../theme';
+import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../../components/AppButton'
 // export class ProductListItem extends React.Component {
-
 //     constructor(props) {
 //         super(props)
 //    }
@@ -81,7 +80,7 @@ class ProductListItem extends React.PureComponent {
         const { item } = this.props
 
         //  console.log('PRODUCT LIST ITEM RENDERING')
-        // console.log(item)
+        console.log(item)
         // console.log(item.displayName)
 
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
@@ -91,45 +90,55 @@ class ProductListItem extends React.PureComponent {
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
+                      
                         <AppButton
                             text={item.supplierDisplayName}
-                            style={{ height: 30, paddingHorizontal: 10 }}
+                            style={{ height: 30, paddingHorizontal: 10, marginVertical: 5 }}
                             textStyle={{ fontSize: sizes.s14 }}
                         />
-                        <Text style={styles.text}>{item.price}</Text>
+                        <View>
+                            <Text style={styles.text}>{item.price}</Text>
+                            <Text style={commonStyles.lightText}>15K count</Text>
+                        </View>
                     </View>
 
                     <View style={styles.row}>
-                        <View style={{flex:1}}>
+                        <View style={{ flex: 1 }}>
                             <Text style={styles.text}>{item.displayName}</Text>
+                            <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
+                            <Text style={[styles.text, { fontSize: sizes.s14,fontFamily:'regular' }]}>$2.80 ($0.01 / count) </Text>
                         </View>
                         {!this.props.reorderOnly &&
-                            <View>
+                            <View style={{ paddingTop: 10 }}>
                                 {/* {
                                     (item.quantity >= 1) && (<Button
                                         title="Remove"
                                         onPress={this.removeItem}
                                     />)
                                 } */}
-                                <View style={styles.counterContainer}>
-
-                                    {/* MINUS BUTTON */}
-                                    <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
-                                        <Text style={styles.boldText}>-</Text>
+                                {this.state.quantity == 0 ?
+                                    <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
+                                        <Text style={[styles.boldText, { fontSize: sizes.s30, fontFamily: 'bold' }]}>+</Text>
                                     </TouchableOpacity>
-                                    <Text style={styles.boldText}>{this.state.quantity}</Text>
-                                    {/* ADD BUTTON */}
-                                    <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
-                                        <Text style={styles.boldText}>+</Text>
-                                    </TouchableOpacity>
-                                </View>
-
+                                    :
+                                    <View style={styles.counterContainer}>
+                                        {/* MINUS BUTTON */}
+                                        <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
+                                            <Text style={styles.boldText}>-</Text>
+                                        </TouchableOpacity>
+                                        <Text style={styles.boldText}>{this.state.quantity}</Text>
+                                        {/* ADD BUTTON */}
+                                        <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
+                                            <Text style={styles.boldText}>+</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                }
                             </View>
                         }
                     </View>
                     {this.props.reorderOnly &&
-                        <Button
-                            title="Reorder"
+                        <AppButton
+                            text="Reorder"
                             onPress={this.addItemQty}
                         />
 
@@ -166,9 +175,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProductListItem)
 const styles = StyleSheet.create({
     productItem: {
         backgroundColor: colors.white,
-        paddingHorizontal: 20,
-        paddingBottom:15,
-       
+        paddingHorizontal: 8,
+        paddingBottom: 15,
+
     },
     row: {
         flexDirection: 'row',
@@ -178,10 +187,8 @@ const styles = StyleSheet.create({
     ,
     text: {
         fontSize: sizes.s16,
-       // fontFamily: 'medium',
+         fontFamily: 'medium',
         color: colors.text,
-
-
     },
     counterContainer: {
         flexDirection: 'row',
@@ -194,10 +201,17 @@ const styles = StyleSheet.create({
     signContainer: {
         paddingHorizontal: 15
     },
-    boldText:{
-        fontSize:sizes.s20,
-       // fontFamily:'bold',
-        color:colors.blue.primary
+    boldText: {
+        fontSize: sizes.s20,
+         fontFamily:'bold',
+        color: colors.blue.primary
+    },
+    addContainer: {
+        backgroundColor: colors.blue.light,
+        height: 40,
+        borderRadius: 40,
+        width: 40,
+        alignItems: 'center', justifyContent: 'center'
     }
 
 })

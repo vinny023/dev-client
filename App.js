@@ -15,12 +15,13 @@ import syncCartStateToDB from './redux/firebaseActions'
 
 export default function App() {
   //Custom fonts
-  const [loaded] = useFonts({
-    regular: require('./assets/fonts/Roboto.ttf'),
-    medium: require('./assets/fonts/Roboto_medium.ttf'),
+  const [loaded,err] = useFonts({
+    regular: require('./assets/fonts/Roboto-Regular.ttf'),
+    medium: require('./assets/fonts/Roboto-Medium.ttf'),
     bold: require('./assets/fonts/Roboto-Bold.ttf'),
   });
   if (!loaded) {
+    console.log('*********************************',loaded,err)
     return null;
   }
     return (

@@ -2,13 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { colors } from '../../theme';
+import { colors, sizes } from '../../theme';
 
 const SearchSuggestion = ({ suggestion, select }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={() => select(suggestion)}>
             <Text>{suggestion}</Text>
-            <Ionicons name="search-outline" color={colors.grey.primary} />
+            <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
+           
         </TouchableOpacity>
 
     )
@@ -67,7 +68,7 @@ class Search extends React.Component {
     render() {
         return (
             <View>
-                <View style={[styles.container,{marginTop:10,borderRadius:10}]}>
+                <View style={[styles.container,{marginTop:15,borderRadius:10}]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
@@ -77,10 +78,12 @@ class Search extends React.Component {
                     />
                     {this.state.showSuggestions ?
                         <TouchableOpacity onPress={() => this.clearSearch()}>
-                            <Ionicons name="close-outline" color={colors.text} />
+                            <Ionicons name="ios-close" color={colors.text} size={sizes.s16} />
+                         
                         </TouchableOpacity>
                         :
-                        <Ionicons name="search-outline" color={colors.grey.primary} />
+                        <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
+                        
                     }
                 </View>
 
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 45
+        height: 38
 
     },
 })

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableOpacity, Modal, Image, TextInput, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableOpacity, Image, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux'
 import * as actions from '../../redux/actions'
 import { colors, commonStyles, sizes } from '../../theme';
@@ -8,8 +8,10 @@ import AppButton from '../AppButton';
 import ProductList from '../Global/ProductList'
 import OrderTotal from '../Global/OrderTotal'
 import { RadioButton } from 'react-native-paper';
-//import Modal from 'react-native-modal'
-import { Icon } from "native-base";
+import Modal from 'react-native-modal'
+import { Ionicons } from '@expo/vector-icons';
+
+
 const createDaySelection = ({ shippingDoW, shippingCutoff, shippingDays }) => {
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const availableDays = weekdays.filter((val, i) => shippingDoW.indexOf(i) !== -1)
@@ -79,7 +81,7 @@ export class SupplierCart extends React.Component {
                         {!this.props.supplierDetail ?
                             <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                             this.props.supplierDetail.logo ?
-                                <View style={{padding:10}}>
+                                <View style={{ padding: 10 }}>
                                     {/* <Image
                                         source={{ uri: this.props.supplierDetail.logo }}
                                         style={{ width: 100, height: 100 }}
@@ -92,23 +94,23 @@ export class SupplierCart extends React.Component {
                             <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
                         </View>
                         <View style={styles.container}>
-                            <View style={styles.row}>
+                            <View style={[styles.row, { paddingVertical: 0 }]}>
                                 <Text style={styles.heading}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
-                            <View style={styles.row}>
+                            <View style={[styles.row, { paddingVertical: 3 }]}>
                                 <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })}>
-                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, }}>Tap to Edit</Text>
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15,fontFamily:'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
-                                <Text st={styles.boldText}>12AM - 5AM</Text>
+                                <Text style={commonStyles.lightText}>12AM - 5AM</Text>
                             </View>
                         </View>
                         {(this.props.supplierDetail && this.props.supplierOrder) ?
                             <View style={{ backgroundColor: colors.white, padding: 20, borderRadius: 10 }} >
-                                <View style={styles.row}>
-                                    <Text>{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
+                                {/* <View style={styles.row}>
+                                    <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
                                     <Text>{orderTotal - deliveryFee}</Text>
-                                </View>
+                                </View> */}
                                 {/*   {deliveryFee > 0 ?
                                     <View>
                                          <View style={styles.row}>
@@ -127,17 +129,21 @@ export class SupplierCart extends React.Component {
                                     </View> : <></>
                                 }*/}
                                 <View>
+                                <View style={styles.row}>
+                                        <Text style={styles.lightText}>Free Delivery Minimum </Text>
+                                        <Text style={styles.boldText}>$ 1024</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.lightText}>Subtotal: </Text>
+                                        <Text style={styles.boldText}>$ 1,100.00</Text>
+                                    </View>
                                     <View style={styles.row}>
                                         <Text style={styles.lightText}>Delivery Fee: </Text>
                                         <Text style={styles.boldText}>$ 20</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Total: </Text>
-                                        <Text style={styles.boldText}>$ 300</Text>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.lightText}>Add </Text>
-                                        <Text style={styles.boldText}>$ 320</Text>
+                                        <Text style={styles.lightText}>Total </Text>
+                                        <Text style={styles.boldText}>$ 1,500</Text>
                                     </View>
                                 </View>
                             </View> : <></>
@@ -149,16 +155,17 @@ export class SupplierCart extends React.Component {
                         {!this.props.supplierDetail ?
                             <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                             this.state.toggleDateFilter &&
-                            <Modal transparent={true}>
-                                <View style={commonStyles.modalView}>
+                            <Modal
+                                animationType="slide"
+                                isVisible={this.state.toggleDateFilter}
+                                backdropOpacity={.5}
+                                style={commonStyles.modalView}
+
+                            >
+                                <View style={commonStyles.centeredView}>
                                     <ScrollView contentContainerStyle={{ padding: 20 }}>
-
-
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <TouchableOpacity style={{ paddingLeft: 15, flex: 0.5 }} onPress={() => this.setState({ toggleDateFilter: false })}>
-                                                <Icon name="arrow-back" color={colors.text} />
-                                            </TouchableOpacity>
-                                            <Text style={{ fontSize: sizes.s20, fontWeight: 'normal', color: colors.text, flex: 1 }}>Select Delivery</Text>
+                                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1 }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
                                         <View style={styles.container}>
@@ -175,9 +182,10 @@ export class SupplierCart extends React.Component {
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
                                                             onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
                                                         />
-                                                        <Text style={commonStyles.text}>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>
+                                                        <View style={{ marginLeft: 7 }}>
+                                                            <Text style={commonStyles.text}>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>
+                                                        </View>
                                                     </View>
-
                                                 )
                                             })
                                             }
@@ -191,13 +199,15 @@ export class SupplierCart extends React.Component {
 
                                                     <View style={commonStyles.row}>
                                                         <RadioButton
-                                                            //value={label}
-                                                            //label={label}
-                                                            uncheckedColor={'#E6F0FD'}
-                                                            color={colors.blue.primary}
-                                                            status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
-                                                        <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
+                                                            value          = {label}
+                                                            label          = {label}
+                                                            uncheckedColor = {'#E6F0FD'}
+                                                            color          = {colors.blue.primary}
+                                                            status         = {label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                            onPress        = {() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
+                                                        <View style={{ marginLeft: 7 }}>
+                                                            <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
+                                                        </View>
                                                     </View>
 
                                                 )
@@ -206,7 +216,7 @@ export class SupplierCart extends React.Component {
                                             }
                                         </View>
                                     </ScrollView>
-                                    <AppButton text="APPLY" style={{ marginHorizontal: 10 }} />
+                                    <AppButton text="APPLY" style={{ marginHorizontal: 10 }} onPress={() => this.setState({ toggleDateFilter: false })} />
                                 </View>
                             </Modal>
                         }
@@ -254,17 +264,20 @@ const styles = StyleSheet.create({
     },
     lightText: {
         fontSize: sizes.s17,
-        // fontFamily: 'medium',
+       fontFamily: 'medium',
         color: colors.grey.primary
     },
     boldText: {
-        //fontFamily: 'medium',
+        fontFamily: 'medium',
         fontSize: sizes.s19,
         color: colors.text
     },
-    heading: { paddingTop: 10, fontSize: sizes.s17,
-        // fontFamily: 'medium',
-         color: colors.grey.primary },
+    heading: {
+        paddingTop: 10,
+        fontSize: sizes.s17,
+         fontFamily: 'medium',
+        color: colors.grey.primary
+    },
     container: {
         backgroundColor: colors.white,
         padding: 15,
@@ -272,7 +285,7 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     text: {
-      //  fontFamily: 'medium',
+         fontFamily: 'medium',
         fontSize: sizes.s17,
         color: colors.grey.primary
     }

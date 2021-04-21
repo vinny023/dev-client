@@ -5,7 +5,7 @@ const commonStyles = {
     paddingTop: 25,
     paddingHorizontal: 10,
     backgroundColor: colors.background.primary,
-    paddingBottom:20
+    paddingBottom: 20
   },
   btnContainer: {
     backgroundColor: colors.blue.primary,
@@ -18,24 +18,37 @@ const commonStyles = {
   },
   btnText: {
     color: colors.white,
-    fontSize: sizes.s18,
-  //  fontFamily: 'bold'
+    fontSize: sizes.s17,
+     fontFamily: 'bold'
   },
   modalView: {
+    width: '100%',
+    height: '100%',
+    marginBottom: 0,
+    marginLeft: 0
+  },
+  centeredView: {
     backgroundColor: colors.background.light,
     flex: 1,
     paddingTop: 20,
-    marginTop: 70,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20
-},
-row: {
-  flexDirection: 'row',
-  alignItems: 'center',
-
-},
-text: { fontSize: sizes.s16,
-  // fontFamily: 'medium',
-    color: colors.text },
+    marginTop: 83,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10
+  },
+  text: {
+    fontSize: sizes.s16,
+    fontFamily: 'medium',
+    color: colors.text
+  },
+  lightText: {
+    fontSize: sizes.s15,
+    fontFamily: 'regular',
+    color: colors.grey.primary
+  },
 }
 export default commonStyles;
