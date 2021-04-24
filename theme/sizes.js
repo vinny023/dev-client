@@ -1,6 +1,7 @@
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const sizes={
+   
     s28: hp("4%"),
     s25: hp("3.1%"),
     s20: hp("2.6%"),

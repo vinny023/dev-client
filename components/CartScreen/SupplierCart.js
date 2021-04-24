@@ -164,8 +164,12 @@ export class SupplierCart extends React.Component {
                             >
                                 <View style={commonStyles.centeredView}>
                                     <ScrollView contentContainerStyle={{ padding: 20 }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1 }}>Select Delivery</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                                            <TouchableOpacity style={{alignSelf:'flex-start'}}>
+                                                <Ionicons name='ios-arrow-back' size={sizes.s25}/>
+                                            </TouchableOpacity>
+                                            
+                                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text,flex:1,textAlign:'center' }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
                                         <View style={styles.container}>

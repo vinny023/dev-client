@@ -182,6 +182,7 @@ export default class FilterModal extends React.Component {
                                                     style={styles.input}
                                                     keyboardType='number-pad'
                                                     placeholder={`$ ${round(min, 0)}`}
+                                                    maxLength={5}
                                                     placeholderTextColor={colors.blue.primary}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
                                                 }
@@ -190,6 +191,8 @@ export default class FilterModal extends React.Component {
                                                     style={styles.input}
                                                     keyboardType='number-pad'
                                                     placeholder={`${min}`}
+                                                    maxLength={5}
+
                                                     placeholderTextColor={colors.blue.primary}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
 }
@@ -200,12 +203,14 @@ export default class FilterModal extends React.Component {
                                                     placeholder={`$ ${round(max, 0)}`}
                                                     placeholderTextColor={colors.blue.primary}
                                                     style={styles.input}
+                                                    maxLength={5}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
                                                 />}
                                                  {title!="Price" &&
                                                 <TextInput
                                                     keyboardType='number-pad'
                                                     placeholder={`${round(max, 0)}`}
+                                                    maxLength={5}
                                                     placeholderTextColor={colors.blue.primary}
                                                     style={styles.input}
                                                     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
@@ -271,7 +276,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         fontSize: sizes.s17,
         fontFamily: 'medium',
-        color: colors.grey.primary
+        color: colors.grey.primary,
+    
     },
 
     input: {
@@ -280,6 +286,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         padding: 5,
         borderRadius: 10,
-        color: colors.blue.primary
+        color: colors.blue.primary,
+       // maxWidth:95
+
     }
 })

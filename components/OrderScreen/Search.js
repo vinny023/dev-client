@@ -68,7 +68,7 @@ class Search extends React.Component {
     render() {
         return (
             <View>
-                <View style={[styles.container,{marginTop:15,borderRadius:10}]}>
+                <View style={[styles.container,{marginTop:15,borderRadius:10,paddingRight:15}]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}

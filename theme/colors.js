@@ -8,6 +8,7 @@ const colors ={
     },
     grey:{
         primary: '#939393',
+        light:'#C4C4C4'
     },
     background:{
         primary:'#E5E5E5',

@@ -50,5 +50,15 @@ const commonStyles = {
     fontFamily: 'regular',
     color: colors.grey.primary
   },
+  lightHeading: {
+    fontSize: sizes.s16,
+    fontFamily: 'medium',
+    color: colors.grey.primary
+},card: {
+  backgroundColor: colors.white,
+  padding: 15,
+  borderRadius: 10,
+  marginTop: 10
+},
 }
 export default commonStyles;

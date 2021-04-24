@@ -219,21 +219,18 @@ export class CartScreen extends React.Component {
     render() {
         const { navigation } = this.props
         return (
-
             <View style={[commonStyles.container, { flex: 1, paddingBottom: 0 }]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-
-                {/* <Button 
-                      title="Go Back"
-                      onPress={() => navigation.navigate('OrderScreen')}
+                {/*
+                 <Button 
+                      title   = "Go Back"
+                      onPress = {() => navigation.navigate('OrderScreen')}
                 /> 
                 <Text>Cart</Text>
-*/}
-
-                <ScrollView showsVerticalScrollIndicator={false} >
+               */}
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {
                         this.state.masterOrder.map((supplierOrder, index) => {
-
                             return (
                                 <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start" }}>
                                     {/* <Text style={styles.text}>Supplier </Text> */}
@@ -251,14 +248,13 @@ export class CartScreen extends React.Component {
                         })}
 
                 </ScrollView>
-
-
-                <AppButton
-                    style={{ marginTop: 0 }}
-                    text="Place Full Order"
-                    onPress={this.placeFullOrder}
-
-                />
+                <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%' }}>
+                    <AppButton
+                     
+                        text="Place Full Order"
+                        onPress={this.placeFullOrder}
+                    />
+                </View>
             </View>
         )
     }
