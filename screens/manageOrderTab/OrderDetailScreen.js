@@ -144,8 +144,10 @@ export class OrderDetailScreen extends React.Component {
     console.log(this.state.order)
     const { order } = this.state
     const supplier = order.supplierDetail
-    let orderDate=order.selectedDeliveryDate.date.slice(0,9)
-    console.log(orderDate)
+    // let orderDay=order.selectedDeliveryDate.date.getDay();
+    // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
+    // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+    // console.log(orderDate)
     return (
       <>
         <ScrollView contentContainerStyle={[commonStyles.container]}>
@@ -164,7 +166,8 @@ export class OrderDetailScreen extends React.Component {
                 </View>
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={require('../../assets/truck.png')} style={{ marginRight: 10 }} />
-                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{orderDate}</Text>
+                  {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
+                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.date}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s18, fontFamily: 'regular', color: colors.text }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
