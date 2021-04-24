@@ -144,7 +144,8 @@ export class OrderDetailScreen extends React.Component {
     console.log(this.state.order)
     const { order } = this.state
     const supplier = order.supplierDetail
-
+    let orderDate=order.selectedDeliveryDate.date.slice(0,9)
+    console.log(orderDate)
     return (
       <>
         <ScrollView contentContainerStyle={[commonStyles.container]}>
@@ -163,7 +164,7 @@ export class OrderDetailScreen extends React.Component {
                 </View>
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={require('../../assets/truck.png')} style={{ marginRight: 10 }} />
-                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.date}</Text>
+                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{orderDate}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s18, fontFamily: 'regular', color: colors.text }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
