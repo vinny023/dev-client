@@ -139,15 +139,15 @@ export class OrderDetailScreen extends React.Component {
   }
 
   render() {
-    console.log('rendering item')
-    console.log(this.state.order.cart)
-    console.log(this.state.order)
+    // console.log('rendering item')
+    // console.log(this.state.order.cart)
+    // console.log(this.state.order)
     const { order } = this.state
     const supplier = order.supplierDetail
-    // let orderDay=order.selectedDeliveryDate.date.getDay();
+    // let orderDay=await order.selectedDeliveryDate.date;
     // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
     // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-    // console.log(orderDate)
+    console.log(order.selectedDeliveryDate,"date test")
     return (
       <>
         <ScrollView contentContainerStyle={[commonStyles.container]}>
@@ -167,7 +167,7 @@ export class OrderDetailScreen extends React.Component {
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={require('../../assets/truck.png')} style={{ marginRight: 10 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
-                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.date}</Text>
+                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s18, fontFamily: 'regular', color: colors.text }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
