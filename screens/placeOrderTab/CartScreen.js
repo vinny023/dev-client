@@ -14,41 +14,42 @@ import AppButton from '../../components/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const setOrderDetails = ({ masterCart, account }) => {
+const setOrderDetails = ({masterCart, account}) => {    
 
-    const { accountId, accountDisplayName, accountConfirmationEmail, supplierContact } = account
+    const {id, displayName, confirmationEmail, supplierContact} = account
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
-        .map(supplierOrder => {
+    .map(supplierOrder => 
+        {
             return (
                 {
-                    accountId: accountId,
-                    accountDisplayName: accountDisplayName,
-                    accountConfirmationEmail: accountConfirmationEmail,
-                    supplierContact: {
-                        contact: supplierContact[supplierOrder.supplierId].contact,
-                        contactType: supplierContact[supplierOrder.supplierId].supplierContactType
-                    },
+                    accountId: id,
+                    accountDisplayName : displayName,
+                    accountConfirmationEmail: confirmationEmail,
+                    supplierContact: {contact: supplierContact[supplierOrder.supplierId].contact, 
+                                      contactType:supplierContact[supplierOrder.supplierId].supplierContactType},                                
                     ...supplierOrder
-                })
-        })
-}
-
-const calcTotalsAddSupplier = ({ masterOrder, supplierDetail }) => {
-    //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
-    return masterOrder.map((supplierOrder, index) => {
-        const orderTotal = supplierOrder.cart.reduce((total, item) => total + item.price * item.quantity)
-        const deliveryFee = 0
-        if (orderTotal < supplierDetail.orderMinimum) { deliveryFee = supplierDetail.deliveryFee }
-        return (
-            {
-                ...supplierOrder, ...supplierDetail,
-                orderTotal: orderTotal + deliveryFee,
-                deliveryFee: deliveryFee
-            }
-        )
+                })                        
     })
 }
+
+const calcTotalsAddSupplier = ({masterOrder, supplierDetail}) => {   
+    //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
+     return  masterOrder.map((supplierOrder, index) => {
+        //  const orderTotal = supplierOrder.cart.reduce((item,total) => item.price*item.quantity + total, 0)
+        const orderTotal = 100
+         console.log('CaLCED ORDER TOTAL')
+         console.log(orderTotal)         
+         let deliveryFee = 0
+         if (orderTotal < supplierDetail[index].orderMinimum) {deliveryFee = supplierDetail[index].deliveryFee}
+         return (
+             {...supplierOrder, supplierDetail: supplierDetail[index],
+                 orderTotal: orderTotal + deliveryFee,
+                 deliveryFee: deliveryFee                
+             }
+         )
+     })
+ }
 
 export class CartScreen extends React.Component {
 
@@ -114,13 +115,21 @@ export class CartScreen extends React.Component {
 
     placeOrder = async ({ index, supplierOrder }) => {
 
+        console.log('RUNNING PLACE ORDER')
+        console.log(index)
+        console.log((index))
+        console.log((supplierOrder))
+        
         let order = {}
-        if (index) {
+        if (supplierOrder) {
+            order = { ...supplierOrder }
+        } else {
             console.log('Place Order' + index)
             order = { ...this.state.masterOrder[index] }
-        } else if (supplierOrder) {
-            order = { ...supplierOrder }
-        }
+        } 
+
+        console.log('SELECTED ORDER')
+        console.log(order)
 
         //set current order baed on index
         console.log("PLACING ORDER")
@@ -158,7 +167,8 @@ export class CartScreen extends React.Component {
                     message: 'Your order to ' + order.supplierId + 'was placed!'
                 }
             })
-        } catch (err) {
+        } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.
+            console.log(err)
             this.setState({
                 banner: {
                     show: true, type: 'error',
@@ -188,16 +198,15 @@ export class CartScreen extends React.Component {
                 console.log("UPDATING WITH SUPPLIER CHANGED")
                 return await this.pullSuppliersAndSetOrders()
             } else {
-                //ONLY IF CHANGE IN CART
-                // console.log(this.props.masterCart)
-                // this.setState({                           
-                //     masterOrder: setOrderDetails(
-                //         {masterCart: calcTotalsAddSupplier(
-                //             {masterOrder: this.props.masterCart,supplierDetail: this.state.supplierDetail}), 
-                //                                  account: this.props.account})            
-                // })  
-                // console.log('only cart item change')                
-                // console.log(this.props.masterCart)
+                console.log(this.props.masterCart)
+                this.setState({                           
+                    masterOrder: setOrderDetails(
+                        {masterCart: calcTotalsAddSupplier(
+                            {masterOrder: this.props.masterCart,supplierDetail: this.state.supplierDetail}), 
+                                                 account: this.props.account})            
+                })  
+                console.log('only cart item change')                
+                console.log(this.props.masterCart)
             }
 
         }

@@ -186,10 +186,7 @@ export class LoginScreen extends React.Component {
     }
 
 //     <Button 
-//     title ="Automatic Login"
-//     onPress={this.autoLogin}
-// />
-
+//     title ="Automatic Login"9450
     render() {
       return (
        <View>

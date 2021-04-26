@@ -11,7 +11,7 @@ import AppButton from '../../components/AppButton'
 //    }
 
 const updateQuantity = (masterCart, product, reorderOnly) => {
-    console.log(reorderOnly)
+    // console.log(reorderOnly)
     if (reorderOnly) {
         return product.quantity
     }
@@ -77,13 +77,7 @@ class ProductListItem extends React.PureComponent {
 
     render() {
 
-        const { item } = this.props
-
-        //  console.log('PRODUCT LIST ITEM RENDERING')
-        console.log(item)
-        // console.log(item.displayName)
-
-        // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
+        const { item } = this.props  
 
         return (
             <View style={styles.productItem}>{

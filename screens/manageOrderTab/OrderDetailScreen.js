@@ -44,13 +44,17 @@ export class OrderDetailScreen extends React.Component {
     super(props)
 
     //pull orderID from route params
+
+    console.log('ROUTE PARAMS')
+    console.log(props.route.params)
     const { navigation } = this.props
     // const orderId = navigation.getParams('orderId'),
-    const orderId = 'arvindsdeli-sysco-2021.3.17.20.33-[["sysco-61208",3],["sysco-741520",2]]'
+    // const orderId = 'arvindsdeli-sysco-2021.3.17.20.33-[["sysco-61208",3],["sysco-741520",2]]'
     let order = {}
-    if (this.props.order) {
-      order = this.props.order
-
+    let orderId = props.route.params.orderId
+    if (props.route.params.order) {
+      order = props.route.params.order  
+      orderId = props.route.params.order.id
     }
 
     this.state = {
