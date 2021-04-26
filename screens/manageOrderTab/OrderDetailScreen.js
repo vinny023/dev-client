@@ -13,6 +13,7 @@ import { colors, commonStyles, sizes } from '../../theme';
 import StepIndicator from 'react-native-step-indicator';
 import AppButton from '../../components/AppButton';
 import StatusComponent from '../../components/StatusComponent';
+import CustomHeader from '../../components/CustomHeader';
 
 const Status = (props) => {
   //console.log('STATUS')
@@ -147,10 +148,10 @@ export class OrderDetailScreen extends React.Component {
     // let orderDay=await order.selectedDeliveryDate.date;
     // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
     // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-    console.log(order.selectedDeliveryDate,"date test")
+    //console.log(order.selectedDeliveryDate,"date test")
     return (
       <>
-        <ScrollView contentContainerStyle={[commonStyles.container]}>
+        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60}]}>
           <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
@@ -167,15 +168,15 @@ export class OrderDetailScreen extends React.Component {
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={require('../../assets/truck.png')} style={{ marginRight: 10 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
-                  <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
+                  <Text style={{ fontSize: sizes.s18, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
                 </View>
-                <Text style={{ fontSize: sizes.s18, fontFamily: 'regular', color: colors.text }}>{order.selectedDeliveryTimeSlot}</Text>
+                <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.grey.primary }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
-              <View style={[commonStyles.card, { marginTop: 25 }]}>
+              <View style={[commonStyles.card, { paddingTop: 18 }]}>
+                <View style={{paddingLeft:10}}>
                 <Text style={commonStyles.lightHeading}>Order Status</Text>
-                <View style={{ padding: 15 }}>
-                  <Status status={order.status} />
                 </View>
+                  <Status status={order.status} />
               </View>
               <View style={commonStyles.card}>
                 <ProductList
@@ -190,8 +191,10 @@ export class OrderDetailScreen extends React.Component {
           }
           <AppButton text='Reorder all items' onPress={() => this.reorderAllItems()} style={{ backgroundColor: colors.black,elevation:0,marginTop:30 }} />
           <AppButton text='Contact Woolco' style={{marginTop:5,backgroundColor:colors.black,elevation:0}} />        
-          <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginTop:5,marginBottom:0}} />
         </ScrollView>
+        <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%',padingHorizontal:10 }}>
+          <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginHorizontal:10}}  />
+        </View>
       </>
 
     )
@@ -217,29 +220,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailScreen)
-const customStyles = {
-  stepIndicatorSize: 3,
-  currentStepIndicatorSize: 0,
-  separatorStrokeWidth: 4,
-  currentStepStrokeWidth: 3,
-  stepStrokeCurrentColor: '#ffffff',
-  stepStrokeWidth: 3,
-  stepStrokeFinishedColor: '#ffffff',
-  stepStrokeUnFinishedColor: '#ffffff',
-  separatorFinishedColor: colors.blue.primary,
-  separatorUnFinishedColor: '#E5E5E5',
-  stepIndicatorFinishedColor: '#ffffff',
-  stepIndicatorUnFinishedColor: '#ffffff',
-  stepIndicatorCurrentColor: '#ffffff',
-  stepIndicatorLabelFontSize: sizes.s16,
-  currentStepIndicatorLabelFontSize: sizes.s16,
-  stepIndicatorLabelCurrentColor: colors.grey.primary,
-  stepIndicatorLabelFinishedColor: colors.grey.primary,
-  stepIndicatorLabelUnFinishedColor: colors.grey.primary,
-  //labelColor: colors.text,
-  labelSize: sizes.s16,
-  //currentStepLabelColor: colors.grey.primary,
-  //  labelAlign:'right',
-  labelFontFamily: 'medium'
-
-}

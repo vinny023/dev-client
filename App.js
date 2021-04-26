@@ -21,7 +21,6 @@ export default function App() {
     bold: require('./assets/fonts/Roboto-Bold.ttf'),
   });
   if (!loaded) {
-    console.log('*********************************',loaded,err)
     return null;
   }
     return (

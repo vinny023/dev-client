@@ -82,26 +82,22 @@ class ProductListItem extends React.PureComponent {
         //  console.log('PRODUCT LIST ITEM RENDERING')
         console.log(item)
         // console.log(item.displayName)
-
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
-
         return (
             <View style={styles.productItem}>{
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
-
                         <AppButton
                             text={item.supplierDisplayName}
                             style={{ height: 30, paddingHorizontal: 10, marginVertical: 5 }}
-                            textStyle={{ fontSize: sizes.s14 }}
+                            textStyle={{ fontSize: sizes.s14,fontFamily:'medium' }}
                         />
                         <View >
                             <Text style={styles.text, { textAlign: "right", fontWeight: "bold" }}>${item.price}</Text>
                             <Text style={commonStyles.lightText, { textAlign: "right" }}>40 Lbs</Text>
                         </View>
                     </View>
-
                     <View style={styles.row}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.text}>{item.displayName}</Text>
@@ -142,8 +138,8 @@ class ProductListItem extends React.PureComponent {
                             //     textStyle={{ color: colors.blue.primary }}
                             //     onPress={this.addItemQty}
                             // />
-                            <TouchableOpacity style={[styles.counterContainer,{paddingHorizontal:10,marginTop:15}]}>
-                                <Text style={[styles.boldText,{fontSize:sizes.s17,fontFamily:'medium'}]}>Reorder</Text>
+                            <TouchableOpacity style={[styles.counterContainer,{paddingHorizontal:20,marginTop:15}]}>
+                                <Text style={[styles.boldText,{fontSize:sizes.s15,fontFamily:'medium'}]}>Reorder</Text>
                             </TouchableOpacity>
 
                         }
@@ -152,11 +148,8 @@ class ProductListItem extends React.PureComponent {
                 </View>
             }
             </View>
-
         )
-
     }
-
 }
 
 
@@ -178,21 +171,21 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductListItem)
+
 const styles = StyleSheet.create({
     productItem: {
         backgroundColor: colors.white,
         paddingHorizontal: 8,
         paddingBottom: 15,
-
     },
     row: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
-    }
-    ,
+    },
     text: {
-        fontSize: sizes.s16,
+       // fontSize: sizes.s16,
+        fontSize: sizes.s15,
         fontFamily: 'medium',
         color: colors.text,
     },

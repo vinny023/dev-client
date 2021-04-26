@@ -40,13 +40,15 @@ export default OrderTotal
 
 const styles = StyleSheet.create({
     lightText: {
-        fontSize: sizes.s17,
+        //fontSize: sizes.s17,
+        fontSize: sizes.s15,
         fontFamily: 'medium',
         color: colors.grey.primary
     },
     boldText: {
         fontFamily: 'medium',
-        fontSize: sizes.s19,
+        //fontSize: sizes.s19,
+        fontSize: sizes.s16,
         color: colors.text
     },
 })

@@ -219,7 +219,9 @@ export class CartScreen extends React.Component {
     render() {
         const { navigation } = this.props
         return (
-            <View style={[commonStyles.container, { flex: 1, paddingBottom: 0 }]}>
+            <>
+                <ScrollView style={[commonStyles.container,]} showsVerticalScrollIndicator={false}>
+            {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
                 {/*
                  <Button 
@@ -228,11 +230,10 @@ export class CartScreen extends React.Component {
                 /> 
                 <Text>Cart</Text>
                */}
-                <ScrollView showsVerticalScrollIndicator={false}>
                     {
                         this.state.masterOrder.map((supplierOrder, index) => {
                             return (
-                                <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start" }}>
+                                <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start",paddingBottom:80 }}>
                                     {/* <Text style={styles.text}>Supplier </Text> */}
                                     <SupplierCart
                                         navigation={navigation}
@@ -250,12 +251,12 @@ export class CartScreen extends React.Component {
                 </ScrollView>
                 <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%' }}>
                     <AppButton
-                     
+                     style= {{marginHorizontal:10}}
                         text="Place Full Order"
                         onPress={this.placeFullOrder}
                     />
                 </View>
-            </View>
+            </>
         )
     }
 }

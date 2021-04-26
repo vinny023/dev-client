@@ -12,6 +12,7 @@ import Banner from '../../components/Global/Banner'
 import { getProducts } from '../../apis/apis'
 import _ from 'lodash'
 import { colors, commonStyles, sizes } from '../../theme';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export class OrderScreen extends React.Component {
 
@@ -198,6 +199,17 @@ export class OrderScreen extends React.Component {
         isError: true,
         banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
       })
+      // showMessage({
+      //   type: 'warning',
+      //   message: 'Error Loading Products - please try searching or switching lists',
+      //   backgroundColor: colors.pink, // background color
+      //  // color: colors.white, // text color
+      //   autoHide:false,
+      //   statusBarHeight:30,
+      //   textStyle:commonStyles.bannerText,
+      //   titleStyle:commonStyles.bannerText
+      // // icon:'success',position:'top'
+      // })
       console.log(error)
     }
   }
@@ -220,6 +232,10 @@ export class OrderScreen extends React.Component {
           isError: true,
           banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
         })
+        //   showMessage({
+        //     type: 'warning',
+        //     message: 'Error'
+        //   })
         console.log(error)
       }
     }
@@ -228,48 +244,48 @@ export class OrderScreen extends React.Component {
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
     return (
-      <View style={{flex:1,backgroundColor:colors.background.primary,paddingTop:20}}>
-      <ScrollView style={[commonStyles.container,{paddingTop:0}]} >
+      <View style={{ flex: 1, backgroundColor: colors.background.primary, paddingTop: 20 }}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+        <ScrollView style={[commonStyles.container, { paddingTop: 0 }]} >
 
-        <SwitchMode setMode={this.setMode} mode={this.state.title} />
-        {/* <Text>{this.state.title}</Text> */}
-        <Search setSearch={this.setSearch} account={this.props.account} />
-        <Text>{this.state.search}</Text>
-        <View style={[commonStyles.row, { justifyContent: 'space-between',paddingVertical:0,paddingBottom:10,paddingHorizontal:5 }]}>
-          <Text style={commonStyles.lightText}>1,000+ Items</Text>
-          <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
-            <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
-          </TouchableOpacity>
-        </View>
-        {this.state.showFilter &&
-          <View>
-            <FilterModal
-              visible={this.toggleFilterModal}
-              close={this.toggleFilterModal}
-              sort={this.state.sort}
-              filter={this.state.filter}
-              setFilter={this.setFilter}
-              setSort={this.setSort}
-              productList={this.state.productList}
-            />
+          <SwitchMode setMode={this.setMode} mode={this.state.title} />
+          {/* <Text>{this.state.title}</Text> */}
+          <Search setSearch={this.setSearch} account={this.props.account} />
+          <Text>{this.state.search}</Text>
+          <View style={[commonStyles.row, { justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 10, paddingHorizontal: 5 }]}>
+            <Text style={commonStyles.lightText}>1,000+ Items</Text>
+            <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
+              <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
+            </TouchableOpacity>
           </View>
-        }
-        {/* 
-        <Text>SORT</Text>
-        <Text>{JSON.stringify(this.state.sort)}</Text>
-        <Text>FILTER</Text>
-        <Text>{JSON.stringify(this.state.filter)}</Text> */}
-        {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{alignSelf: 'center',marginTop:70 }} /> :
-          <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10,marginBottom:10 }}>
+          {this.state.showFilter &&
+            <View>
+              <FilterModal
+                visible={this.toggleFilterModal}
+                close={this.toggleFilterModal}
+                sort={this.state.sort}
+                filter={this.state.filter}
+                setFilter={this.setFilter}
+                setSort={this.setSort}
+                productList={this.state.productList}
+              />
+            </View>
+          }
+          {/* 
+<Text>SORT</Text>
+<Text>{JSON.stringify(this.state.sort)}</Text>
+<Text>FILTER</Text>
+<Text>{JSON.stringify(this.state.filter)}</Text> */}
+          {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
+            <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginBottom: 10 }}>
 
-            <ProductList
-              navigation={this.props.navigation}
-              productList={this.state.productList}
-            />
-          </View>
-        }
-      </ScrollView>
+              <ProductList
+                navigation={this.props.navigation}
+                productList={this.state.productList}
+              />
+            </View>
+          }
+        </ScrollView>
       </View>
 
     )

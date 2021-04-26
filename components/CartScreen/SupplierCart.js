@@ -267,18 +267,21 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     lightText: {
-        fontSize: sizes.s17,
+        //fontSize: sizes.s17,
+        fontSize: sizes.s15,
        fontFamily: 'medium',
         color: colors.grey.primary
     },
     boldText: {
         fontFamily: 'medium',
-        fontSize: sizes.s19,
+        fontSize: sizes.s16,
+       // fontSize: sizes.s19,
         color: colors.text
     },
     heading: {
         paddingTop: 10,
-        fontSize: sizes.s17,
+        //fontSize: sizes.s17,
+        fontSize: sizes.s15,
          fontFamily: 'medium',
         color: colors.grey.primary
     },
@@ -290,7 +293,8 @@ const styles = StyleSheet.create({
     },
     text: {
          fontFamily: 'medium',
-        fontSize: sizes.s17,
+       // fontSize: sizes.s17,
+        fontSize: sizes.s15,
         color: colors.grey.primary
     }
 

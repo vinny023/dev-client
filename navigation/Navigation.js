@@ -17,7 +17,9 @@ import CartButton from '../components/Global/CartButton'
 //Manage Order Tab SCREENS
 import ViewOrderScreen from '../screens/manageOrderTab/ViewOrderScreen'
 import OrderDetailScreen from '../screens/manageOrderTab/OrderDetailScreen'
-import { colors } from '../theme';
+import { colors, commonStyles, sizes } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'react-native';
 
 const OrderTabStack = createStackNavigator();
 
@@ -54,8 +56,24 @@ const Tab = createBottomTabNavigator();
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Shop" component={PlaceOrderTab} />
+      <Tab.Navigator screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused}) => {
+          let imageName;
+          if (route.name === 'Shop & Order') {
+            imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
+          } else if (route.name === 'Track & Manage') {
+            imageName = focused ? require('../assets/truck-black.png')        : require('../assets/truck-grey.png');
+          }
+          return <Image source={imageName} style={{ marginTop: 10 }} />;
+        },
+      })}
+        tabBarOptions={{
+          activeTintColor   : colors.text,
+          inactiveTintColor : colors.grey.light,
+          labelStyle        : { fontSize: sizes.s13, fontFamily: 'medium', marginBottom: 8 },
+          style             : { height: 60 }
+        }}>
+        <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
         <Tab.Screen name="Track & Manage" component={ManageOrderTab} />
       </Tab.Navigator>
     </NavigationContainer>

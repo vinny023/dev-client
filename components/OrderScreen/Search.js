@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { colors, sizes } from '../../theme';
 
 const SearchSuggestion = ({ suggestion, select }) => {
@@ -9,12 +8,9 @@ const SearchSuggestion = ({ suggestion, select }) => {
         <TouchableOpacity style={styles.container} onPress={() => select(suggestion)}>
             <Text>{suggestion}</Text>
             <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
-           
         </TouchableOpacity>
-
     )
 }
-
 class Search extends React.Component {
 
     constructor(props) {
@@ -31,7 +27,6 @@ class Search extends React.Component {
     }
 
     updateSuggestions(searchTerm) {
-
         if (searchTerm.length < 3) {
             this.setState({
                 searchTerm: searchTerm,
@@ -47,7 +42,6 @@ class Search extends React.Component {
             })
         }
     }
-
     setSearch(term) {
         this.setState({
             searchTerm: term,
@@ -72,6 +66,7 @@ class Search extends React.Component {
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
+                        style={{fontFamily:'regular',width:'80%'}}
                         onChangeText={text => this.updateSuggestions(text)}
                         onSubmitEditing={text => this.setSearch(text)}
                         onFocus={() => this.setState({ showSuggestions: true })}
@@ -79,15 +74,12 @@ class Search extends React.Component {
                     {this.state.showSuggestions ?
                         <TouchableOpacity onPress={() => this.clearSearch()}>
                             <Ionicons name="ios-close" color={colors.text} size={sizes.s16} />
-                         
                         </TouchableOpacity>
                         :
                         <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
                         
                     }
                 </View>
-
-
                 {this.state.showSuggestions &&
                     <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white,marginTop:30 }}>
                         {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}

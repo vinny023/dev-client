@@ -48,7 +48,8 @@ export const styles = StyleSheet.create({
        
     },
     cartItems: {
-        fontSize: sizes.s20,
+        fontSize: sizes.s19,
+        fontFamily:'medium',
         color: colors.blue.primary,
     }
 })

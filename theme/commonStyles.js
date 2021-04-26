@@ -41,24 +41,44 @@ const commonStyles = {
     paddingVertical: 10
   },
   text: {
-    fontSize: sizes.s16,
+    //fontSize: sizes.s16,
+    fontSize: sizes.s14,
     fontFamily: 'medium',
     color: colors.text
   },
   lightText: {
-    fontSize: sizes.s15,
+    //fontSize: sizes.s15,
+    fontSize: sizes.s13,
     fontFamily: 'regular',
     color: colors.grey.primary
   },
   lightHeading: {
-    fontSize: sizes.s16,
+    //fontSize: sizes.s16,
+    fontSize:sizes.s14,
     fontFamily: 'medium',
     color: colors.grey.primary
-},card: {
+},
+card: {
   backgroundColor: colors.white,
   padding: 15,
   borderRadius: 10,
   marginTop: 10
 },
+bannerText:{
+  //fontSize:sizes.s16,
+  fontSize:sizes.s14,
+  fontFamily:'bold',
+  color:colors.white,
+  textAlign:'center',
+
+},
+bannerTitle:{
+  fontSize:sizes.s14,
+//  fontSize:sizes.s16,
+  fontFamily:'regular',
+  color:colors.white,
+  textAlign:'center',
+
+}
 }
 export default commonStyles;
