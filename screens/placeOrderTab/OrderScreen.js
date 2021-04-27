@@ -188,6 +188,7 @@ export class OrderScreen extends React.Component {
   //LIFECYCLE METHODS
 
   async componentDidMount() {
+   
     try {
       this.setState({
         loading: false,

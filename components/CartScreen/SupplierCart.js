@@ -157,9 +157,9 @@ export class SupplierCart extends React.Component {
                             this.state.toggleDateFilter &&
                             <Modal
                                 animationType="slide"
-                                isVisible={this.state.toggleDateFilter}
                                 backdropOpacity={.5}
                                 style={commonStyles.modalView}
+                                isVisible={this.state.toggleDateFilter}
 
                             >
                                 <View style={commonStyles.centeredView}>

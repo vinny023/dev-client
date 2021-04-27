@@ -14,42 +14,44 @@ import AppButton from '../../components/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const setOrderDetails = ({masterCart, account}) => {    
+const setOrderDetails = ({ masterCart, account }) => {
 
-    const {id, displayName, confirmationEmail, supplierContact} = account
+    const { id, displayName, confirmationEmail, supplierContact } = account
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
-    .map(supplierOrder => 
-        {
+        .map(supplierOrder => {
             return (
                 {
                     accountId: id,
-                    accountDisplayName : displayName,
+                    accountDisplayName: displayName,
                     accountConfirmationEmail: confirmationEmail,
-                    supplierContact: {contact: supplierContact[supplierOrder.supplierId].contact, 
-                                      contactType:supplierContact[supplierOrder.supplierId].supplierContactType},                                
+                    supplierContact: {
+                        contact: supplierContact[supplierOrder.supplierId].contact,
+                        contactType: supplierContact[supplierOrder.supplierId].supplierContactType
+                    },
                     ...supplierOrder
-                })                        
-    })
+                })
+        })
 }
 
-const calcTotalsAddSupplier = ({masterOrder, supplierDetail}) => {   
+const calcTotalsAddSupplier = ({ masterOrder, supplierDetail }) => {
     //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
-     return  masterOrder.map((supplierOrder, index) => {
+    return masterOrder.map((supplierOrder, index) => {
         //  const orderTotal = supplierOrder.cart.reduce((item,total) => item.price*item.quantity + total, 0)
         const orderTotal = 100
-         console.log('CaLCED ORDER TOTAL')
-         console.log(orderTotal)         
-         let deliveryFee = 0
-         if (orderTotal < supplierDetail[index].orderMinimum) {deliveryFee = supplierDetail[index].deliveryFee}
-         return (
-             {...supplierOrder, supplierDetail: supplierDetail[index],
-                 orderTotal: orderTotal + deliveryFee,
-                 deliveryFee: deliveryFee                
-             }
-         )
-     })
- }
+        console.log('CaLCED ORDER TOTAL')
+        console.log(orderTotal)
+        let deliveryFee = 0
+        if (orderTotal < supplierDetail[index].orderMinimum) { deliveryFee = supplierDetail[index].deliveryFee }
+        return (
+            {
+                ...supplierOrder, supplierDetail: supplierDetail[index],
+                orderTotal: orderTotal + deliveryFee,
+                deliveryFee: deliveryFee
+            }
+        )
+    })
+}
 
 export class CartScreen extends React.Component {
 
@@ -119,14 +121,14 @@ export class CartScreen extends React.Component {
         console.log(index)
         console.log((index))
         console.log((supplierOrder))
-        
+
         let order = {}
         if (supplierOrder) {
             order = { ...supplierOrder }
         } else {
             console.log('Place Order' + index)
             order = { ...this.state.masterOrder[index] }
-        } 
+        }
 
         console.log('SELECTED ORDER')
         console.log(order)
@@ -199,13 +201,15 @@ export class CartScreen extends React.Component {
                 return await this.pullSuppliersAndSetOrders()
             } else {
                 console.log(this.props.masterCart)
-                this.setState({                           
+                this.setState({
                     masterOrder: setOrderDetails(
-                        {masterCart: calcTotalsAddSupplier(
-                            {masterOrder: this.props.masterCart,supplierDetail: this.state.supplierDetail}), 
-                                                 account: this.props.account})            
-                })  
-                console.log('only cart item change')                
+                        {
+                            masterCart: calcTotalsAddSupplier(
+                                { masterOrder: this.props.masterCart, supplierDetail: this.state.supplierDetail }),
+                            account: this.props.account
+                        })
+                })
+                console.log('only cart item change')
                 console.log(this.props.masterCart)
             }
 
@@ -230,37 +234,38 @@ export class CartScreen extends React.Component {
         return (
             <>
                 <ScrollView style={[commonStyles.container,]} showsVerticalScrollIndicator={false}>
-            {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
-                <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                {/*
+                    {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
+                    <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+                    {/*
                  <Button 
                       title   = "Go Back"
                       onPress = {() => navigation.navigate('OrderScreen')}
                 /> 
                 <Text>Cart</Text>
                */}
-                    {
-                        this.state.masterOrder.map((supplierOrder, index) => {
-                            return (
-                                <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start",paddingBottom:80 }}>
-                                    {/* <Text style={styles.text}>Supplier </Text> */}
-                                    <SupplierCart
-                                        navigation={navigation}
-                                        supplierOrder={supplierOrder}
-                                        getSupplierLoading={this.state.getSuppliersLoading}
-                                        supplierDetail={this.state.supplierDetail[index]}
-                                        index={index}
-                                        placeOrder={this.placeOrder}
-                                        updateOrderDetails={this.updateOrderDetails}
-                                    />
-                                </View>
-                            )
-                        })}
-
+                    <View style={{ paddingBottom: 80 }}>
+                        {
+                            this.state.masterOrder.map((supplierOrder, index) => {
+                                return (
+                                    <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
+                                        {/* <Text style={styles.text}>Supplier </Text> */}
+                                        <SupplierCart
+                                            navigation={navigation}
+                                            supplierOrder={supplierOrder}
+                                            getSupplierLoading={this.state.getSuppliersLoading}
+                                            supplierDetail={this.state.supplierDetail[index]}
+                                            index={index}
+                                            placeOrder={this.placeOrder}
+                                            updateOrderDetails={this.updateOrderDetails}
+                                        />
+                                    </View>
+                                )
+                            })}
+                    </View>
                 </ScrollView>
-                <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%' }}>
+                <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
                     <AppButton
-                     style= {{marginHorizontal:10}}
+                        style={{ marginHorizontal: 10 }}
                         text="Place Full Order"
                         onPress={this.placeFullOrder}
                     />
