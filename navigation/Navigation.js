@@ -41,11 +41,14 @@ const PlaceOrderTab = () => {
   )
 }
 
+
+
 const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling }}>
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions} />
-      <OrderTabStack.Screen name="View All Orders" component={ViewOrderScreen} options={myScreenOptions} />
+    
+    <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions} />  
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions} />      
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />
     </OrderTabStack.Navigator>
   )

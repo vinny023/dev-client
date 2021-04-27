@@ -198,11 +198,16 @@ export class LoginScreen extends React.Component {
         this.setState({ banner: { ...this.state.banner, show: false } })
     }
 
+<<<<<<< HEAD
     //     <Button 
     //     title ="Automatic Login"
     //     onPress={this.autoLogin}
     // />
 
+=======
+//     <Button 
+//     title ="Automatic Login"9450
+>>>>>>> 2a189a44d48cda091f6a3ef5dcb9fe5764a6d388
     render() {
         return (
             <View style={[commonStyles.container, { flex: 1 }]}>

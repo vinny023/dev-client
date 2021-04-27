@@ -11,7 +11,7 @@ import AppButton from '../../components/AppButton'
 //    }
 
 const updateQuantity = (masterCart, product, reorderOnly) => {
-    console.log(reorderOnly)
+    // console.log(reorderOnly)
     if (reorderOnly) {
         return product.quantity
     }
