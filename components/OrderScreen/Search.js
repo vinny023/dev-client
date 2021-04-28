@@ -5,7 +5,7 @@ import { colors, commonStyles, sizes } from '../../theme';
 
 const SearchSuggestion = ({ suggestion, select }) => {
     return (
-        <TouchableOpacity style={styles.container} onPress={() => select(suggestion)}>
+        <TouchableOpacity style={[styles.container]} onPress={() => select(suggestion)}>
             <Text style={commonStyles.text}>{suggestion}</Text>
             <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
         </TouchableOpacity>
@@ -60,11 +60,11 @@ class Search extends React.Component {
     render() {
         return (
             <View>
-                <View style={[styles.container,{marginTop:15,borderRadius:10,paddingRight:15}]}>
+                <View style={[styles.container, { marginTop: 15, borderRadius: 10, paddingRight: 15 }]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
-                        style={{fontFamily:'regular',width:'80%'}}
+                        style={{ fontFamily: 'regular', width: '80%' }}
                         onChangeText={text => this.updateSuggestions(text)}
                         onSubmitEditing={text => this.setSearch(text)}
                         onFocus={() => this.setState({ showSuggestions: true })}
@@ -74,12 +74,14 @@ class Search extends React.Component {
                             <Ionicons name="ios-close" color={colors.text} size={sizes.s16} />
                         </TouchableOpacity>
                         :
-                        <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />   
+                        <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
                     }
                 </View>
                 {this.state.showSuggestions &&
-                    <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white,marginTop:30 }}>
-                        {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
+                    <View style={{ height: '100%'}}>
+                        <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white, marginTop: 30, }}>
+                            {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
+                        </View>
                     </View>
                 }
 
