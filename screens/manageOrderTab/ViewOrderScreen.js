@@ -20,7 +20,7 @@ const OrderButton = ({ order }) => {
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={require('../../assets/woolco.png')} style={{width:60,height:60}} />
+            <Image source={{uri:order.supplierDetail.logo}} resizeMode='contain' style={{width:60,height:60,marginRight:10}} />
             <View style={{flex:2,}}>
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{marginBottom:5}} />
