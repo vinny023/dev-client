@@ -1,21 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, sizes } from '../../theme';
+import { colors, commonStyles, sizes } from '../../theme';
 
 const SearchSuggestion = ({ suggestion, select }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={() => select(suggestion)}>
-            <Text>{suggestion}</Text>
+            <Text style={commonStyles.text}>{suggestion}</Text>
             <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
         </TouchableOpacity>
     )
 }
 class Search extends React.Component {
-
     constructor(props) {
         super(props)
-
         this.state = {
             showSuggestions: false,
             searchTerm: '',
@@ -76,8 +74,7 @@ class Search extends React.Component {
                             <Ionicons name="ios-close" color={colors.text} size={sizes.s16} />
                         </TouchableOpacity>
                         :
-                        <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
-                        
+                        <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />   
                     }
                 </View>
                 {this.state.showSuggestions &&

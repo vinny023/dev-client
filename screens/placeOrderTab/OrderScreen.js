@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Layout, Text } from '@ui-kitten/components';
-import { View, Text, Button, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Button, ScrollView, TouchableOpacity, ActivityIndicator, BackHandler, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux'
 import SwitchMode from '../../components/OrderScreen/SwitchMode'
 import FilterModal from '../../components/OrderScreen/FilterModal'
@@ -188,7 +188,11 @@ export class OrderScreen extends React.Component {
   //LIFECYCLE METHODS
 
   async componentDidMount() {
-   
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    // this.props.navigation.addListener('beforeRemove', (e) => {
+    //   e.preventDefault();
+
+    // })
     try {
       this.setState({
         loading: false,
@@ -214,6 +218,10 @@ export class OrderScreen extends React.Component {
       console.log(error)
     }
   }
+  handleBackButton() {
+    BackHandler.exitApp()
+    return true;
+}
 
   //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
   async componentDidUpdate(prevProps, prevState) {
@@ -241,18 +249,18 @@ export class OrderScreen extends React.Component {
       }
     }
   }
-
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background.primary, paddingTop: 20 }}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
         <ScrollView style={[commonStyles.container, { paddingTop: 0 }]} >
-
           <SwitchMode setMode={this.setMode} mode={this.state.title} />
           {/* <Text>{this.state.title}</Text> */}
           <Search setSearch={this.setSearch} account={this.props.account} />
-          <Text>{this.state.search}</Text>
+          <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
+            <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
+          </View>
           <View style={[commonStyles.row, { justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 10, paddingHorizontal: 5 }]}>
             <Text style={commonStyles.lightText}>1,000+ Items</Text>
             <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
