@@ -57,8 +57,6 @@ export class SupplierCart extends React.Component {
     }
 
     render() {
-
-
         const { navigation, index } = this.props
 
         let { shippingTimeSlots } = {}
@@ -71,7 +69,7 @@ export class SupplierCart extends React.Component {
         const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
         const date = new Date()
-
+        console.log(this.props.supplierOrder.cart,"this is the cart we are getting")
         return (
             <View>
 

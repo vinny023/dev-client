@@ -172,8 +172,7 @@ class ViewOrderScreen extends React.Component {
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
                         <View style={[commonStyles.card]}>
-                            {
-                                this.props.account.activeSuppliers.map(supplier => {
+                            {this.props.account.activeSuppliers.map(supplier => {
                                     console.log(supplier)
                                     //CHECK IF SELECTED
                                     let selected = false;

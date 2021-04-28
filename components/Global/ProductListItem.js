@@ -25,7 +25,7 @@ const updateQuantity = (masterCart, product, reorderOnly) => {
     return 0
 }
 
-class ProductListItem extends React.PureComponent {
+class ProductListItem extends React.Component {
 
     constructor(props) {
         super(props)
@@ -44,7 +44,8 @@ class ProductListItem extends React.PureComponent {
 
     componentDidUpdate(prevProps, prevState) {
 
-        if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
+        // if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
+        if (!_.isEqual(prevProps, this.props)) {
             this.setState({
                 quantity: updateQuantity(this.props.masterCart, this.props.item, this.props.reorderOnly)
             })

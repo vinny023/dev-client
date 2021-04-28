@@ -85,8 +85,8 @@ const cartReducer = (state={}, action) => {
             let removeSupplierIndex = -1;
             let removeItemIndex = -1;
 
+            let temp;
             const newMasterCart = state.masterCart.map((supplierCart,j) => {  
-            
                 let newCart = [...supplierCart.cart]
                 
                if (item.supplierId === supplierCart.supplierId) {
@@ -104,8 +104,11 @@ const cartReducer = (state={}, action) => {
                 })
 
                 if (removeItemIndex !== -1) {
-                    newCart.splice(removeItemIndex,1)
-
+                    // let testCart=newCart;
+                    // console.log(testCart,"NEW CART")
+                    temp = newCart.splice(removeItemIndex,1)
+                    console.log('temp', temp);
+                    // console.log(newCart,"NEW CART IS THIS")
                     if (newCart.length === 0) {
                         removeSupplierIndex = j
                     }
@@ -126,11 +129,11 @@ const cartReducer = (state={}, action) => {
                 newMasterCart.splice(removeSupplierIndex,1)
             }
 
-            console.log('MASTERCART AFTER SPLICE')
-            console.log(newMasterCart)
+            // console.log('MASTERCART AFTER SPLICE')
+            console.log(newMasterCart, 'MASTERCART AFTER SPLICE')
                     
-            return {...state, masterCart: newMasterCart}    
-                       
+            // return {...state, masterCart: newMasterCart} 
+            return {masterCart: newMasterCart};
             
         }
 
