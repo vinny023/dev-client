@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ViewOrders from '../../components/ViewOrders'
-import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { getOrders, setOrder } from '../../apis/apis'
 import Banner from '../../components/Global/Banner'
 //import * as Sentry from 'sentry-expo';
@@ -15,7 +15,7 @@ const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row,{width:'100%',paddingHorizontal:10,paddingBottom:0}]} >
+        <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 10, }]} >
             {/* <AppButton
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
@@ -23,10 +23,10 @@ const OrderButton = ({ order }) => {
             <Image source={{uri:order.supplierDetail.logo}} resizeMode='contain' style={{width:60,height:60,marginRight:10}} />
             <View style={{flex:2,}}>
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
-                <View style={{marginBottom:5}} />
+                <View style={{ marginBottom: 5 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
-            </View>           
-            <Text style={[commonStyles.text,{fontSize:sizes.s16,flex:0.8,textAlign:'right'}]}>$ {order.supplierDetail.orderMinimum}</Text>
+            </View>
+            <Text style={[commonStyles.text, { fontSize: sizes.s16, flex: 0.8, textAlign: 'right' }]}>$ {order.supplierDetail.orderMinimum}</Text>
         </TouchableOpacity>
     )
 }
@@ -81,7 +81,7 @@ class ViewOrderScreen extends React.Component {
                 }
             }
         }
-       
+
     }
 
     hideBanner = () => {
@@ -135,8 +135,10 @@ class ViewOrderScreen extends React.Component {
         renderOrderList.forEach(order => {
             if (order.status === 'Delivered') {
                 deliveredOrders.push(order)
+               
             } else {
                 openOrders.push(order)
+                // this.setState({})
             }
         })
 
@@ -150,9 +152,9 @@ class ViewOrderScreen extends React.Component {
 
             //show loading until orders has been pulled
 
-            <ScrollView style={[commonStyles.container,{paddingHorizontal:15}]}>
+            <ScrollView style={[commonStyles.container, { paddingHorizontal: 15 }]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{paddingRight:10}}>
+                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
                 </TouchableOpacity>
                 <Modal
@@ -173,47 +175,65 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <View style={[commonStyles.card]}>
                             {this.props.account.activeSuppliers.map(supplier => {
-                                    console.log(supplier)
-                                    //CHECK IF SELECTED
-                                    let selected = false;
-                                    if (supplierFilter.indexOf(supplier) !== -1) {
-                                        selected = true;
-                                    }
-                                    return (
-                                        <View style={commonStyles.row}>
+                                console.log(supplier)
+                                //CHECK IF SELECTED
+                                let selected = false;
+                                if (supplierFilter.indexOf(supplier) !== -1) {
+                                    selected = true;
+                                }
+                                return (
+                                    <View style={commonStyles.row}>
 
-                                            <RadioButton
-                                                //value={label}
-                                                //label={label}
-                                                uncheckedColor={'#E6F0FD'}
-                                                color={colors.blue.primary}
-                                                status={supplierFilter.indexOf(supplier) !== -1 ? 'checked':'unchecked'}
-                                                onPress={() => this.handleFilterUpdate(supplier)}
-                                            />
-                                            <View style={{ marginLeft: 7 }}>
-                                                <Text style={commonStyles.text}>{supplier}</Text>
-                                            </View>
+                                        <RadioButton
+                                            //value={label}
+                                            //label={label}
+                                            uncheckedColor={'#E6F0FD'}
+                                            color={colors.blue.primary}
+                                            status={supplierFilter.indexOf(supplier) !== -1 ? 'checked' : 'unchecked'}
+                                            onPress={() => this.handleFilterUpdate(supplier)}
+                                        />
+                                        <View style={{ marginLeft: 7 }}>
+                                            <Text style={commonStyles.text}>{supplier}</Text>
                                         </View>
-                                    )
-                                })
+                                    </View>
+                                )
+                            })
                             }
                         </View>
                         <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={{ marginTop: 50 }} />
                     </View>
                 </Modal>
                 <View style={{ paddingBottom: 60 }}>
-                    <View style={{paddingLeft:10}}>
-                    <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
+                    <View style={{ paddingLeft: 10 }}>
+                        <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
                     </View>
-                    <View style={[commonStyles.card,{marginBottom:30}]}>
-                        {openOrders.map((order, i) => <OrderButton key={i} order={order} />)}
+                    {!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
+                        :
+                        <View style={[commonStyles.card, { marginBottom: 30 }]}>
+                            {openOrders.length > 0 ?
+                                openOrders.map((order, i) => <OrderButton key={i} order={order} />)
+                                :
+                                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+                                    <Text style={commonStyles.lightText}>No Open Orders</Text>
+                                </View>}
+                        </View>
+                    }
+                    <View style={{ paddingLeft: 10 }}>
+                        <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
                     </View>
-                    <View style={{paddingLeft:10}}>
-                    <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
-                    </View>
-                    <View style={commonStyles.card}>
-                        {deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)}
-                    </View>
+                    {!this.state.getOrdersLoading ?
+                        <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
+                        :
+                        <View style={commonStyles.card}>
+                            {deliveredOrders.length > 0 ?
+                                deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
+                                :
+                                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+                                    <Text style={commonStyles.lightText}>No Orders Delivered yet</Text>
+                                </View>
+                            }
+                        </View>
+                    }
                 </View>
             </ScrollView>
         )

@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableOpacity,Image} from 'react-native';
 import { connect } from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
 import { colors, sizes } from '../../theme';
-
 export function CartButton({ masterCart }) {
 
     const navigation = useNavigation();
@@ -12,8 +11,12 @@ export function CartButton({ masterCart }) {
         <TouchableOpacity
             style={styles.cartButtonContainer}
             onPress={() => navigation.navigate('CartScreen')}
+            
         >
-            <Image source={require('../../assets/cartIcon.png')} color={colors.blue} size={sizes.s16} style={{marginRight:10}} />
+            <Image
+                source={require('../../assets/cartIcon.png')}
+                //onError={({ nativeEvent: { error } }) => console.log('error',error)}
+                color={colors.blue} size={sizes.s16} style={{ marginRight: 10,}} />
             <Text style={styles.cartItems}>{masterCart.reduce((length, supplierCart) => {
                 if (supplierCart.cart) {
                     return length + supplierCart.cart.length
@@ -41,15 +44,15 @@ export const styles = StyleSheet.create({
         color: colors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        borderRadius:20,
-        paddingHorizontal:20,
-        paddingVertical:10,
-        marginRight:15,
-       
+        borderRadius: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginRight: 15,
+
     },
     cartItems: {
         fontSize: sizes.s19,
-        fontFamily:'medium',
+        fontFamily: 'medium',
         color: colors.blue.primary,
     }
 })

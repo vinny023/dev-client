@@ -189,10 +189,7 @@ export class OrderScreen extends React.Component {
 
   async componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    // this.props.navigation.addListener('beforeRemove', (e) => {
-    //   e.preventDefault();
-
-    // })
+    
     try {
       this.setState({
         loading: false,
@@ -204,17 +201,6 @@ export class OrderScreen extends React.Component {
         isError: true,
         banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
       })
-      // showMessage({
-      //   type: 'warning',
-      //   message: 'Error Loading Products - please try searching or switching lists',
-      //   backgroundColor: colors.pink, // background color
-      //  // color: colors.white, // text color
-      //   autoHide:false,
-      //   statusBarHeight:30,
-      //   textStyle:commonStyles.bannerText,
-      //   titleStyle:commonStyles.bannerText
-      // // icon:'success',position:'top'
-      // })
       console.log(error)
     }
   }
@@ -241,10 +227,6 @@ export class OrderScreen extends React.Component {
           isError: true,
           banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
         })
-        //   showMessage({
-        //     type: 'warning',
-        //     message: 'Error'
-        //   })
         console.log(error)
       }
     }
@@ -286,12 +268,18 @@ export class OrderScreen extends React.Component {
 <Text>FILTER</Text>
 <Text>{JSON.stringify(this.state.filter)}</Text> */}
           {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
-            <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginBottom: 10 }}>
-
+           <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginBottom: 10 }}>
+             {this.state.productList.length>0?
               <ProductList
                 navigation={this.props.navigation}
                 productList={this.state.productList}
               />
+            :
+            <View style={{paddingVertical:60,alignItems:'center',justifyContent:'center'}}>
+            <Text style={commonStyles.lightText}>Sorry, No Search Results</Text>
+            <Text style={commonStyles.lightText}>Please Try again with a different keyword</Text>
+            </View>
+             }
             </View>
           }
         </ScrollView>
