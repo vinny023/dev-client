@@ -28,10 +28,11 @@ const myScreenOptions = {
   headerRight: () => <CartButton />,
 
 }
-const headerStyling = { backgroundColor: colors.background.primary, elevation: 0 }
+const headerStyling = { backgroundColor: colors.background.primary, elevation: 0, }
+const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text}
 const PlaceOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,title:'' }}>
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
       <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />}}  />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />
@@ -43,7 +44,7 @@ const PlaceOrderTab = () => {
 
 const ManageOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,title:'' }}>
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
     <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions} />  
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions} />      
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />

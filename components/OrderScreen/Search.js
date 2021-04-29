@@ -31,6 +31,7 @@ class Search extends React.Component {
                 suggestions: this.props.account.searchSuggestions,
                 showSuggestions: true
             })
+            console.log("SUGGESTIONS",this.state.suggestions)
         }
         else {
             this.setState({
@@ -66,7 +67,7 @@ class Search extends React.Component {
                         value={this.state.searchTerm}
                         style={{ fontFamily: 'regular', width: '80%' }}
                         onChangeText={text => this.updateSuggestions(text)}
-                        onSubmitEditing={text => this.setSearch(text)}
+                        onSubmitEditing={event => this.setSearch(event.nativeEvent.text)}
                         onFocus={() => this.setState({ showSuggestions: true })}
                     />
                     {this.state.showSuggestions ?

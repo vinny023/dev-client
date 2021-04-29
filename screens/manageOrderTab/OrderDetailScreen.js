@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Banner from '../../components/Global/Banner'
 import ProductList from '../../components/Global/ProductList'
 import OrderTotal from '../../components/Global/OrderTotal'
-import { View, Text, Button, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Button, ScrollView, Image, ActivityIndicator,Linking } from 'react-native';
 import { getOrders, setOrder } from '../../apis/apis'
 import * as actions from '../../redux/actions'
 import _ from 'lodash'
@@ -193,11 +193,17 @@ export class OrderDetailScreen extends React.Component {
               <OrderTotal order={order} />
             </View>
           }
+          {//this.state.order.cart.length >1 &&
           <AppButton text='Reorder all items' onPress={() => this.reorderAllItems()} style={{ backgroundColor: colors.black,elevation:0,marginTop:30 }} />
-          <AppButton text='Contact Woolco' style={{marginTop:5,backgroundColor:colors.black,elevation:0}} />        
+          }
+          <AppButton text='Contact Woolco' onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us') } style={{marginTop:5,backgroundColor:colors.black,elevation:0}} />        
         </ScrollView>
         <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%',padingHorizontal:10 }}>
+          {order.status === 'Delivered' ?
+          <></>
+          :
           <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginHorizontal:10}}  />
+          }
         </View>
       </>
 

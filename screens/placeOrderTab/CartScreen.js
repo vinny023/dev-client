@@ -246,6 +246,7 @@ export class CartScreen extends React.Component {
                     <View style={{ paddingBottom: 80 }}>
                         {
                             this.state.masterOrder.map((supplierOrder, index) => {
+                                console.log("THIS IS SUPPLIER----------------------",this.state.masterOrder.length)
                                 return (
                                     <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
                                         {/* <Text style={styles.text}>Supplier </Text> */}
@@ -264,11 +265,13 @@ export class CartScreen extends React.Component {
                     </View>
                 </ScrollView>
                 <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
+                    {this.state.masterOrder.length >1 &&
                     <AppButton
-                        style={{ marginHorizontal: 10 }}
-                        text="Place Full Order"
-                        onPress={this.placeFullOrder}
+                    style={{ marginHorizontal: 10 }}
+                    text="Place Full Order"
+                    onPress={this.placeFullOrder}
                     />
+                }
                 </View>
             </>
         )

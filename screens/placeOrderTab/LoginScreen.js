@@ -214,7 +214,11 @@ export class LoginScreen extends React.Component {
                 </View>
                 <View style={{ marginTop: 60, marginBottom: 5 }}>
 
-                    <TextInput onChangeText={text => this.setState({ code: text })} placeholder="Enter your unique login code" style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }} />
+                    <TextInput 
+                    onChangeText={text => this.setState({ code: text })} 
+                    placeholder="Enter your unique login code"
+                    style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
+                    secureTextEntry />
                 </View>
                 <AppButton
                     text="Login"

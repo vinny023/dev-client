@@ -238,11 +238,14 @@ export class SupplierCart extends React.Component {
                         : <View>
                             {this.state.placingOrder ?
                                 <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
+                                <View>
                                 <AppButton
                                     text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                     onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                    style={{ marginTop: 0, backgroundColor: colors.black }}
+                                    style={{ marginTop: 0, backgroundColor: 'black',opacity:.7 }}
+                                    //backgroundColor:'rgba(0,0,0,.4)'
                                 />
+                                </View>
                             }
                         </View>
                     }
