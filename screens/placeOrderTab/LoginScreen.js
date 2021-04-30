@@ -137,8 +137,6 @@ export class LoginScreen extends React.Component {
             })
         }
     }
-
-
     login = async (accountId) => {
 
         //SYNC ACCOUNT ID WITH FIREBASE         
@@ -169,10 +167,8 @@ export class LoginScreen extends React.Component {
 
             return
         }
-
         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
         this.props.navigation.navigate('OrderScreen')
-
     }
 
     autoLogin = async () => {

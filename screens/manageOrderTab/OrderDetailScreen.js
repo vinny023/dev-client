@@ -15,11 +15,17 @@ import AppButton from '../../components/AppButton';
 import StatusComponent from '../../components/StatusComponent';
 import CustomHeader from '../../components/CustomHeader';
 
+import TruckLogo from '../../assets/truck.png';
+// var TruckLogo=require('../../assets/truck.png')
 const Status = (props) => {
   //console.log('STATUS')
   //console.log("STATUS", props)
   switch (props.status) {
     case 'Queued':
+      return (
+        <StatusComponent status="Placed" placeDate="4/14" confirmDate="4/14" deliverDate="est 5/14" />
+      )
+      case 'Unqueued':
       return (
         <StatusComponent status="Placed" placeDate="4/14" confirmDate="4/14" deliverDate="est 5/14" />
       )
@@ -167,10 +173,10 @@ export class OrderDetailScreen extends React.Component {
                     <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
                     <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplier.displayName}</Text>
                   </View>
-                  <Image source={require('../../assets/woolco.png')} style={{ width: 60, height: 60 }} />
+                  <Image source={{uri:order.supplierDetail.logo}} resizeMode='contain' style={{ width: 60, height: 60 }} />
                 </View>
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
-                  <Image source={require('../../assets/truck.png')} style={{ marginRight: 10 }} />
+                  <Image source={TruckLogo} style={{ marginRight: 10 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
                   <Text style={{ fontSize: sizes.s18, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
                 </View>
