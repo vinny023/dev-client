@@ -233,46 +233,55 @@ export class CartScreen extends React.Component {
         const { navigation } = this.props
         return (
             <>
-                <ScrollView style={[commonStyles.container,]} showsVerticalScrollIndicator={false}>
-                    {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
-                    <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                    {/*
+                {this.state.masterOrder.length > 0 ?
+                    <>
+                        <ScrollView style={[commonStyles.container,]} showsVerticalScrollIndicator={false}>
+                            {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
+                            <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+                            {/*
                  <Button 
                       title   = "Go Back"
                       onPress = {() => navigation.navigate('OrderScreen')}
                 /> 
                 <Text>Cart</Text>
                */}
-                    <View style={{ paddingBottom: 80 }}>
-                        {
-                            this.state.masterOrder.map((supplierOrder, index) => {
-                                console.log("THIS IS SUPPLIER----------------------",this.state.masterOrder.length)
-                                return (
-                                    <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
-                                        {/* <Text style={styles.text}>Supplier </Text> */}
-                                        <SupplierCart
-                                            navigation={navigation}
-                                            supplierOrder={supplierOrder}
-                                            getSupplierLoading={this.state.getSuppliersLoading}
-                                            supplierDetail={this.state.supplierDetail[index]}
-                                            index={index}
-                                            placeOrder={this.placeOrder}
-                                            updateOrderDetails={this.updateOrderDetails}
-                                        />
-                                    </View>
-                                )
-                            })}
+                            <View style={{ paddingBottom: 80 }}>
+                                {
+                                    this.state.masterOrder.map((supplierOrder, index) => {
+                                        return (
+                                            <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
+                                                {/* <Text style={styles.text}>Supplier </Text> */}
+                                                <SupplierCart
+                                                    navigation={navigation}
+                                                    supplierOrder={supplierOrder}
+                                                    getSupplierLoading={this.state.getSuppliersLoading}
+                                                    supplierDetail={this.state.supplierDetail[index]}
+                                                    index={index}
+                                                    placeOrder={this.placeOrder}
+                                                    updateOrderDetails={this.updateOrderDetails}
+                                                />
+                                            </View>
+                                        )
+                                    })}
+                            </View>
+                        </ScrollView>
+                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
+                            {this.state.masterOrder.length > 1 &&
+                                <AppButton
+                                    style={{ marginHorizontal: 10 }}
+                                    text="Place Full Order"
+                                    onPress={this.placeFullOrder}
+                                />
+                            }
+                        </View>
+                    </>
+                    :
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',paddingHorizontal:30}}>
+                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items in cart. Go back to browse or manage existing orders.</Text>
+                        <AppButton  text="Browse Products" onPress={()=>this.props.navigation.navigate('OrderScreen')} style={{width:'100%'}} />
+                        <AppButton  text="Manage Orders" onPress={()=>this.props.navigation.navigate('ViewOrderScreen')} style={{width:'100%',marginTop:0}} />
                     </View>
-                </ScrollView>
-                <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
-                    {this.state.masterOrder.length >1 &&
-                    <AppButton
-                    style={{ marginHorizontal: 10 }}
-                    text="Place Full Order"
-                    onPress={this.placeFullOrder}
-                    />
                 }
-                </View>
             </>
         )
     }

@@ -17,6 +17,8 @@ import syncCartStateToDB from './redux/firebaseActions'
 //   enableInExpoDevelopment: true,
 //   debug: true, // Sentry will try to print out useful debugging information if something goes wrong with sending an event. Set this to `false` in production.
 // });
+//"@sentry/react-native": "^2.4.1",
+//"sentry-expo": "^3.1.0",
 
 
 

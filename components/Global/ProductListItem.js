@@ -107,12 +107,7 @@ class ProductListItem extends React.Component {
                         </View>
                         {!this.props.reorderOnly &&
                             <View style={{ paddingTop: 10 }}>
-                                {/* {
-                                    (item.quantity >= 1) && (<Button
-                                        title="Remove"
-                                        onPress={this.removeItem}
-                                    />)
-                                } */}
+                                
                                 {this.state.quantity == 0 ?
                                     <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
                                         <Text style={[styles.boldText, { fontSize: sizes.s30, fontFamily: 'bold' }]}>+</Text>
@@ -129,6 +124,18 @@ class ProductListItem extends React.Component {
                                             <Text style={styles.boldText}>+</Text>
                                         </TouchableOpacity>
                                     </View>
+                                }
+                                {
+                                    (item.quantity >= 1) && (
+                                    // <Button
+                                    //     title="Remove"
+                                    //     onPress={this.removeItem}
+                                    // />
+
+                                    <TouchableOpacity onPress={this.removeItem} style={{paddingTop:10}}>
+                                        <Text style={[commonStyles.lightText,{color:colors.pink}]}>Remove Item</Text>
+                                    </TouchableOpacity>
+                                    )
                                 }
                             </View>
                         }

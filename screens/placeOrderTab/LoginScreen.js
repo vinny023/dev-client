@@ -113,7 +113,7 @@ export class LoginScreen extends React.Component {
                 //success message
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'message', message: "Success. Logging in " + account.displayName + "..." }
+                    banner: { show: true, type: 'message', message: "Success. Logging in.. " + account.displayName + "..." }
                 })
 
                 this.login(account.id)
@@ -141,17 +141,16 @@ export class LoginScreen extends React.Component {
 
         //SYNC ACCOUNT ID WITH FIREBASE         
         try {
-            this.setState({ banner: { show: true, type: 'error', message: 'Syncing Store' } })
+           // this.setState({ banner: { show: true, type: 'error', message: 'Syncing Store' } })
             syncStore({ accountId: accountId })
         } catch {
 
         }
-
         //PULL ACCOUNT ID FROM MONGO (SSINGLE SOURCE OF TRUTH FOR ACCOUNT INFO)
         try {
             this.setState({
                 getAccountLoading: true,
-                banner: { show: true, type: 'message', message: "Loading account details... " }
+               // banner: { show: true, type: 'message', message: "Loading account details... " }
             })
             const account = await getAccount({ query: { id: accountId } })
             this.props.setAccount(account)

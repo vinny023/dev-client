@@ -61,18 +61,18 @@ class Search extends React.Component {
     render() {
         return (
             <View>
-                <View style={[styles.container, { marginTop: 15, borderRadius: 10, paddingRight: 15 }]}>
+                <View style={[styles.container, { marginTop: 15, borderRadius: 10, paddingRight: 15, }]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
-                        style={{ fontFamily: 'regular', width: '80%' }}
+                        style={{ fontFamily: 'regular', width: '85%' }}
                         onChangeText={text => this.updateSuggestions(text)}
                         onSubmitEditing={event => this.setSearch(event.nativeEvent.text)}
                         onFocus={() => this.setState({ showSuggestions: true })}
                     />
                     {this.state.showSuggestions ?
-                        <TouchableOpacity onPress={() => this.clearSearch()}>
-                            <Ionicons name="ios-close" color={colors.text} size={sizes.s16} />
+                        <TouchableOpacity onPress={() => this.clearSearch()} style={{width:'15%',padding:10,alignItems:'center'}}>
+                            <Ionicons name="ios-close" color={colors.text} size={sizes.s20} />
                         </TouchableOpacity>
                         :
                         <Ionicons name="ios-search" color={colors.grey.primary} size={sizes.s16} />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 38
+        height: 50
 
     },
 })

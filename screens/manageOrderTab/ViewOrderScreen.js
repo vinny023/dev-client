@@ -135,7 +135,7 @@ class ViewOrderScreen extends React.Component {
         renderOrderList.forEach(order => {
             if (order.status === 'Delivered') {
                 deliveredOrders.push(order)
-               
+
             } else {
                 openOrders.push(order)
                 // this.setState({})
@@ -204,35 +204,39 @@ class ViewOrderScreen extends React.Component {
                     </View>
                 </Modal>
                 <View style={{ paddingBottom: 60 }}>
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
-                    </View>
-                    {!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
-                        :
-                        <View style={[commonStyles.card, { marginBottom: 30 }]}>
-                            {openOrders.length > 0 ?
-                                openOrders.map((order, i) => <OrderButton key={i} order={order} />)
-                                :
-                                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
-                                    <Text style={commonStyles.lightText}>No Open Orders</Text>
-                                </View>}
-                        </View>
-                    }
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
-                    </View>
-                    {!this.state.getOrdersLoading ?
-                        <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
-                        :
-                        <View style={commonStyles.card}>
-                            {deliveredOrders.length > 0 ?
-                                deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
-                                :
-                                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
-                                    <Text style={commonStyles.lightText}>No Orders Delivered yet</Text>
-                                </View>
+                    {openOrders.length > 0 ?
+                        <View>
+                            <View style={{ paddingLeft: 10 }}>
+                                <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
+                            </View>
+                            { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }
+                            <View style={[commonStyles.card, { marginBottom: 30 }]}>
+                                {
+                                    openOrders.map((order, i) => <OrderButton key={i} order={order} />)
+                                }
+                               
+                            </View>
                         </View>
+                        : <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
+
+                    }
+                    {deliveredOrders.length > 0 ?
+                        <View>
+                            <View style={{ paddingLeft: 10 }}>
+                                <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
+                            </View>
+                            <View style={commonStyles.card}>
+                                {
+                                    deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
+
+                                }
+                                {/* <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
+                                    <Text style={commonStyles.lightText}>No Orders Delivered yet</Text>
+                                </View> */}
+                            </View>
+                        </View>
+                        : <></>
                     }
                 </View>
             </ScrollView>
