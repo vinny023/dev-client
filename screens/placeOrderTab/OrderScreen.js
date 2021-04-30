@@ -188,7 +188,7 @@ export class OrderScreen extends React.Component {
   //LIFECYCLE METHODS
 
   async componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    //BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     
     try {
       this.setState({
@@ -204,10 +204,7 @@ export class OrderScreen extends React.Component {
       console.log(error)
     }
   }
-  handleBackButton() {
-    BackHandler.exitApp()
-    return true;
-}
+ 
 
   //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
   async componentDidUpdate(prevProps, prevState) {
@@ -239,7 +236,7 @@ export class OrderScreen extends React.Component {
         <ScrollView style={[commonStyles.container, { paddingTop: 0 }]} >
           <SwitchMode setMode={this.setMode} mode={this.state.title} />
           {/* <Text>{this.state.title}</Text> */}
-          <Search setSearch={this.setSearch} account={this.props.account} />
+          <Search setSearch={this.setSearch} account={this.props.account}/>
           <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
             <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
           </View>
@@ -268,19 +265,17 @@ export class OrderScreen extends React.Component {
 <Text>FILTER</Text>
 <Text>{JSON.stringify(this.state.filter)}</Text> */}
           {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
+             this.state.productList.length>0?
            <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginBottom: 10 }}>
-             {this.state.productList.length>0?
               <ProductList
                 navigation={this.props.navigation}
                 productList={this.state.productList}
               />
+              </View>
             :
-            <View style={{paddingVertical:60,alignItems:'center',justifyContent:'center'}}>
-            <Text style={commonStyles.lightText}>Sorry, No Search Results</Text>
-            <Text style={commonStyles.lightText}>Please Try again with a different keyword</Text>
-            </View>
-             }
-            </View>
+            <View style={{padding:50,alignItems:'center',justifyContent:'center',}}>
+            <Text style={[commonStyles.lightText,{textAlign:'center'}]}>No items for that search. Please try a different search or filter.</Text>
+            </View>  
           }
         </ScrollView>
       </View>

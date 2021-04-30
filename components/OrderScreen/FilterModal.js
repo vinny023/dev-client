@@ -8,6 +8,9 @@ import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
 //import { Modal } from '@ui-kitten/components';
 import Modal from 'react-native-modal'
+import {RangeSlider} from 'rn-range-slider';
+//import Thumb from '../Slider/Thumb';
+//import CustomSlider from '../Slider/CustomSlider';
 
 const dimensions = Dimensions.get('window')
 const sortOptions = [
@@ -69,6 +72,17 @@ export default class FilterModal extends React.Component {
 
         const filterOptions = getFilters(this.props.productList)
         console.log(filterOptions)
+        //  const renderThumb = ()=>( 
+        //  <Thumb/>
+        //  );
+        // const renderRail = useCallback(() => <Rail />, []);
+        // const renderRailSelected = useCallback(() => <RailSelected />, []);
+        // const renderLabel = useCallback(value => <Label text={value} />, []);
+        // const renderNotch = useCallback(() => <Notch />, []);
+        // const handleValueChange = useCallback((low, high) => {
+        //     setLow(low);
+        //     setHigh(high);
+        // }, []);
 
         return (
 
@@ -79,80 +93,170 @@ export default class FilterModal extends React.Component {
                 backdropOpacity={.5}
                 coverScreen={true}
                 style={commonStyles.modalView}
-
             >
                 <View style={commonStyles.centeredView} >
                     <ScrollView contentContainerStyle={{ padding: 15 }}>
-                        <View style={{  alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center' }}>
                             <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, }}>Filter & Sort</Text>
                         </View>
 
+                        <Text style={styles.heading}>Sort By</Text>
+                        <View style={{ marginLeft: 7 }} >
+                            <ScrollView horizontal>
+
+                                {sortOptions.map((option, i) => {
+
+                                    let selected = (this.props.sort.filter(currOptionVal => _.isEqual(currOptionVal, option.value)).length > 0)
+                                    console.log(selected)
+                                    let { value, title } = option
+                                    if (selected) {
+                                        value = { ...option.value, 'remove': true }
+                                        title = option.title + ' (Selected)'
+                                    }
+                                    return (
+
+                                        <View key={i} style={{ marginRight: 10 }} >
+                                            {/* <RadioButton
+                                            value={title}
+                                            label={title}
+                                            uncheckedColor={'#E6F0FD'}
+                                            color={colors.blue.primary}
+                                            status={title.includes("Selected") ? 'checked' : 'unchecked'}
+                                            onPress={() => this.props.setSort(value)}
+                                            />
+                                            <View style={{ marginLeft: 7 }}>
+                                            <Text style={commonStyles.text}>{title.replace('(Selected)', '')}</Text>
+                                        </View> */}
+                                            <AppButton
+                                                onPress={() => this.props.setSort(value)}
+                                                text={title.replace('(Selected)', '')}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 }}
+                                                textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
+
+                                        </View>
+
+
+                                    )
+                                })}
+                            </ScrollView>
+                        </View>
                         {/* <Text>Filter</Text> */}
                         {filterOptions.map((filterOption, i) => {
                             const { title, field, options, min, max } = filterOption
-                            if (title === 'Supplier' || title === 'Units') {
-                                //SELECTION FILTER
-                                return (
-                                    <View key={i}>
-                                        {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
-                                        <View style={styles.container}>
-                                            {
-                                                options.map((option, k) => {
-                                                    let selected = (this.props.filter
-                                                        .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
+                        
+                                if (title === 'Units') {
+                                    //SELECTION FILTER
+                                    return (
+                                        <View key={i}>
+                                            {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
+                                            <View style={{ marginLeft: 7 }}>
+                                                <ScrollView horizontal>
 
-                                                    //CHECK IF SELECTED
-                                                    let filterValue = { 'field': field, 'comparison': ':', 'value': option }
-                                                    let label = option;
-                                                    if (selected) {
-                                                        label = label + '(Selected)'
-                                                        filterValue = { ...filterValue, 'remove': true }
-                                                    }
-                                                    return (
-                                                        <View key={k} style={commonStyles.row}>
-                                                            <RadioButton
+                                                    {
+                                                        options.map((option, k) => {
+                                                            let selected = (this.props.filter
+                                                                .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
 
-                                                                value={label}
-                                                                label={label}
-                                                                uncheckedColor={'#E6F0FD'}
-                                                                color={colors.blue.primary}
-                                                                status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                                onPress={() => this.props.setFilter(filterValue)}
-                                                            />
-                                                            <View style={{ marginLeft: 7 }}>
+                                                            //CHECK IF SELECTED
+                                                            let filterValue = { 'field': field, 'comparison': ':', 'value': option }
+                                                            let label = option;
+                                                            if (selected) {
+                                                                label = label + '(Selected)'
+                                                                filterValue = { ...filterValue, 'remove': true }
+                                                            }
+                                                            return (
+                                                                <View key={k} style={{ marginRight: 10 }}>
+                                                                    {/* <RadioButton
+
+                                                                            value={label}
+                                                                            label={label}
+                                                                            uncheckedColor={'#E6F0FD'}
+                                                                            color={colors.blue.primary}
+                                                                    status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                                    onPress={() => this.props.setFilter(filterValue)}
+                                                                    />
+                                                                <View style={{ marginLeft: 7 }}>
                                                                 <Text style={commonStyles.text}>{label.replace('(Selected)', '')}</Text>
-                                                            </View>
-                                                        </View>
+                                                                </View> */}
+                                                                    <AppButton
+                                                                        onPress={() => this.props.setFilter(filterValue)}
+                                                                        text={label.replace('(Selected)', '')}
+                                                                        style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15 }}
+                                                                        textStyle={label.includes("Selected") ? styles.selectedText : styles.unselectedText} />
+                                                                </View>
 
-                                                    )
-                                                })
-                                            }
+                                                            )
+                                                        })
+                                                    }
+                                                </ScrollView>
+                                            </View>
                                         </View>
-                                    </View>
-                                )
-                            } else {
-                                //NUMBER RANGE FILTER                      
-                                let minValue = ''
-                                let maxValue = ''
-
-                                //set comparison to $gt & $lt for mongo price
-                                let gt = '>'
-                                let lt = '<'
-
-                                if (title === 'Price') {
-                                    gt = "$gt"
-                                    lt = "$lt"
+                                    )
                                 }
-
-                                //CHECK IF SELECTED
-                                this.props.filter.filter(currFilter => currFilter.field === field).forEach(currFilter => {
-                                    if (currFilter.comparison === gt) {
-                                        minValue = currFilter.values[0].toString()
-                                    } else if (currFilter.comparison === lt) {
-                                        maxValue = currFilter.values[0].toString()
+                                if (title === 'Supplier') {
+                                    //SELECTION FILTER
+                                    return (
+                                        <View key={i}>
+                                            {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
+                                            <View style={styles.container}>
+                                                {
+                                                    options.map((option, k) => {
+                                                        let selected = (this.props.filter
+                                                            .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
+    
+                                                        //CHECK IF SELECTED
+                                                        let filterValue = { 'field': field, 'comparison': ':', 'value': option }
+                                                        let label = option;
+                                                        if (selected) {
+                                                            label = label + '(Selected)'
+                                                            filterValue = { ...filterValue, 'remove': true }
+                                                        }
+                                                        return (
+                                                            <View key={k} style={commonStyles.row}>
+                                                                <RadioButton
+    
+                                                                    value={label}
+                                                                    label={label}
+                                                                    uncheckedColor={'#E6F0FD'}
+                                                                    color={colors.blue.primary}
+                                                                    status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                                    onPress={() => this.props.setFilter(filterValue)}
+                                                                />
+                                                                <View style={{ marginLeft: 7 }}>
+                                                                    <Text style={commonStyles.text}>{label.replace('(Selected)', '')}</Text>
+                                                                </View>
+                                                            </View>
+    
+                                                        )
+                                                    })
+                                                }
+                                            </View>
+                                        </View>
+                                    )
+                                }
+     
+                                else {
+                                    //NUMBER RANGE FILTER                      
+                                    let minValue = ''
+                                    let maxValue = ''
+    
+                                    //set comparison to $gt & $lt for mongo price
+                                    let gt = '>'
+                                    let lt = '<'
+    
+                                    if (title === 'Price') {
+                                        gt = "$gt"
+                                        lt = "$lt"
                                     }
-                                })
-
+    
+                                    //CHECK IF SELECTED
+                                    this.props.filter.filter(currFilter => currFilter.field === field).forEach(currFilter => {
+                                        if (currFilter.comparison === gt) {
+                                            minValue = currFilter.values[0].toString()
+                                        } else if (currFilter.comparison === lt) {
+                                            maxValue = currFilter.values[0].toString()
+                                        }
+                                    })
                                 return (
                                     <View >
                                         <Text style={styles.heading}>Filter by {title}</Text>
@@ -175,46 +279,61 @@ export default class FilterModal extends React.Component {
                                                 />
                                                 <Button title="X" onPress={() => this.props.setFilter({ 'field': field, 'comparison': lt, 'remove': true })} />
                                 </Text> */}<View style={commonStyles.row}>
-
                                                 <Text style={styles.text}>Min </Text>
-                                                {!!(title=="Price") && 
-                                                <TextInput
-                                                    style={styles.input}
-                                                    keyboardType='number-pad'
-                                                    placeholder={`$ ${round(min, 0)}`}
-                                                    maxLength={5}
-                                                    placeholderTextColor={colors.blue.primary}
-                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
+                                                {!!(title == "Price") &&
+                                                    <View>
+                                                        {/* <RangeSlider
+                                                           // style={styles.slider}
+                                                            min={0}
+                                                            max={100}
+                                                            step={1}
+                                                            floatingLabel
+                                                             renderThumb={renderThumb}
+                                                            // renderRail={renderRail}
+                                                            // renderRailSelected={renderRailSelected}
+                                                            // renderLabel={renderLabel}
+                                                            // renderNotch={renderNotch}
+                                                            // onValueChanged={handleValueChange}
+                                                        />
+                                                        <CustomSlider/> */}
+                                                        <TextInput
+                                                            style={styles.input}
+                                                            keyboardType='number-pad'
+                                                            placeholder={`$ ${round(min, 0)}`}
+                                                            maxLength={5}
+                                                            placeholderTextColor={colors.blue.primary}
+                                                            onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
+                                                    </View>
                                                 }
-                                                {title!="Price" &&
+                                                {title != "Price" &&
                                                     <TextInput
-                                                    style={styles.input}
-                                                    keyboardType='number-pad'
-                                                    placeholder={`${min}`}
-                                                    maxLength={5}
+                                                        style={styles.input}
+                                                        keyboardType='number-pad'
+                                                        placeholder={`${min}`}
+                                                        maxLength={5}
 
-                                                    placeholderTextColor={colors.blue.primary}
-                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
-}
+                                                        placeholderTextColor={colors.blue.primary}
+                                                        onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} />
+                                                }
                                                 <Text style={styles.text}>Max</Text>
-                                                {!!(title=="Price") && 
-                                                <TextInput
-                                                    keyboardType='number-pad'
-                                                    placeholder={`$ ${round(max, 0)}`}
-                                                    placeholderTextColor={colors.blue.primary}
-                                                    style={styles.input}
-                                                    maxLength={5}
-                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
-                                                />}
-                                                 {title!="Price" &&
-                                                <TextInput
-                                                    keyboardType='number-pad'
-                                                    placeholder={`${round(max, 0)}`}
-                                                    maxLength={5}
-                                                    placeholderTextColor={colors.blue.primary}
-                                                    style={styles.input}
-                                                    onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
-                                                />}
+                                                {!!(title == "Price") &&
+                                                    <TextInput
+                                                        keyboardType='number-pad'
+                                                        placeholder={`$ ${round(max, 0)}`}
+                                                        placeholderTextColor={colors.blue.primary}
+                                                        style={styles.input}
+                                                        maxLength={5}
+                                                        onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
+                                                    />}
+                                                {title != "Price" &&
+                                                    <TextInput
+                                                        keyboardType='number-pad'
+                                                        placeholder={`${round(max, 0)}`}
+                                                        maxLength={5}
+                                                        placeholderTextColor={colors.blue.primary}
+                                                        style={styles.input}
+                                                        onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
+                                                    />}
                                             </View>
 
                                         </View>
@@ -223,37 +342,6 @@ export default class FilterModal extends React.Component {
                             }
                         })}
 
-                        <Text style={styles.heading}>Sort By</Text>
-                        <View style={styles.container}>
-                            {sortOptions.map((option, i) => {
-
-                                let selected = (this.props.sort.filter(currOptionVal => _.isEqual(currOptionVal, option.value)).length > 0)
-                                console.log(selected)
-                                let { value, title } = option
-                                if (selected) {
-                                    value = { ...option.value, 'remove': true }
-                                    title = option.title + ' (Selected)'
-                                }
-                                return (
-
-                                    <View key={i} style={commonStyles.row}>
-                                        <RadioButton
-                                            value={title}
-                                            label={title}
-                                            uncheckedColor={'#E6F0FD'}
-                                            color={colors.blue.primary}
-                                            status={title.includes("Selected") ? 'checked' : 'unchecked'}
-                                            onPress={() => this.props.setSort(value)}
-                                        />
-                                        <View style={{ marginLeft: 7 }}>
-                                            <Text style={commonStyles.text}>{title.replace('(Selected)', '')}</Text>
-                                        </View>
-                                    </View>
-
-
-                                )
-                            })}
-                        </View>
                     </ScrollView>
                     <AppButton text={"APPLY"} style={{ marginHorizontal: 10 }} onPress={() => this.props.close(false)} />
 
@@ -277,7 +365,7 @@ const styles = StyleSheet.create({
         fontSize: sizes.s17,
         fontFamily: 'medium',
         color: colors.grey.primary,
-    
+
     },
 
     input: {
@@ -287,7 +375,16 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 10,
         color: colors.blue.primary,
-       // maxWidth:95
+        // maxWidth:95
 
+    },
+    unselectedText: {
+        color: colors.grey.dark,
+        fontSize: sizes.s15,
+        fontFamily: "medium"
+    },
+    selectedText: {
+        fontFamily: 'medium',
+        fontSize: sizes.s15
     }
 })

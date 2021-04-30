@@ -91,18 +91,18 @@ export class SupplierCart extends React.Component {
                         <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginTop: 5 }}>
                             <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
                         </View>
-                        <View style={styles.container}>
+                        <TouchableOpacity style={styles.container} onPress={() => this.setState({ toggleDateFilter: true })}>
                             <View style={[styles.row, { paddingVertical: 0 }]}>
                                 <Text style={styles.heading}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
                             <View style={[styles.row, { paddingVertical: 3 }]}>
-                                <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })}>
+                                <TouchableOpacity >
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s15,fontFamily:'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
                                 <Text style={commonStyles.lightText}>12AM - 5AM</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         {(this.props.supplierDetail && this.props.supplierOrder) ?
                             <View style={{ backgroundColor: colors.white, padding: 20, borderRadius: 10 }} >
                                 {/* <View style={styles.row}>
