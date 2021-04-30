@@ -182,7 +182,7 @@ export class SupplierCart extends React.Component {
                                                             uncheckedColor={'#E6F0FD'}
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
+                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: {day: val.day, date: val.date.getTime()} }, index: index })}
                                                         />
                                                         <View style={{ marginLeft: 7 }}>
                                                             <Text style={commonStyles.text}>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>

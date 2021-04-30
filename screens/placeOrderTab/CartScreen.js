@@ -142,7 +142,7 @@ export class CartScreen extends React.Component {
 
         if (!order.selectedDeliveryDate || !order.selectedDeliveryTimeSlot) {
             this.setState({
-                banner: { show: true, type: 'error', message: 'Please select a delivery date and time for' + order.supplierId }
+                banner: { show: true, type: 'error', message: 'Please select a delivery date and time for ' + order.supplierDetail.supplierDisplayName }
             })
             return null
         }
@@ -158,11 +158,19 @@ export class CartScreen extends React.Component {
 
         //write to db & send email
         try {
+            this.setState({
+                banner: {
+                    show: true, type: 'success',
+                    message: 'Placing your order to ' + order.supplierDetail.displayName
+                }
+            })
             const response = await placeOrder({ supplierOrder: order })
             console.log(response)
             const body = response.data
             console.log('Success')
+
             this.props.removeOrderedCart(order.supplierId)
+
             this.setState({
                 banner: {
                     show: true, type: 'success',

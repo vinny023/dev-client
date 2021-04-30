@@ -153,7 +153,7 @@ export class LoginScreen extends React.Component {
         try {
             this.setState({
                 getAccountLoading: true,
-                banner: { show: true, type: 'message', message: "Loading account details... " }
+                banner: { show: true, type: 'message', message: "Logging in... " }
             })
             const account = await getAccount({ query: { id: accountId } })
             this.props.setAccount(account)

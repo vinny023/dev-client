@@ -4,13 +4,14 @@ import ViewOrders from '../../components/ViewOrders'
 import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { getOrders, setOrder } from '../../apis/apis'
 import Banner from '../../components/Global/Banner'
-//import * as Sentry from 'sentry-expo';
 import { useNavigation } from '@react-navigation/native';
 import { colors, commonStyles, sizes } from '../../theme'
 import AppButton from '../../components/AppButton'
 import Modal from 'react-native-modal'
 import { Ionicons } from '@expo/vector-icons'
 import { RadioButton } from 'react-native-paper'
+import Sentry from '../../sentry'
+
 const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
@@ -47,40 +48,30 @@ class ViewOrderScreen extends React.Component {
     }
 
     getOrders = async () => {
-        for (let i = 0; i < 3; i++) {
-            try {
+            try {      
+                  
                 console.log(i + ' ATTEMPT')
                 this.setState({ getOrdersLoading: true })
                 const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
                 this.setState({
                     orderList: orders,
                     getOrderLoading: false,
-                })
-                break;
+                })    
             }
             catch (error) {
                 console.log(error)
-                if (i < 2) {
-                    this.setState({
-                        getOrdersLoading: false,
-                        getOrdersError: true,
-                        banner: { show: true, type: 'error', message: 'Issue loading orders - trying again.' }
-                    })
-                } else {
                     //show errors if item is not loading, & try again
-                    this.setState({
-                        banner: {
-                            show: true,
-                            type: 'error',
-                            message: 'Could not load orders. Please refresh. If error persists - please contact support.',
-                            buttonAction: { 'title': 'Refresh', 'params': '' }
-                        }
-                    })
-                    //Sentry.Native.captureException(error)
-                    //log error with sentry
-                }
-            }
-        }
+                this.setState({
+                    banner: {
+                        show: true,
+                        type: 'error',
+                        message: 'Could not load orders. Please refresh. If error persists - please contact support.',                           
+                    }
+                })
+                Sentry.Native.captureException('View Order Screen Error'+error)
+                //log error with sentry
+                
+            } 
 
     }
 
@@ -116,8 +107,7 @@ class ViewOrderScreen extends React.Component {
 
 
     render() {
-
-        const { supplierFilter, orderList, showFilterModal } = this.state
+          const { supplierFilter, orderList, showFilterModal } = this.state
 
         //filter by supplierFilter.
         let renderOrderList = [...orderList]
