@@ -167,7 +167,7 @@ export class LoginScreen extends React.Component {
             return
         }
         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
-        this.props.navigation.navigate('OrderScreen')
+        // this.props.navigation.navigate('OrderScreen')
     }
 
     autoLogin = async () => {

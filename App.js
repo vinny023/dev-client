@@ -33,13 +33,12 @@ export default function App() {
   if (!loaded) {
     return null;
   }
- 
+
     return (
       <Provider store={store}>
         <Navigation />
         <FlashMessage position="top" />
       </Provider>
-
     );
 }
 

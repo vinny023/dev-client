@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ViewOrders from '../../components/ViewOrders'
-import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { getOrders, setOrder } from '../../apis/apis'
+import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
+import { getOrders as _getOrders, setOrder } from '../../apis/apis'
 import Banner from '../../components/Global/Banner'
 //import * as Sentry from 'sentry-expo';
 import { useNavigation } from '@react-navigation/native';
@@ -11,8 +11,9 @@ import AppButton from '../../components/AppButton'
 import Modal from 'react-native-modal'
 import { Ionicons } from '@expo/vector-icons'
 import { RadioButton } from 'react-native-paper'
-const OrderButton = ({ order }) => {
+import { getOrdersFromDb } from '../../redux/actions'
 
+const OrderButton = ({ order }) => {
     const navigation = useNavigation()
     return (
         <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 10, }]} >
@@ -32,9 +33,8 @@ const OrderButton = ({ order }) => {
 }
 
 class ViewOrderScreen extends React.Component {
-
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             supplierFilter: [],
@@ -51,7 +51,7 @@ class ViewOrderScreen extends React.Component {
             try {
                 console.log(i + ' ATTEMPT')
                 this.setState({ getOrdersLoading: true })
-                const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
+                const orders = await _getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
                 this.setState({
                     orderList: orders,
                     getOrderLoading: false,
@@ -89,7 +89,6 @@ class ViewOrderScreen extends React.Component {
     }
 
     handleFilterUpdate = (newSupplier) => {
-        console.log('running filter update')
         const index = this.state.supplierFilter.indexOf(newSupplier)
         if (index === -1) {
             this.setState({
@@ -107,17 +106,19 @@ class ViewOrderScreen extends React.Component {
 
     //filters - status, supplier  
 
-
-
     async componentDidMount() {
-        await this.getOrders()
-
+        // await this.getOrders() // !! this should be removed
+        if (this.props.getOrdersFromApi) {
+            // alert('Fetching data');
+            await this.props.getOrdersFromApi();
+        }
     }
 
 
     render() {
-
-        const { supplierFilter, orderList, showFilterModal } = this.state
+        // console.log('ordersState', this.props.ordersState)
+        const { supplierFilter, showFilterModal } = this.state
+        const orderList = this.props.ordersState.orders;
 
         //filter by supplierFilter.
         let renderOrderList = [...orderList]
@@ -125,8 +126,8 @@ class ViewOrderScreen extends React.Component {
             renderOrderList = orderList.filter(order => supplierFilter.indexOf(order.supplierDetail.displayName) !== -1)
         }
 
-        console.log('FILTERED LIST')
-        console.log(renderOrderList)
+        // console.log('FILTERED LIST')
+        // console.log(renderOrderList)
 
         //group orders between open & completed, which sits on top of sorting    
         let deliveredOrders = []
@@ -142,16 +143,15 @@ class ViewOrderScreen extends React.Component {
             }
         })
 
-        console.log('OPEN ORDERS')
-        console.log(openOrders)
+        // console.log('OPEN ORDERS')
+        // console.log(openOrders)
 
-        console.log('DELIVERED ORDERS')
-        console.log(deliveredOrders)
+        // console.log('DELIVERED ORDERS')
+        // console.log(deliveredOrders)
 
         return (
-
             //show loading until orders has been pulled
-
+            
             <ScrollView style={[commonStyles.container, { paddingHorizontal: 15 }]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
                 <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
@@ -174,7 +174,7 @@ class ViewOrderScreen extends React.Component {
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
                         <View style={[commonStyles.card]}>
-                            {this.props.account.activeSuppliers.map(supplier => {
+                            {this.props.account?.activeSuppliers?.map(supplier => {
                                 console.log(supplier)
                                 //CHECK IF SELECTED
                                 let selected = false;
@@ -218,8 +218,11 @@ class ViewOrderScreen extends React.Component {
                                
                             </View>
                         </View>
-                        : <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
-
+                        : 
+                        <>
+                            <Text>No Data fetched</Text>
+                            <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
+                        </>
                     }
                     {deliveredOrders.length > 0 ?
                         <View>
@@ -241,8 +244,6 @@ class ViewOrderScreen extends React.Component {
                 </View>
             </ScrollView>
         )
-
-
         //list of orders with button on press navigat to order with params
     }
 }
@@ -251,12 +252,19 @@ const mapStateToProps = state => {
     return (
         {
             masterCart: state.cartState.masterCart,
-            account: state.accountState.account
+            account: state.accountState.account,
+            ordersState: state.ordersState
         }
     )
 }
 
-export default connect(mapStateToProps)(ViewOrderScreen)
+const mapDispatchToProps = dispatch => {
+    return {
+        getOrdersFromApi: async() => { 
+            console.log('GETTING ORDERS FROM THE API')
+            dispatch(await getOrdersFromDb())
+        }
+    }
+}
 
-
-
+export default connect(mapStateToProps, mapDispatchToProps)(ViewOrderScreen)

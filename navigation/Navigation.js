@@ -22,6 +22,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {syncCartStateToDB} from '../redux/firebaseActions'
+import { useDispatch } from 'react-redux';
+import {db} from '../firebaseConfig';
+
 const OrderTabStack = createStackNavigator();
 
 const myScreenOptions = {
@@ -74,7 +78,18 @@ const ManageOrderTab = () => {
 const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
-  
+  // const dispatch = useDispatch();
+
+  // React.useEffect(() => {
+  //   async function syncDataWithDb () {
+  //     const data = await AsyncStorage.getItem('accountId');
+  //     if (data) {
+  //       syncCartStateToDB(db, dispatch, JSON.parse(data));
+  //     }
+  //   }
+  //   syncDataWithDb()
+  // }, [])
+ 
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({

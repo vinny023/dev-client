@@ -4,8 +4,10 @@ import orderReducer from './orderReducer'
 import accountReducer from './accountReducer'
 import fetchReducer from './fetchReducer'
 
-const rootReducer = combineReducers(
-    {accountState: accountReducer, 
-    cartState:cartReducer})
+const rootReducer = combineReducers({
+    accountState: accountReducer, 
+    cartState: cartReducer,
+    ordersState: orderReducer
+})
 
 export default rootReducer

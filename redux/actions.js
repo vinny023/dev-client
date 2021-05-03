@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import {getOrders} from '../apis/apis';
 
 //ACCOUNT ACTIONS
 export const setAccount = account => {
@@ -32,20 +33,34 @@ export const subtractItem = subtractItemProps => {
 }
 
 export const removeOrderedCart = supplierId => {
-
     return ({
         type: 'REMOVE_ORDERED_CART',
         payload: supplierId
     })
 }
 
-
-
-
-
-
-
-
+export const getOrdersFromDb = async () => {
+    try {
+        alert('Fetching data!');
+        const dataFromStorage = await AsyncStorage.getItem('accountId');
+        if (dataFromStorage) {
+            const orders = await getOrders({query: {
+                accountId: JSON.parse(dataFromStorage)
+            }, sort: { createdDate: -1 }});
+            alert('Data fetched!');
+            return ({
+                type: 'SET_ORDERS',
+                payload: orders
+            })
+        }
+    } catch (err) {
+        console.log('error in getting orders', err);
+    }
+    return ({
+        type: 'SET_ORDERS',
+        payload: []
+    })
+}
 
 // //FETCH ACTIONS
 // export const fetchAction = () => dispatch => {
