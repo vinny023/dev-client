@@ -14,7 +14,6 @@ import StepIndicator from 'react-native-step-indicator';
 import AppButton from '../../components/AppButton';
 import StatusComponent from '../../components/StatusComponent';
 import CustomHeader from '../../components/CustomHeader';
-import {getOrdersFromDb} from '../../redux/actions'
 
 import TruckLogo from '../../assets/truck.png';
 // var TruckLogo=require('../../assets/truck.png')
@@ -94,12 +93,6 @@ export class OrderDetailScreen extends React.Component {
         setOrderLoading: false,
         setOrderError: true
       })
-    }
-  }
-
-  async componentWillUnmount () {
-    if (this.props.getOrdersFromApi) {
-      await this.props.getOrdersFromApi();
     }
   }
 
@@ -237,8 +230,7 @@ const mapDispatchToProps = dispatch => {
   return (
     {
       addItem: addItemProps => dispatch(actions.addItem(addItemProps)),
-      subtractItem: subtractItemProps => dispatch(actions.subtractItem(subtractItemProps)),
-      getOrdersFromApi: async() => dispatch(await getOrdersFromDb())
+      subtractItem: subtractItemProps => dispatch(actions.subtractItem(subtractItemProps))
     }
   )
 }
