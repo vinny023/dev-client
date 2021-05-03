@@ -175,8 +175,8 @@ export class OrderDetailScreen extends React.Component {
             :
             <View>
               <View style={{ paddingHorizontal: 15 }}>
-                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0 }]}>
-                  <View>
+                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0 ,}]}>
+                  <View style={{width:'80%'}}>
                     <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
                     <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplier.displayName}</Text>
                   </View>
