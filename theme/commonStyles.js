@@ -68,7 +68,7 @@ bannerText:{
   //fontSize:sizes.s16,
   fontSize:sizes.s14,
   fontFamily:'bold',
-  color:colors.white,
+ // color:colors.white,
   textAlign:'center',
 
 },
@@ -76,7 +76,7 @@ bannerTitle:{
   fontSize:sizes.s14,
 //  fontSize:sizes.s16,
   fontFamily:'regular',
-  color:colors.white,
+ // color:colors.white,
   textAlign:'center',
 
 }

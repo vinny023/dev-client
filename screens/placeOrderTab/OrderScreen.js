@@ -95,7 +95,7 @@ export class OrderScreen extends React.Component {
 
   setFilter(newFilter) {
     //handle Remove
-    console.log(newFilter)
+    console.log('newFilter----------------------',newFilter)
     let type = 'qty'
     if (newFilter.field === 'supplierDisplayName' || newFilter.field === 'units') {
       type = 'select'
