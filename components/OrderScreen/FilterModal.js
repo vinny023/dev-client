@@ -8,7 +8,7 @@ import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
 //import { Modal } from '@ui-kitten/components';
 import Modal from 'react-native-modal'
-import {RangeSlider} from 'rn-range-slider';
+// import {RangeSlider} from 'rn-range-slider';
 //import Thumb from '../Slider/Thumb';
 //import CustomSlider from '../Slider/CustomSlider';
 

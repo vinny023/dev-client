@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { View, Text } from 'react-native'
 
-import RangeSlider from 'rn-range-slider';
+// import RangeSlider from 'rn-range-slider';
 import Rail from './Rail';
 import Thumb from './Thumb';
 import RailSelected from './RailSelected';
@@ -19,7 +19,7 @@ const renderRailSelected = useCallback(() => <RailSelected/>, []);
 export default function CustomSlider() {
     return (
         <View>
-            <RangeSlider
+            {/* <RangeSlider
                 //style={styles.slider}
                 min={0}
                 max={100}
@@ -31,7 +31,7 @@ export default function CustomSlider() {
                // renderLabel={renderLabel}
                // renderNotch={renderNotch}
                 //onValueChanged={handleValueChange}
-            />
+            /> */}
 
         </View>
     )
