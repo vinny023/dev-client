@@ -45,7 +45,11 @@ export default class Banner extends React.Component {
                 style: styles.banner,
                 //default duration:1850
                 duration:1400,
+<<<<<<< HEAD
                 color:type === 'message' ? colors.blue.primary : colors.white 
+=======
+                color: type === 'message' ? colors.blue.primary : colors.white, 
+>>>>>>> 1238b9a649e3e3d8814a81ef731f3038500c0486
             })
         }
         return (

@@ -16,7 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const setOrderDetails = ({ masterCart, account }) => {
 
-    const { id, displayName, confirmationEmail, supplierContact } = account
+    const { id, displayName, confirmationEmail, supplierContact,deliveryLocations } = account
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
         .map(supplierOrder => {
@@ -25,6 +25,8 @@ const setOrderDetails = ({ masterCart, account }) => {
                     accountId: id,
                     accountDisplayName: displayName,
                     accountConfirmationEmail: confirmationEmail,
+                    //ONLY HANDLE SINGLE DELIVERY LOCATION FOR NOW
+                    deliveryLocation: deliveryLocations[0],
                     supplierContact: {
                         contact: supplierContact[supplierOrder.supplierId].contact,
                         contactType: supplierContact[supplierOrder.supplierId].supplierContactType
@@ -158,6 +160,12 @@ export class CartScreen extends React.Component {
 
         //write to db & send email
         try {
+            this.setState({
+                banner: {
+                    show: true, type: 'message',
+                    message: 'Placing order to ' + order.supplierDetail.displayName
+                }
+            })
             const response = await placeOrder({ supplierOrder: order })
             console.log(response)
             const body = response.data
@@ -166,7 +174,7 @@ export class CartScreen extends React.Component {
             this.setState({
                 banner: {
                     show: true, type: 'success',
-                    message: 'Your order to ' + order.supplierId + 'was placed!'
+                    message: 'Your order to ' + order.supplierDetail.displayName + ' was placed!'
                 }
             })
         } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.

@@ -1,9 +1,9 @@
-exports.NETLIFY = "https://tender-roentgen-7b8b7f.netlify.app/.netlify/functions/"
+// exports.NETLIFY = "https://tender-roentgen-7b8b7f.netlify.app/.netlify/functions/"
 // exports.NETLIFY = "https://elastic-beaver-a020d9.netlify.app/.netlify/functions/"
-// exports.NETLIFY = 'http://localhost:8888/.netlify/functions/'
+exports.NETLIFY = 'http://localhost:8888/.netlify/functions/'
 
 
-
+exports.HITS_PER_PAGE = 20
 
 exports.headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",

@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ViewOrders from '../../components/ViewOrders'
 import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { getOrders, setOrder } from '../../apis/apis'
 import Banner from '../../components/Global/Banner'
@@ -20,8 +19,8 @@ const OrderButton = ({ order }) => {
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={{uri:order.supplierDetail.logo}} resizeMode='contain' style={{width:60,height:60,marginRight:10}} />
-            <View style={{flex:2,}}>
+            <Image source={require('../../assets/woolco.png')} style={{ width: 50, height: 50, marginRight: 10 }} />
+            <View style={{ flex: 2, }}>
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{ marginBottom: 5 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
@@ -257,6 +256,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(ViewOrderScreen)
-
-
-
