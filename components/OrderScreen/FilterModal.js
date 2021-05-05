@@ -355,14 +355,14 @@ export default class FilterModal extends React.Component {
                                                 {(title == "Price") &&
                                                     <View>
                                                         <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                         </View>
                                              
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                         </View>
                                                         {/* <TextInput
                                                             style={styles.input}
@@ -379,13 +379,13 @@ export default class FilterModal extends React.Component {
                                                             //Size
                                                             <View >
                                                                 <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
-                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
+                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                                 </View>
                                                                
                                                                 <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                                 </View>
                                                             </View>
                                                             :
@@ -427,14 +427,14 @@ export default class FilterModal extends React.Component {
                                                     // />
                                                     <View>
                                                         <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                         </View>
                                                  
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                         </View>
                                                     </View>
                                                 }

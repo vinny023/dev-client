@@ -134,7 +134,7 @@ export class LoginScreen extends React.Component {
             console.log(error)
             this.setState({
                 getAccountLoading: false,
-                banner: { show: true, type: 'error', message: "Incorrect code, please try again" }
+                banner: { show: true, type: 'error', message: "Sorry! Looks like your code is invalid. Please try again." }
             })
         }
     }

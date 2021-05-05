@@ -19,13 +19,13 @@ const OrderButton = ({ order }) => {
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={require('../../assets/woolco.png')} style={{ width: 50, height: 50, marginRight: 10 }} />
+            <Image source={require('../../assets/woolco.png')} style={{ width: 45, height: 45, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
-                <View style={{ marginBottom: 5 }} />
+                <View style={{ marginBottom: 2 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
             </View>
-            <Text style={[commonStyles.text, { fontSize: sizes.s16, flex: 0.8, textAlign: 'right' }]}>$ {order.supplierDetail.orderMinimum}</Text>
+            <Text style={[commonStyles.text, { fontSize: sizes.s16, flex: 0.8, textAlign: 'right' }]}>${order.supplierDetail.orderMinimum}</Text>
         </TouchableOpacity>
     )
 }

@@ -10,24 +10,24 @@ const OrderTotal = (props) => {
         <View style={commonStyles.card}>
             <View style={[commonStyles.row, { justifyContent: 'space-between' }]}>
                 <Text style={styles.lightText}>{deliveryFee > 0 ? "Subtotal" : "Total"}</Text>
-                <Text style={styles.boldText}>$ {orderTotal - deliveryFee}</Text>
+                <Text style={styles.boldText}>${orderTotal - deliveryFee}</Text>
             </View>
             {deliveryFee > 0 &&
                 <View>
                     <View style={[commonStyles.row, { justifyContent: 'space-between' }]}>
                         <Text style={styles.lightText}>Delivery Fee</Text>
-                        <Text style={styles.boldText}>$ {deliveryFee} </Text>
+                        <Text style={styles.boldText}>${deliveryFee} </Text>
                     </View>
                     <View style={[commonStyles.row, { justifyContent: 'space-between' }]}>
                         <Text style={styles.lightText}>Total</Text>
-                        <Text style={styles.boldText}>$ {orderTotal}</Text>
+                        <Text style={styles.boldText}>${orderTotal}</Text>
                     </View>
                     {props.showAdd &&
                         <View style={[commonStyles.row, { justifyContent: 'space-between' }]}>
 
                             {/* <Text>Add {order.supplierDetail.orderMinimum - orderTotal - deliveryFee} to hit minimum.</Text> */}
                             <Text style={styles.lightText}>Add</Text>
-                            <Text style={styles.boldText}>$ {order.supplierDetail.orderMinimum - orderTotal - deliveryFee}</Text>
+                            <Text style={styles.boldText}>${order.supplierDetail.orderMinimum - orderTotal - deliveryFee}</Text>
                         </View>
                     }
                 </View>
