@@ -27,7 +27,7 @@ const createDaySelection = ({ shippingDoW, shippingCutoff, shippingDays }) => {
         date.setDate(currentTime.getDate() + dateOffset)
         return ({
             day: day,
-            date: date
+            date: date.getMonth()+'/'+date.getDate()
         }
         )
     })
@@ -185,7 +185,7 @@ export class SupplierCart extends React.Component {
                                                             onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
                                                         />
                                                         <View style={{ marginLeft: 7 }}>
-                                                            <Text style={commonStyles.text}>{val.day} - {val.date.getMonth()}/{val.date.getDate()}</Text>
+                                                            <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
                                                         </View>
                                                     </View>
                                                 )

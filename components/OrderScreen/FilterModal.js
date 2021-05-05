@@ -8,7 +8,7 @@ import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../AppButton';
 //import { Modal } from '@ui-kitten/components';
 import Modal from 'react-native-modal'
-import RangeSlider from 'rn-range-slider';
+// import RangeSlider from 'rn-range-slider';
 
 const dimensions = Dimensions.get('window')
 const sortOptions = [
@@ -29,8 +29,8 @@ const filterOptions = [
     { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
 const getFilters = (productList) => {
-    console.log('IN FUCNTION PLIST')
-    console.log(productList)
+    // console.log('IN FUCNTION PLIST')
+    // console.log(productList)
 
     productList.forEach(product => {
         const { supplierDisplayName, supplierId, units, price, size, qtyPerItem } = product
@@ -140,8 +140,8 @@ export default class FilterModal extends React.Component {
     }
 
     render() {
-        console.log('PROPS')
-        console.log(this.props.productList)
+        // console.log('PROPS')
+        // console.log(this.props.productList)
 
         const filterOptions = getFilters(this.props.productList)
 
@@ -357,19 +357,7 @@ export default class FilterModal extends React.Component {
 
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
                                                         </View>
-                                                        <RangeSlider
-                                                            //  style={styles.slider}
-                                                            min={round(min, 0)}
-                                                            max={round(max, 0)}
-                                                            renderRail={this.renderRail}
-                                                            renderThumb={this.renderThumb}
-                                                            renderRailSelected={this.renderRailSelected}
-                                                            //low={this.state.low}
-                                                            step={1}
-                                                            // disableRange
-                                                            onValueChanged={this.handleValueChangePrice}
-                                                            renderLabel={this.renderLabel}
-                                                        />
+                                             
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
@@ -392,19 +380,7 @@ export default class FilterModal extends React.Component {
                                                                     <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
                                                                     <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
                                                                 </View>
-                                                                <RangeSlider
-                                                                    //  style={styles.slider}
-                                                                    min={round(min, 0)}
-                                                                    max={round(max, 0)}
-                                                                    renderRail={this.renderRail}
-                                                                    renderThumb={this.renderThumb}
-                                                                    renderRailSelected={this.renderRailSelected}
-                                                                    // low={this.state.low}
-                                                                    step={1}
-                                                                    // disableRange
-                                                                    onValueChanged={this.handleValueChangeSize}
-                                                                    renderLabel={this.renderLabel}
-                                                                />
+                                                               
                                                                 <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
                                                                     <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
                                                                     <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
@@ -453,25 +429,7 @@ export default class FilterModal extends React.Component {
 
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
                                                         </View>
-                                                        <RangeSlider
-                                                            //  style={styles.slider}
-                                                            min={round(min, 0)}
-                                                            max={round(max, 0)}
-                                                            renderRail={this.renderRail}
-                                                            renderThumb={this.renderThumb}
-                                                            renderRailSelected={this.renderRailSelected}
-                                                            // low={this.state.low}
-                                                            step={1}
-                                                            // disableRange
-                                                            onValueChanged={this.handleValueChangeQty}
-                                                            //     {
-                                                            //     console.log(low, high)
-                                                            //     this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(low)] })
-                                                            //     this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(high)] })
-                                                            // }
-
-                                                            renderLabel={this.renderLabel}
-                                                        />
+                                                 
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
