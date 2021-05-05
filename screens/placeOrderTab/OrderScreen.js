@@ -29,6 +29,8 @@ export class OrderScreen extends React.Component {
       // showSearchSuggestions: false,
       showFilter: false,
       productList: [],
+      numPages: 0,
+      currentPage: 0,
       loading: true,
       accountId: this.props.account.id,
       isError: false,
@@ -94,8 +96,7 @@ export class OrderScreen extends React.Component {
   }
 
   setFilter(newFilter) {
-    //handle Remove
-    console.log('newFilter----------------------',newFilter)
+    //handle Remove    
     let type = 'qty'
     if (newFilter.field === 'supplierDisplayName' || newFilter.field === 'units') {
       type = 'select'
@@ -106,8 +107,9 @@ export class OrderScreen extends React.Component {
     let isNew = true;
     let matchIndex = -1
 
-    //check if filter already exists, if not add                      
-    const filterList = this.state.filter.map((filter, i) => {
+    //check if filter already exists, if not add   
+    const filterHolder = JSON.parse(JSON.stringify(this.state.filter))                
+    const filterList = filterHolder.map((filter, i) => {
       if (type === 'select') {
         //check if same field
         if (filter.field === newFilter.field) {
@@ -160,8 +162,11 @@ export class OrderScreen extends React.Component {
   }
 
   setSort(newSort) {
+
+    //ONLY ALLOW ONE SORT  - this.setState({sort: [newSort]})
+
     let isNew = true;
-    let matchIndex = -1
+    let matchIndex = -1    
     let sortList = this.state.sort.map((sortEntry, i) => {
       console.log({ ...sortEntry, ...newSort })
       if (_.isEqual({ ...sortEntry, ...newSort }, newSort) || _.isEqual({ ...sortEntry, ...newSort }, sortEntry)) {
@@ -189,47 +194,55 @@ export class OrderScreen extends React.Component {
 
   async componentDidMount() {
     //BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    
-    try {
-      this.setState({
-        loading: false,
-        productList: await getProducts(this.state)
-      })
-    }
-    catch (error) {
-      this.setState({
-        isError: true,
-        banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
-      })
-      console.log(error)
-    }
+    await this.getProducts()
   }
  
 
   //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
   async componentDidUpdate(prevProps, prevState) {
+
+    console.log('COMPONENT DID UPDATE')
+    console.log(prevState.filter)
+    console.log(this.state.filter)
+
     if (!_.isEqual([prevState.search, prevState.initialFilter, prevState.filter, prevState.sort],
-      [this.state.search, this.state.initialFilter, this.state.filter, this.state.sort])) {
-      this.setState({ loading: true })
-      try {
-        console.log('STARTING API')
-        this.setState({
-          loading: false,
-          productList: await getProducts(this.state)
-        })
-        console.log('FINSIHED SETTING STATE')
+      [this.state.search, this.state.initialFilter, this.state.filter, this.state.sort])) {      
+        await this.getProducts()
       }
-      catch (error) {
-        this.setState({
-          isError: true,
-          banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
-        })
-        console.log(error)
-      }
+    }
+  
+
+  getProducts = async() => {
+
+    console.log("RUNING GET PRODUCTS")
+    
+    this.setState({ loading: true })
+    try {
+      console.log('STARTING API')
+      const productList = await getProducts(this.state)
+      this.setState({
+        loading: false,
+        productList: productList.products,
+        numPages: productList.nbPages,
+        currentPage: 0
+      })
+      console.log('FINSIHED SETTING STATE')
+    }
+    catch (error) {
+      this.setState({
+        isError: true,
+        loading: false,
+        banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
+      })
+      console.log(error)
     }
   }
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
+
+    const {productList, numPages} = this.state    
+    let numItems = (productList.length * numPages >= 900) ? '1000+': (productList.length * numPages).toString()
+    
     return (
       <View style={{ flex: 1, backgroundColor: colors.background.primary, paddingTop: 20 }}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
@@ -241,7 +254,7 @@ export class OrderScreen extends React.Component {
             <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
           </View>
           <View style={[commonStyles.row, { justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 10, paddingHorizontal: 5 }]}>
-            <Text style={commonStyles.lightText}>1,000+ Items</Text>
+            <Text style={commonStyles.lightText}>{numItems} Items</Text>
             <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
               <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
             </TouchableOpacity>

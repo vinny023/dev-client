@@ -13,13 +13,16 @@ import AppButton from '../../components/AppButton';
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
-//WRITE CHANGES TO FIREBASE
+
 
 const syncStore = ({ accountId }) => {
-    let shouldWrite = true;
+    let shouldWrite = false;
 
+    //WRITE CHANGES TO FIREBASE
     store.subscribe(() => {
         if (shouldWrite) {
+        console.log('writing to firebase')
+        console.log(store.getState())
             firebaseApp.database().ref('customers/' + accountId).set({
                 state: store.getState()
             })
@@ -144,6 +147,13 @@ export class LoginScreen extends React.Component {
            // this.setState({ banner: { show: true, type: 'error', message: 'Syncing Store' } })
             syncStore({ accountId: accountId })
         } catch {
+            this.setState({
+                banner: {
+                    show: true,
+                    type: 'error',
+                    message: 'Trouble logging in. Please close and reopen app'
+                }
+            })
 
         }
         //PULL ACCOUNT ID FROM MONGO (SSINGLE SOURCE OF TRUTH FOR ACCOUNT INFO)
@@ -162,12 +172,12 @@ export class LoginScreen extends React.Component {
                     message: 'Trouble logging in. Please close and reopen app'
                 }
             })
-            //2 more times - then show issue with accountId itself?
+            
 
             return
         }
         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
-        // this.props.navigation.navigate('OrderScreen')
+        this.props.navigation.navigate('OrderScreen')
     }
 
     autoLogin = async () => {

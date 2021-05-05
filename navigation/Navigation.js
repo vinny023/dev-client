@@ -37,31 +37,14 @@ const headerStyling = { backgroundColor: colors.background.primary, elevation: 0
 const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text}
 
 const PlaceOrderTab = () => {
-  const [currentUser, setcurrentUser] = useState(false)
-  useEffect(() => {
-    const getUser=async()=>{
-      try{
-        user=await AsyncStorage.getItem('accountId')
-        setcurrentUser(user)
-      }catch(e){
-        console.log(e)
-      }
-    }
-    getUser();
-  }, [])
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
-      {!currentUser?
-      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />
-      :
-      <>
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>      
+      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />      
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />}}  />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
-      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
-      </>
-}
-    </OrderTabStack.Navigator>
+      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />     
+      </OrderTabStack.Navigator>
   )
 }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ViewOrders from '../../components/ViewOrders'
 import { Text, View, Image, Button, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { getOrders, setOrder } from '../../apis/apis'
 import Banner from '../../components/Global/Banner'

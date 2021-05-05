@@ -81,7 +81,7 @@ class ProductListItem extends React.Component {
         const { item } = this.props
 
         //  console.log('PRODUCT LIST ITEM RENDERING')
-        console.log("ITEM---------------------------",item)
+        // console.log("ITEM---------------------------",item)
         // console.log(item.displayName)
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
         return (

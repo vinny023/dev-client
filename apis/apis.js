@@ -35,8 +35,8 @@ export const getOrders = async({query, sort}) => {
 export const placeOrder = async({supplierOrder})  => {
     console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
     const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
-    if (returnval.status === 200 && returnval.data.orderSaved) {
-        return returnval.data.orderSaved           
+    if (returnval.status === 200 && returnval.data.orderSent) {
+        return returnval.data.orderSent   
     }  else {
         throw 500
     }    
@@ -71,10 +71,13 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
     if ([...initialFilter, ...modFilter].length !== 0) { queryString += 'filterQuery='+encodeURI(JSON.stringify([...initialFilter, ...modFilter]))+"&" }
     if (sort.length !== 0) {queryString += 'sortQuery='+encodeURI(JSON.stringify(sort))}
 
+    console.log("GET PRODUCTS CALL")
+    console.log(NETLIFY+'getProducts'+queryString)
+
     //GET PRODUCTS BASED ON QUERY   
     const productList = await axios.get(NETLIFY+'getProducts'+queryString, headers)
     if (productList.status === 200 && productList.data.products) {
-        return productList.data.products
+        return productList.data
     } else {
         throw 500     
     }
