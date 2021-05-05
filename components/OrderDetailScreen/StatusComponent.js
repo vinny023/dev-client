@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text,StyleSheet } from 'react-native'
-import { colors, commonStyles, sizes } from '../theme'
+import { colors, commonStyles, sizes } from '../../theme'
 
 export default function StatusComponent({status,placeDate,confirmDate,deliverDate}) {
     return (

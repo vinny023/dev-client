@@ -5,7 +5,7 @@ import React from 'react';
 import { View, Button, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
 import { RadioButton } from 'react-native-paper'
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../AppButton';
+import AppButton from '../Global/AppButton';
 //import { Modal } from '@ui-kitten/components';
 import Modal from 'react-native-modal'
 // import {RangeSlider} from 'rn-range-slider';

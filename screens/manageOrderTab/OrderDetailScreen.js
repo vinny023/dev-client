@@ -8,12 +8,11 @@ import { View, Text, Button, ScrollView, Image, ActivityIndicator,Linking } from
 import { getOrders, setOrder } from '../../apis/apis'
 import * as actions from '../../redux/actions'
 import _ from 'lodash'
-import { ThemeService } from '@ui-kitten/components/theme/theme/theme.service';
+// import { ThemeService } from '@ui-kitten/components/theme/theme/theme.service';
 import { colors, commonStyles, sizes } from '../../theme';
 import StepIndicator from 'react-native-step-indicator';
-import AppButton from '../../components/AppButton';
-import StatusComponent from '../../components/StatusComponent';
-import CustomHeader from '../../components/CustomHeader';
+import AppButton from '../../components/Global/AppButton';
+import StatusComponent from '../../components/OrderDetailScreen/StatusComponent'
 
 import TruckLogo from '../../assets/truck.png';
 // var TruckLogo=require('../../assets/truck.png')
@@ -161,7 +160,7 @@ export class OrderDetailScreen extends React.Component {
     //console.log(order.selectedDeliveryDate,"date test")
     return (
       <>
-        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60}]}>
+        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60,paddingTop:10}]}>
           <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />

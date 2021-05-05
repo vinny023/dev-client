@@ -10,7 +10,7 @@ import { ThemeProvider } from '@react-navigation/native';
 import axios from 'axios';
 import * as actions from '../../redux/actions.js'
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../../components/AppButton';
+import AppButton from '../../components/Global/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 

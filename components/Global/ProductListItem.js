@@ -4,7 +4,7 @@ import * as actions from '../../redux/actions'
 import { connect } from 'react-redux'
 import _ from 'lodash';
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../../components/AppButton'
+import AppButton from './AppButton'
 // export class ProductListItem extends React.Component {
 //     constructor(props) {
 //         super(props)
@@ -81,8 +81,7 @@ class ProductListItem extends React.Component {
         const { item } = this.props
 
         //  console.log('PRODUCT LIST ITEM RENDERING')
-        // console.log("ITEM---------------------------",item)
-        // console.log(item.displayName)
+
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
         return (
             <View style={styles.productItem}>{
@@ -92,12 +91,14 @@ class ProductListItem extends React.Component {
                         <AppButton
                             text={item.supplierDisplayName}
                             style={{ height: 30, paddingHorizontal: 10, marginVertical: 5 }}
-                            textStyle={{ fontSize: sizes.s14,fontFamily:'medium' }}
+                            textStyle={{ fontSize: sizes.s14, fontFamily: 'medium' }}
                         />
-                        <View >
-                            <Text style={styles.text, { textAlign: "right", fontWeight: "bold" }}>${item.price}</Text>
-                            <Text style={commonStyles.lightText, { textAlign: "right" }}>40 Lbs</Text>
-                        </View>
+                        {this.state.quantity >= 1 &&
+                            <View >
+                                <Text style={styles.text, { textAlign: "right", fontWeight: "bold" }}>${item.price}</Text>
+                                <Text style={commonStyles.lightText, { textAlign: "right" }}>40 Lbs</Text>
+                            </View>
+                        }
                     </View>
                     <View style={styles.row}>
                         <View style={{ flex: 1 }}>
@@ -107,36 +108,44 @@ class ProductListItem extends React.Component {
                         </View>
                         {!this.props.reorderOnly &&
                             <View style={{ paddingTop: 10 }}>
-                                
+
                                 {this.state.quantity == 0 ?
                                     <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
                                         <Text style={[styles.boldText, { fontSize: sizes.s30, fontFamily: 'bold' }]}>+</Text>
                                     </TouchableOpacity>
                                     :
-                                    <View style={styles.counterContainer}>
-                                        {/* MINUS BUTTON */}
-                                        <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
-                                            <Text style={styles.boldText}>-</Text>
-                                        </TouchableOpacity>
-                                        <Text style={styles.boldText}>{this.state.quantity}</Text>
-                                        {/* ADD BUTTON */}
-                                        <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
-                                            <Text style={styles.boldText}>+</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                }
-                                {
-                                    (item.quantity >= 1) && (
-                                    // <Button
-                                    //     title="Remove"
-                                    //     onPress={this.removeItem}
-                                    // />
+                                    <>
+                                        <View style={styles.counterContainer}>
+                                            {/* MINUS BUTTON */}
+                                            <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
+                                                <Text style={styles.boldText}>-</Text>
+                                            </TouchableOpacity>
+                                            <View style={styles.signContainer}>
 
-                                    <TouchableOpacity onPress={this.removeItem} style={{paddingTop:10}}>
-                                        <Text style={[commonStyles.lightText,{color:colors.pink}]}>Remove Item</Text>
-                                    </TouchableOpacity>
-                                    )
+                                                <Text style={styles.boldText}>{this.state.quantity}</Text>
+                                            </View>
+                                            {/* ADD BUTTON */}
+                                            <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
+                                                <Text style={styles.boldText}>+</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 10 }}>
+                                            <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
+                                        </TouchableOpacity>
+                                    </>
                                 }
+                                {/* {
+                                    (item.quantity >= 1) && (
+                                        // <Button
+                                        //     title="Remove"
+                                        //     onPress={this.removeItem}
+                                        // />
+
+                                        <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 10 }}>
+                                            <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
+                                        </TouchableOpacity>
+                                    )
+                                } */}
                             </View>
                         }
                         {this.props.reorderOnly &&
@@ -146,8 +155,8 @@ class ProductListItem extends React.Component {
                             //     textStyle={{ color: colors.blue.primary }}
                             //     onPress={this.addItemQty}
                             // />
-                            <TouchableOpacity style={[styles.counterContainer,{paddingHorizontal:20,marginTop:15}]}>
-                                <Text style={[styles.boldText,{fontSize:sizes.s15,fontFamily:'medium'}]}>Reorder</Text>
+                            <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
+                                <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
                             </TouchableOpacity>
 
                         }
@@ -192,7 +201,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     text: {
-       // fontSize: sizes.s16,
+        // fontSize: sizes.s16,
         fontSize: sizes.s15,
         fontFamily: 'medium',
         color: colors.text,
@@ -203,15 +212,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 10,
         backgroundColor: colors.blue.light,
-        borderRadius: 10
+        borderRadius: 10,
+        width: 100
     },
     signContainer: {
-        paddingHorizontal: 15
+        paddingHorizontal: 10,
+        // alignItems:'center',
+        //backgroundColor:'red'
     },
     boldText: {
         fontSize: sizes.s20,
         fontFamily: 'bold',
-        color: colors.blue.primary
+        color: colors.blue.primary,
+        textAlign: 'center'
     },
     addContainer: {
         backgroundColor: colors.blue.light,

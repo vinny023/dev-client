@@ -9,7 +9,7 @@ import * as data from '../../databaseMock'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAccount } from '../../apis/apis'
 import _ from 'lodash'
-import AppButton from '../../components/AppButton';
+import AppButton from '../../components/Global/AppButton';
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
@@ -130,8 +130,6 @@ export class LoginScreen extends React.Component {
                 })
                
             }
-
-
         } catch (error) {
             console.log(error)
             this.setState({
@@ -195,6 +193,7 @@ export class LoginScreen extends React.Component {
 
     }
     async componentDidMount() {
+        
         this.autoLogin()
     }
 
@@ -223,7 +222,8 @@ export class LoginScreen extends React.Component {
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
                     style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
-                    secureTextEntry />
+                   // secureTextEntry 
+                    />
                 </View>
                 <AppButton
                     text="Login"

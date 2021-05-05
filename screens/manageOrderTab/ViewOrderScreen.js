@@ -6,7 +6,7 @@ import Banner from '../../components/Global/Banner'
 //import * as Sentry from 'sentry-expo';
 import { useNavigation } from '@react-navigation/native';
 import { colors, commonStyles, sizes } from '../../theme'
-import AppButton from '../../components/AppButton'
+import AppButton from '../../components/Global/AppButton'
 import Modal from 'react-native-modal'
 import { Ionicons } from '@expo/vector-icons'
 import { RadioButton } from 'react-native-paper'
@@ -163,12 +163,16 @@ class ViewOrderScreen extends React.Component {
                     style={commonStyles.modalView}
                 >
                     <View style={[commonStyles.centeredView, { paddingTop: 40, padding: 20 }]}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                            <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => this.setState({ showFilterModal: false })}>
-                                <Ionicons name='ios-arrow-back' size={sizes.s25} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.setState({ showFilterModal: false })} >
+                                <Ionicons name='close' size={sizes.s20} />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1, textAlign: 'center' }}>Filter Orders</Text>
+                            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                         </View>
+                        <View>
+                            <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter Orders</Text>
+                        </View>
+                       
                         <View style={{ paddingTop: 40 }}>
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
@@ -214,7 +218,7 @@ class ViewOrderScreen extends React.Component {
                                 {
                                     openOrders.map((order, i) => <OrderButton key={i} order={order} />)
                                 }
-                               
+
                             </View>
                         </View>
                         : <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
