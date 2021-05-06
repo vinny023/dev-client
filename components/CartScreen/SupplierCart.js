@@ -89,31 +89,31 @@ export class SupplierCart extends React.Component {
                                     <Text style={styles.text}>{this.props.supplierDetail.displayName}</Text>
                                 </View> : <></>
                         }
-                        <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginTop: 5 }}>
+                        <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginVertical: 5 }}>
                             <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
                         </View>
                         {/* ----------- Set Delivery Card ---------*/}
-                        <TouchableOpacity style={styles.container} onPress={() => this.setState({ toggleDateFilter: true })}>
+                        <View style={styles.container}>
                             <View style={[styles.row, { paddingVertical: 0, paddingTop: 10 }]}>
-                                <Text style={styles.heading}>Delivery</Text>
+                                <Text style={[styles.heading,{fontSize:sizes.s17}]}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
                             <View style={[styles.row, { paddingVertical: 3 }]}>
-                                <TouchableOpacity >
-                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular' }}>Tap to Edit</Text>
+                                <TouchableOpacity  onPress={() => this.setState({ toggleDateFilter: true })}>
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
                                 <Text style={commonStyles.lightText}>12AM - 5AM</Text>
                             </View>
-                        </TouchableOpacity>
+                        </View>
                         {/* ---------- Add notes Card ---------- */}
-                        <TouchableOpacity style={[styles.container, { marginVertical: 0, marginBottom: 10 }]} onPress={() => this.setState({ toggleNotesFilter: true })}>
+                        <TouchableOpacity style={[styles.container,]} onPress={() => this.setState({ toggleNotesFilter: true })}>
                             <View style={[commonStyles.row, { justifyContent: 'space-between', }]}>
                                 <Text style={styles.heading}>Add Order notes</Text>
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
                         </TouchableOpacity>
                         {(this.props.supplierDetail && this.props.supplierOrder) ?
-                            <View style={{ backgroundColor: colors.white, padding: 20, borderRadius: 10 }} >
+                            <View style={styles.container} >
                                 {/* <View style={styles.row}>
                                     <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
                                     <Text>{orderTotal - deliveryFee}</Text>
@@ -139,19 +139,19 @@ export class SupplierCart extends React.Component {
                                 <View>
                                     <View style={styles.row}>
                                         <Text style={styles.lightText}>Free Delivery Minimum </Text>
-                                        <Text style={styles.boldText}>$ 1024</Text>
+                                        <Text style={styles.boldText}>$1024</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.lightText}>Subtotal: </Text>
-                                        <Text style={styles.boldText}>$ 1,100.00</Text>
+                                        <Text style={styles.boldText}>$1,100.00</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.lightText}>Delivery Fee: </Text>
-                                        <Text style={styles.boldText}>$ 20</Text>
+                                        <Text style={styles.boldText}>$20</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.lightText}>Total </Text>
-                                        <Text style={styles.boldText}>$ 1,500</Text>
+                                        <Text style={styles.boldText}>$1,500</Text>
                                     </View>
                                 </View>
                             </View> : <></>
@@ -167,8 +167,7 @@ export class SupplierCart extends React.Component {
                                 isVisible={this.state.toggleDateFilter}
 
                             >
-                                <KeyboardAvoidingView>
-
+                               
                                     <View style={commonStyles.centeredView}>
                                         <ScrollView contentContainerStyle={{ padding: 20 }}>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
@@ -179,7 +178,7 @@ export class SupplierCart extends React.Component {
                                                 <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1, textAlign: 'center' }}>Select Delivery</Text>
                                             </View>
                                             <Text style={styles.heading}>Select Day</Text>
-                                            <View style={[styles.container, { marginBottom: 15 }]}>
+                                            <View style={[styles.container, { marginBottom: 10,marginTop:5 }]}>
                                                 {createDaySelection(this.props.supplierDetail).map(val => {
                                                     const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
                                                     return (
@@ -229,7 +228,6 @@ export class SupplierCart extends React.Component {
                                         </ScrollView>
                                         <AppButton text="APPLY" style={{ marginHorizontal: 10 }} onPress={() => this.setState({ toggleDateFilter: false })} />
                                     </View>
-                                </KeyboardAvoidingView>
 
                             </Modal>
                         }
@@ -250,19 +248,19 @@ export class SupplierCart extends React.Component {
                                     </View>
                                     <View>
                                         <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Add Order Notes</Text>
-                                        <View style={{ paddingTop: 30 }}>
+                                        <View style={{ paddingTop: 15 }}>
                                             <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
                                         </View>
                                         <View style={{ marginTop: 15 }}>
                                             <TextInput
                                                 multiline
-                                                numberOfLines={12}
+                                                numberOfLines={16}
                                                 style={styles.input}
                                                 onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }, index: index })} />
                                         </View>
                                     </View>
                                 </ScrollView>
-                                <View style={{ flex:1,paddingBottom:20 }}>
+                                <View>
 
                                     <AppButton text="APPLY" style={{ marginHorizontal: 10}} onPress={() => this.setState({ toggleNotesFilter: false })} />
                                 </View>
@@ -332,9 +330,10 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: colors.white,
-        padding: 15,
+        paddingVertical: 8,
+        paddingHorizontal:15,
         borderRadius: 10,
-        marginVertical: 10
+        marginVertical: 5
     },
     text: {
         fontFamily: 'medium',

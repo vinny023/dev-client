@@ -216,7 +216,7 @@ export class LoginScreen extends React.Component {
                 <View style={{ paddingLeft: 10 }}>
                     <Text style={{ fontSize: sizes.s25-2, fontFamily: 'bold', color: colors.text }}>Login to SupplyHero</Text>
                 </View>
-                <View style={{ marginTop: 60, marginBottom: 5 }}>
+                <View style={{ marginTop: 60,}}>
 
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 

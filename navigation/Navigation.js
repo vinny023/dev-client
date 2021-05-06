@@ -35,7 +35,7 @@ const myScreenOptions = {
   
 
 }
-const headerStyling = { backgroundColor: colors.background.primary, elevation: 0, }
+const headerStyling = { backgroundColor: colors.background.primary, elevation: 0,height:85 }
 const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text}
 
 const PlaceOrderTab = () => {
@@ -80,19 +80,22 @@ export default function Navigation() {
       <Tab.Navigator screenOptions={({ route }) => ({
         tabBarIcon: ({ focused}) => {
           let imageName;
+          let imageType;
           if (route.name === 'Shop & Order') {
+            imageType='bag'
             imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
           } else if (route.name === 'Track & Manage') {
+            imageType='truck'
             imageName = focused ? require('../assets/truck-black.png')        : require('../assets/truck-grey.png');
           }
-          return <Image source={imageName} style={{ marginTop: 10 }} />;
+          return <Image source={imageName} style={{ marginTop: 10,width:imageType==='bag'?19:30,height:imageType==='bag'?22:31 }} resizeMode={'contain'} />;
         },
       })}
         tabBarOptions={{
           activeTintColor   : colors.text,
           inactiveTintColor : colors.grey.light,
-          labelStyle        : { fontSize: sizes.s13, fontFamily: 'medium', marginBottom: 8 },
-          style             : { height: 60 }
+          labelStyle        : { fontSize: sizes.s11, fontFamily: 'medium', marginBottom: 8,paddingTop:8 },
+          style             : { height: 60,padding:10 }
         }}>
         <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
         <Tab.Screen name="Track & Manage" component={ManageOrderTab} />

@@ -160,7 +160,7 @@ export class OrderDetailScreen extends React.Component {
     //console.log(order.selectedDeliveryDate,"date test")
     return (
       <>
-        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60,paddingTop:10}]}>
+        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60,}]}>
           <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
@@ -177,11 +177,11 @@ export class OrderDetailScreen extends React.Component {
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={TruckLogo} style={{ marginRight: 10 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
-                  <Text style={{ fontSize: sizes.s18, fontFamily: 'medium', color: colors.text }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
+                  <Text style={{ fontSize: sizes.s17, fontFamily: 'medium', color: colors.grey.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.grey.primary }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
-              <View style={[commonStyles.card, { paddingTop: 18 }]}>
+              <View style={[commonStyles.card,{paddingBottom:5}]}>
                 <View style={{paddingLeft:10}}>
                 <Text style={commonStyles.lightHeading}>Order Status</Text>
                 </View>

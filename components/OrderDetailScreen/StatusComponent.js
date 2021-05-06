@@ -4,7 +4,7 @@ import { colors, commonStyles, sizes } from '../../theme'
 
 export default function StatusComponent({status,placeDate,confirmDate,deliverDate}) {
     return (
-        <View style={[commonStyles.row,{ margin: 10,marginBottom:5 }]}>
+        <View style={[commonStyles.row,{ marginHorizontal: 10,marginTop:5 }]}>
             <View>
                 <View style={[styles.line,{backgroundColor:colors.blue.primary}]} />
                 <Text style={styles.text}>Placed</Text>
@@ -27,7 +27,7 @@ const styles=StyleSheet.create({
  line:{
      height:4,
      width:90,
-     marginBottom:15,
+     marginBottom:10,
      marginRight:5
  },
  text:{

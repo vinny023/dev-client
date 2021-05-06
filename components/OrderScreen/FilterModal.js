@@ -166,12 +166,12 @@ export default class FilterModal extends React.Component {
                             </TouchableOpacity>
                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity style={{paddingBottom:7}}>
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter and Sort</Text>
                         </TouchableOpacity>
 
                         <Text style={styles.heading}>Sort By</Text>
-                        <View style={{ marginLeft: 7 }} >
+                        <View>
                             <ScrollView horizontal>
 
                                 {sortOptions.map((option, i) => {
@@ -201,7 +201,7 @@ export default class FilterModal extends React.Component {
                                             <AppButton
                                                 onPress={() => this.props.setSort(value)}
                                                 text={title.replace('(Selected)', '')}
-                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 }}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7}}
                                                 textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
 
                                         </View>
@@ -219,7 +219,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View key={i}>
                                         {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
-                                        <View style={{ marginLeft: 7 }}>
+                                        <View >
                                             <ScrollView horizontal>
                                                 {
                                                     options.map((option, k) => {
@@ -252,7 +252,7 @@ export default class FilterModal extends React.Component {
                                                                 <AppButton
                                                                     onPress={() => this.sizeHandler(filterValue)}
                                                                     text={label.replace('(Selected)', '')}
-                                                                    style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15 }}
+                                                                    style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5 }}
                                                                     textStyle={label.includes("Selected") ? styles.selectedText : styles.unselectedText} />
                                                             </View>
 
@@ -285,7 +285,7 @@ export default class FilterModal extends React.Component {
                                                     return (
                                                         <View key={k} style={commonStyles.row}>
                                                             <RadioButton
-
+                                                              
                                                                 value={label}
                                                                 label={label}
                                                                 uncheckedColor={'#E6F0FD'}

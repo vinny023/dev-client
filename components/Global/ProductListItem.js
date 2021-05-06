@@ -88,30 +88,48 @@ class ProductListItem extends React.Component {
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
-                        <AppButton
-                            text={item.supplierDisplayName}
-                            style={{ height: 30, paddingHorizontal: 10, marginVertical: 5 }}
-                            textStyle={{ fontSize: sizes.s14, fontFamily: 'medium' }}
-                        />
+                        {!this.props.reorderOnly &&
+                            <AppButton
+                                text={item.supplierDisplayName}
+                                style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
+                                textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
+                            />
+                        }
                         {this.state.quantity >= 1 &&
-                            <View >
-                                <Text style={styles.text, { textAlign: "right", fontWeight: "bold" }}>${item.price}</Text>
-                                <Text style={commonStyles.lightText, { textAlign: "right" }}>40 Lbs</Text>
+                            <View style={{ marginTop: 5,flex:1 }} >
+                                <View style={{ paddingBottom: 3 }}>
+                                    <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price}</Text>
+                                </View>
+                                <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>40 Lbs</Text>
                             </View>
                         }
                     </View>
                     <View style={styles.row}>
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 0.9 }}>
                             <Text style={styles.text}>{item.displayName}</Text>
-                            <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
-                            <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>$2.80 ($0.01 / count) </Text>
+                            {this.props.reorderOnly ?
+                                <View style={[styles.row, { marginTop: 3 }]}>
+                                    <View style={[styles.addContainer, { borderRadius: 10 }]}>
+                                        <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
+                                        <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>$2.80 ($0.01 / count) </Text>
+                                    </View>
+                                </View>
+                                :
+                                <View>
+                                    <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
+                                    <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>$2.80 ($0.01 / count) </Text>
+                                </View>
+                            }
                         </View>
                         {!this.props.reorderOnly &&
                             <View style={{ paddingTop: 10 }}>
 
                                 {this.state.quantity == 0 ?
                                     <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
-                                        <Text style={[styles.boldText, { fontSize: sizes.s30, fontFamily: 'bold' }]}>+</Text>
+                                        <Text style={[styles.boldText]}>+</Text>
                                     </TouchableOpacity>
                                     :
                                     <>
@@ -149,15 +167,15 @@ class ProductListItem extends React.Component {
                             </View>
                         }
                         {this.props.reorderOnly &&
-                            // <AppButton
-                            //     text="Reorder"
-                            //     style={{ backgroundColor: colors.blue.light, }}
-                            //     textStyle={{ color: colors.blue.primary }}
-                            //     onPress={this.addItemQty}
-                            // />
-                            <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
-                                <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
-                            </TouchableOpacity>
+                            <AppButton
+                                text="Reorder"
+                                style={{ paddingHorizontal: 20, height: 42 }}
+                                textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
+                                onPress={this.addItemQty}
+                            />
+                            // <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
+                            //     <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
+                            // </TouchableOpacity>
 
                         }
                     </View>

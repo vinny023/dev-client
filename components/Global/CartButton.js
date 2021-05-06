@@ -16,7 +16,8 @@ export function CartButton({ masterCart }) {
             <Image
                 source={require('../../assets/cartIcon.png')}
                 //onError={({ nativeEvent: { error } }) => console.log('error',error)}
-                color={colors.blue} size={sizes.s16} style={{ marginRight: 10,}} />
+                style={{ marginRight: 8,height:18,width:18}}
+                resizeMode={"contain"}/>
             <Text style={styles.cartItems}>{masterCart.reduce((length, supplierCart) => {
                 if (supplierCart.cart) {
                     return length + supplierCart.cart.length
@@ -45,14 +46,14 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 20,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingHorizontal: 17,
+        paddingVertical: 7,
         marginRight: 15,
 
     },
     cartItems: {
-        fontSize: sizes.s19,
-        fontFamily: 'medium',
+        fontSize: sizes.s18,
+        fontFamily: 'bold',
         color: colors.blue.primary,
     }
 })

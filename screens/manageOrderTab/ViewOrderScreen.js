@@ -19,13 +19,13 @@ const OrderButton = ({ order }) => {
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={require('../../assets/woolco.png')} style={{ width: 45, height: 45, marginRight: 10 }} />
+            <Image source={require('../../assets/woolco.png')} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{ marginBottom: 2 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
             </View>
-            <Text style={[commonStyles.text, { fontSize: sizes.s16, flex: 0.8, textAlign: 'right' }]}>${order.supplierDetail.orderMinimum}</Text>
+            <Text style={[commonStyles.text, { fontSize: sizes.s17, flex: 0.8, textAlign: 'right' }]}>${order.supplierDetail.orderMinimum}</Text>
         </TouchableOpacity>
     )
 }
@@ -153,9 +153,7 @@ class ViewOrderScreen extends React.Component {
 
             <ScrollView style={[commonStyles.container, { paddingHorizontal: 15 }]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
-                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
-                </TouchableOpacity>
+
                 <Modal
                     isVisible={this.state.showFilterModal}
                     animationType="slide"
@@ -172,7 +170,7 @@ class ViewOrderScreen extends React.Component {
                         <View>
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter Orders</Text>
                         </View>
-                       
+
                         <View style={{ paddingTop: 40 }}>
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
@@ -209,8 +207,11 @@ class ViewOrderScreen extends React.Component {
                 <View style={{ paddingBottom: 60 }}>
                     {openOrders.length > 0 ?
                         <View>
-                            <View style={{ paddingLeft: 10 }}>
+                            <View style={[commonStyles.row,{ paddingLeft: 10,justifyContent:'space-between',paddingVertical:0,paddingBottom:3 }]}>
                                 <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
+                                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter Orders</Text>
+                                </TouchableOpacity>
                             </View>
                             { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }

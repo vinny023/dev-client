@@ -273,7 +273,7 @@ export class CartScreen extends React.Component {
                                     })}
                             </View>
                         </ScrollView>
-                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '95%',backgroundColor:'rgba(255,255,255,.5)'}}>
+                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '95%',backgroundColor:'rgba(255,255,255,.3)'}}>
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
                                     style={{marginTop:0, }}

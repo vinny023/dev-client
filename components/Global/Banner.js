@@ -74,7 +74,8 @@ export default class Banner extends React.Component {
 
 const styles = StyleSheet.create({
     banner: {
-        opacity: 1
+        opacity: 1,
+        paddingVertical:28
     },
     bannerTitle: {
         fontSize: sizes.s14,
@@ -82,6 +83,12 @@ const styles = StyleSheet.create({
         fontFamily: 'regular',
         color: colors.white,
         textAlign: 'center',
+        elevation:3,
+        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowOffset: {
+          width: 3,
+          height: 6
+        },
 
     }
 

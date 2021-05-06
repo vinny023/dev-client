@@ -68,7 +68,7 @@ setSuggestion=()=>{
     render() {
         return (
             <View>
-                <View style={[styles.container, { marginTop: 15, borderRadius: 10, paddingRight: 15, }]}>
+                <View style={[styles.container, { marginTop: 15, borderRadius: 10, paddingRight: 15,borderColor:this.state.showSuggestions?colors.blue.primary:colors.white,borderWidth:1, }]}>
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
@@ -77,8 +77,8 @@ setSuggestion=()=>{
                         onSubmitEditing={event => this.setSearch(event.nativeEvent.text)}
                         onFocus={this.setSuggestion}
                     />
-                    {this.state.showSuggestions ?
-                        <TouchableOpacity onPress={() => this.clearSearch()} style={{width:'15%',padding:10,alignItems:'center'}}>
+                    {this.state.showSuggestions || this.state.searchTerm ?
+                        <TouchableOpacity onPress={() => this.clearSearch()} style={{width:'15%',alignItems:'flex-end'}}>
                             <Ionicons name="ios-close" color={colors.text} size={sizes.s20} />
                         </TouchableOpacity>
                         :
@@ -100,12 +100,13 @@ setSuggestion=()=>{
 
 const styles = StyleSheet.create({
     container: {
+        
         backgroundColor: colors.white,
         paddingHorizontal: 11,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 50
+        height: 42
 
     },
 })

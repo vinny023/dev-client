@@ -9,11 +9,15 @@ export default class OrderScreen extends React.Component {
         return (
             <>
                 <View style={styles.container}>
-                    <TouchableOpacity style={this.props.mode === 'Order Guide' ? [styles.switchModeContainer, { backgroundColor: colors.white }] : [styles.switchModeContainer, { backgroundColor: '#E7EAEC' }]} onPress={() => this.props.setMode('Order Guide')}>
-                        <Text style={this.props.mode === 'Order Guide' ? styles.switchMode : styles.switchMode}>Order Guide</Text>
+                    <TouchableOpacity style={[styles.switchModeContainer, this.props.mode === 'Order Guide' ? styles.activeOrderGuide : styles.inactiveOrderGuide]}
+                        onPress={() => this.props.setMode('Order Guide')}>
+                        <Text style={[styles.switchMode, { color: this.props.mode === 'Order Guide' ? colors.text : colors.grey.primary }]}>Order Guide</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={this.props.mode === 'Browse Full Catalog' ? [styles.switchModeContainer, { backgroundColor: colors.white }] : [styles.switchModeContainer, { backgroundColor: '#E7EAEC' }]} onPress={() => this.props.setMode('Catalog')}>
-                        <Text style={this.props.mode === 'Browse Full Catalog' ? styles.switchMode : styles.switchMode} >Catalog</Text>
+                    <TouchableOpacity
+                        //
+                        style={[styles.switchModeContainer, this.props.mode === 'Browse Full Catalog' ? styles.activeCatalog : styles.inactiveCatalog]}
+                        onPress={() => this.props.setMode('Catalog')}>
+                        <Text style={[styles.switchMode, { color: this.props.mode === 'Browse Full Catalog' ? colors.text : colors.grey.primary }]} >Catalog</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -31,20 +35,43 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // padding:10,
         marginTop: 15,
-      
+        top: 5,
+
+        marginBottom: 18
+
     },
     switchModeContainer: {
         width: '48%',
-        paddingVertical: 10,
+        paddingVertical: 7,
         alignItems: 'center',
         justifyContent: 'center',
-        //backgroundColor: '#E7EAEC',
-        borderRadius:10
+        borderRadius: 10,
+        position: 'absolute',
+
     },
     switchMode: {
         fontSize: sizes.s15,
         fontFamily: 'medium',
-        
+
     },
-    
+    activeOrderGuide: {
+        backgroundColor: colors.white,
+        left: 0,
+        zIndex: 40,
+        marginRight: '43%'
+    },
+    inactiveOrderGuide: {
+        backgroundColor: '#E7EAEC',
+        left: 0,
+        zIndex: -30
+    },
+    activeCatalog: {
+        backgroundColor: colors.white,
+         right: 0, 
+         zIndex: 40, 
+         marginLeft: '43%'
+    },
+    inactiveCatalog: { backgroundColor: '#E7EAEC', right: 0, zIndex: 30 }
+
+
 })
