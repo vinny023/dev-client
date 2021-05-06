@@ -7,7 +7,7 @@ import fetchReducer from './fetchReducer'
 const rootReducer = combineReducers({
     accountState: accountReducer, 
     cartState: cartReducer,
-    ordersState: orderReducer
+    // ordersState: orderReducer
 })
 
 export default rootReducer

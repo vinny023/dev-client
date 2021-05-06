@@ -10,13 +10,13 @@ import { ThemeProvider } from '@react-navigation/native';
 import axios from 'axios';
 import * as actions from '../../redux/actions.js'
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../../components/AppButton';
+import AppButton from '../../components/Global/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const setOrderDetails = ({ masterCart, account }) => {
 
-    const { id, displayName, confirmationEmail, supplierContact } = account
+    const { id, displayName, confirmationEmail, supplierContact,deliveryLocations } = account
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
         .map(supplierOrder => {
@@ -25,6 +25,8 @@ const setOrderDetails = ({ masterCart, account }) => {
                     accountId: id,
                     accountDisplayName: displayName,
                     accountConfirmationEmail: confirmationEmail,
+                    //ONLY HANDLE SINGLE DELIVERY LOCATION FOR NOW
+                    deliveryLocation: deliveryLocations[0],
                     supplierContact: {
                         contact: supplierContact[supplierOrder.supplierId].contact,
                         contactType: supplierContact[supplierOrder.supplierId].supplierContactType
@@ -158,6 +160,12 @@ export class CartScreen extends React.Component {
 
         //write to db & send email
         try {
+            this.setState({
+                banner: {
+                    show: true, type: 'message',
+                    message: 'Placing order to ' + order.supplierDetail.displayName
+                }
+            })
             const response = await placeOrder({ supplierOrder: order })
             console.log(response)
             const body = response.data
@@ -166,7 +174,7 @@ export class CartScreen extends React.Component {
             this.setState({
                 banner: {
                     show: true, type: 'success',
-                    message: 'Your order to ' + order.supplierId + 'was placed!'
+                    message: 'Your order to ' + order.supplierDetail.displayName + ' was placed!'
                 }
             })
         } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.
@@ -265,10 +273,10 @@ export class CartScreen extends React.Component {
                                     })}
                             </View>
                         </ScrollView>
-                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
+                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '95%',backgroundColor:'rgba(255,255,255,.3)'}}>
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
-                                    style={{ marginHorizontal: 10 }}
+                                    style={{marginTop:0, }}
                                     text="Place Full Order"
                                     onPress={this.placeFullOrder}
                                 />

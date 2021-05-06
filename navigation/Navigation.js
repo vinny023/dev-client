@@ -31,46 +31,31 @@ const OrderTabStack = createStackNavigator();
 const myScreenOptions = {
 
   headerRight: () => <CartButton />,
+  
+  
 
 }
-const headerStyling = { backgroundColor: colors.background.primary, elevation: 0, }
+const headerStyling = { backgroundColor: colors.background.primary, elevation: 0,height:85 }
 const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text}
 
 const PlaceOrderTab = () => {
-  const [currentUser, setcurrentUser] = useState(false)
-  useEffect(() => {
-    const getUser=async()=>{
-      try{
-        user=await AsyncStorage.getItem('accountId')
-        setcurrentUser(user)
-      }catch(e){
-        console.log(e)
-      }
-    }
-    getUser();
-  }, [])
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
-      {!currentUser?
-      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />
-      :
-      <>
-      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />}}  />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>      
+      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />      
+      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />,}}  />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center'}} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
-      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
-      </>
-}
-    </OrderTabStack.Navigator>
+      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />     
+      </OrderTabStack.Navigator>
   )
 }
 
 const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
-    <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions} />  
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={myScreenOptions} />      
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={myScreenOptions} />
+    <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions,{headerTitle:'Manage Orders',headerRight:()=><CartButton />}} />  
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{headerTitle:null,}} />      
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center'}} />
     </OrderTabStack.Navigator>
   )
 }
@@ -95,19 +80,22 @@ export default function Navigation() {
       <Tab.Navigator screenOptions={({ route }) => ({
         tabBarIcon: ({ focused}) => {
           let imageName;
+          let imageType;
           if (route.name === 'Shop & Order') {
+            imageType='bag'
             imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
           } else if (route.name === 'Track & Manage') {
+            imageType='truck'
             imageName = focused ? require('../assets/truck-black.png')        : require('../assets/truck-grey.png');
           }
-          return <Image source={imageName} style={{ marginTop: 10 }} />;
+          return <Image source={imageName} style={{ marginTop: 10,width:imageType==='bag'?19:30,height:imageType==='bag'?22:31 }} resizeMode={'contain'} />;
         },
       })}
         tabBarOptions={{
           activeTintColor   : colors.text,
           inactiveTintColor : colors.grey.light,
-          labelStyle        : { fontSize: sizes.s13, fontFamily: 'medium', marginBottom: 8 },
-          style             : { height: 60 }
+          labelStyle        : { fontSize: sizes.s11, fontFamily: 'medium', marginBottom: 8,paddingTop:8 },
+          style             : { height: 60,padding:10 }
         }}>
         <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
         <Tab.Screen name="Track & Manage" component={ManageOrderTab} />

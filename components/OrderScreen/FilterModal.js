@@ -5,10 +5,12 @@ import React from 'react';
 import { View, Button, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Dimensions, } from 'react-native';
 import { RadioButton } from 'react-native-paper'
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../AppButton';
+import AppButton from '../Global/AppButton';
 //import { Modal } from '@ui-kitten/components';
 import Modal from 'react-native-modal'
-import RangeSlider from 'rn-range-slider';
+// import {RangeSlider} from 'rn-range-slider';
+//import Thumb from '../Slider/Thumb';
+//import CustomSlider from '../Slider/CustomSlider';
 
 const dimensions = Dimensions.get('window')
 const sortOptions = [
@@ -29,8 +31,8 @@ const filterOptions = [
     { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
 const getFilters = (productList) => {
-    console.log('IN FUCNTION PLIST')
-    console.log(productList)
+    // console.log('IN FUCNTION PLIST')
+    // console.log(productList)
 
     productList.forEach(product => {
         const { supplierDisplayName, supplierId, units, price, size, qtyPerItem } = product
@@ -140,8 +142,8 @@ export default class FilterModal extends React.Component {
     }
 
     render() {
-        console.log('PROPS')
-        console.log(this.props.productList)
+        // console.log('PROPS')
+        // console.log(this.props.productList)
 
         const filterOptions = getFilters(this.props.productList)
 
@@ -164,12 +166,12 @@ export default class FilterModal extends React.Component {
                             </TouchableOpacity>
                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity style={{paddingBottom:7}}>
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter and Sort</Text>
                         </TouchableOpacity>
 
                         <Text style={styles.heading}>Sort By</Text>
-                        <View style={{ marginLeft: 7 }} >
+                        <View>
                             <ScrollView horizontal>
 
                                 {sortOptions.map((option, i) => {
@@ -199,7 +201,7 @@ export default class FilterModal extends React.Component {
                                             <AppButton
                                                 onPress={() => this.props.setSort(value)}
                                                 text={title.replace('(Selected)', '')}
-                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 }}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7}}
                                                 textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
 
                                         </View>
@@ -217,7 +219,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View key={i}>
                                         {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
-                                        <View style={{ marginLeft: 7 }}>
+                                        <View >
                                             <ScrollView horizontal>
                                                 {
                                                     options.map((option, k) => {
@@ -250,7 +252,7 @@ export default class FilterModal extends React.Component {
                                                                 <AppButton
                                                                     onPress={() => this.sizeHandler(filterValue)}
                                                                     text={label.replace('(Selected)', '')}
-                                                                    style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15 }}
+                                                                    style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5 }}
                                                                     textStyle={label.includes("Selected") ? styles.selectedText : styles.unselectedText} />
                                                             </View>
 
@@ -283,7 +285,7 @@ export default class FilterModal extends React.Component {
                                                     return (
                                                         <View key={k} style={commonStyles.row}>
                                                             <RadioButton
-
+                                                              
                                                                 value={label}
                                                                 label={label}
                                                                 uncheckedColor={'#E6F0FD'}
@@ -353,26 +355,14 @@ export default class FilterModal extends React.Component {
                                                 {(title == "Price") &&
                                                     <View>
                                                         <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                         </View>
-                                                        <RangeSlider
-                                                            //  style={styles.slider}
-                                                            min={round(min, 0)}
-                                                            max={round(max, 0)}
-                                                            renderRail={this.renderRail}
-                                                            renderThumb={this.renderThumb}
-                                                            renderRailSelected={this.renderRailSelected}
-                                                            //low={this.state.low}
-                                                            step={1}
-                                                            // disableRange
-                                                            onValueChanged={this.handleValueChangePrice}
-                                                            renderLabel={this.renderLabel}
-                                                        />
+                                             
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                         </View>
                                                         {/* <TextInput
                                                             style={styles.input}
@@ -389,25 +379,13 @@ export default class FilterModal extends React.Component {
                                                             //Size
                                                             <View >
                                                                 <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
-                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
+                                                                    <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                                 </View>
-                                                                <RangeSlider
-                                                                    //  style={styles.slider}
-                                                                    min={round(min, 0)}
-                                                                    max={round(max, 0)}
-                                                                    renderRail={this.renderRail}
-                                                                    renderThumb={this.renderThumb}
-                                                                    renderRailSelected={this.renderRailSelected}
-                                                                    // low={this.state.low}
-                                                                    step={1}
-                                                                    // disableRange
-                                                                    onValueChanged={this.handleValueChangeSize}
-                                                                    renderLabel={this.renderLabel}
-                                                                />
+                                                               
                                                                 <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                                    <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                                 </View>
                                                             </View>
                                                             :
@@ -449,32 +427,14 @@ export default class FilterModal extends React.Component {
                                                     // />
                                                     <View>
                                                         <View style={[commonStyles.row, { justifyContent: "center" }]}>
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>$ {round(min, 0)} -</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
-                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> $ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                         </View>
-                                                        <RangeSlider
-                                                            //  style={styles.slider}
-                                                            min={round(min, 0)}
-                                                            max={round(max, 0)}
-                                                            renderRail={this.renderRail}
-                                                            renderThumb={this.renderThumb}
-                                                            renderRailSelected={this.renderRailSelected}
-                                                            // low={this.state.low}
-                                                            step={1}
-                                                            // disableRange
-                                                            onValueChanged={this.handleValueChangeQty}
-                                                            //     {
-                                                            //     console.log(low, high)
-                                                            //     this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(low)] })
-                                                            //     this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(high)] })
-                                                            // }
-
-                                                            renderLabel={this.renderLabel}
-                                                        />
+                                                 
                                                         <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(min, 0)}</Text>
-                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>$ {round(max, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
+                                                            <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                         </View>
                                                     </View>
                                                 }

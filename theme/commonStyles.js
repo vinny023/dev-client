@@ -2,7 +2,7 @@ import { colors, sizes } from ".";
 
 const commonStyles = {
   container: {
-    paddingTop: 25,
+    paddingTop: 10,
     paddingHorizontal: 10,
     backgroundColor: colors.background.primary,
     paddingBottom: 20
@@ -11,14 +11,21 @@ const commonStyles = {
     backgroundColor: colors.blue.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 45,
+    height: 41,
     borderRadius: 10,
     marginVertical: 20,
-    elevation: 3
+    elevation: 3,
+    shadowColor: 'rgba(0, 0, 0, 0.25)',
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    //shadowRadius: 5,
+    //shadowOpacity: 0.5
   },
   btnText: {
     color: colors.white,
-    fontSize: sizes.s17,
+    fontSize: sizes.s16,
      fontFamily: 'bold'
   },
   modalView: {
@@ -31,7 +38,7 @@ const commonStyles = {
     backgroundColor: colors.background.light,
     flex: 1,
     paddingTop: 20,
-    marginTop: 83,
+    marginTop: 80,
     borderTopRightRadius: 35,
     borderTopLeftRadius: 35
   },
