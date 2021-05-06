@@ -10,7 +10,7 @@ import { ThemeProvider } from '@react-navigation/native';
 import axios from 'axios';
 import * as actions from '../../redux/actions.js'
 import { colors, commonStyles, sizes } from '../../theme';
-import AppButton from '../../components/AppButton';
+import AppButton from '../../components/Global/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -273,10 +273,10 @@ export class CartScreen extends React.Component {
                                     })}
                             </View>
                         </ScrollView>
-                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%' }}>
+                        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '95%',backgroundColor:'rgba(255,255,255,.5)'}}>
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
-                                    style={{ marginHorizontal: 10 }}
+                                    style={{marginTop:0, }}
                                     text="Place Full Order"
                                     onPress={this.placeFullOrder}
                                 />

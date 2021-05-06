@@ -9,8 +9,8 @@ const sizes={
     s18: hp("2.4%"),
     s17: hp("2.3%"),
     s16: hp("2.2%"),
-    s15: hp("2.1%"),
+    s15: hp("1.9%"),
     s14: hp("2%"),
-    s13: hp("1.9%"),
+    s13: hp("1.7%"),
 }
 export default sizes;

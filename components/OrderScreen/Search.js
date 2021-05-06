@@ -31,7 +31,7 @@ class Search extends React.Component {
                 suggestions: this.props.account.searchSuggestions,
                 showSuggestions: true
             })
-            console.log("SUGGESTIONS",this.state.suggestions)
+           
         }
         else {
             this.setState({
@@ -47,6 +47,7 @@ class Search extends React.Component {
             showSuggestions: false
         })
         return this.props.setSearch(term)
+        
     }
 
     clearSearch() {
@@ -55,9 +56,15 @@ class Search extends React.Component {
             showSuggestions: false,
             suggestions: this.props.account.searchSuggestions
         })
-        return this.props.setSearch('')
+        return this.props.setSearch('')  
+        
+            
     }
-
+setSuggestion=()=>{
+   
+    this.setState({ showSuggestions: true })
+    return this.props.setSuggestion(true)
+}
     render() {
         return (
             <View>
@@ -68,7 +75,7 @@ class Search extends React.Component {
                         style={{ fontFamily: 'regular', width: '85%' }}
                         onChangeText={text => this.updateSuggestions(text)}
                         onSubmitEditing={event => this.setSearch(event.nativeEvent.text)}
-                        onFocus={() => this.setState({ showSuggestions: true })}
+                        onFocus={this.setSuggestion}
                     />
                     {this.state.showSuggestions ?
                         <TouchableOpacity onPress={() => this.clearSearch()} style={{width:'15%',padding:10,alignItems:'center'}}>
@@ -79,7 +86,7 @@ class Search extends React.Component {
                     }
                 </View>
                 {this.state.showSuggestions &&
-                    <View style={{ height: '100%'}}>
+                    <View>
                         <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white, marginTop: 30, }}>
                             {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
                         </View>

@@ -2,7 +2,7 @@ import { colors, sizes } from ".";
 
 const commonStyles = {
   container: {
-    paddingTop: 25,
+    paddingTop: 20,
     paddingHorizontal: 10,
     backgroundColor: colors.background.primary,
     paddingBottom: 20
