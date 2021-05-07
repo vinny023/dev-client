@@ -80,6 +80,11 @@ class ProductListItem extends React.Component {
 
         const { item } = this.props
 
+        let priceString = 'Pricing unavailable'
+        if (item.price) {
+            priceString = '$'+item.price +' ($'+item.unitCost+ ' / '+item.units+')'
+        }
+
         //  console.log('PRODUCT LIST ITEM RENDERING')
 
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
@@ -93,14 +98,19 @@ class ProductListItem extends React.Component {
                                 text={item.supplierDisplayName}
                                 style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
                                 textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
-                            />
+                            />                           
                         }
+                        <AppButton
+                            text={item.brand}
+                            style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
+                            textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
+                        />    
                         {this.state.quantity >= 1 &&
-                            <View style={{ marginTop: 5,flex:1 }} >
+                            <View style={{ marginTop: 5,flex:1 }} > { item.price &&
                                 <View style={{ paddingBottom: 3 }}>
-                                    <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price}</Text>
-                                </View>
-                                <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>40 Lbs</Text>
+                                    <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price*this.state.quantity}</Text>
+                                </View> }
+                                <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size*item.qtyPerItem*this.state.quantity} {item.units}</Text>
                             </View>
                         }
                     </View>
@@ -113,14 +123,14 @@ class ProductListItem extends React.Component {
                                         <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
                                     </View>
                                     <View>
-                                        <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
-                                        <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>$2.80 ($0.01 / count) </Text>
+                                        <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
+                                        <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>{priceString}</Text>
                                     </View>
                                 </View>
                                 :
                                 <View>
-                                    <Text style={[commonStyles.lightText,]}>5 x 2000 count</Text>
-                                    <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>$2.80 ($0.01 / count) </Text>
+                                    <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
+                                    <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>{priceString}</Text>
                                 </View>
                             }
                         </View>

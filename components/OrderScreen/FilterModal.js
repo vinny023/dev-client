@@ -25,6 +25,7 @@ const sortOptions = [
 
 const filterOptions = [
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
+    { 'title': 'Brand', 'field': 'brand', 'options': [] },
     { 'title': 'Units', 'field': 'units', 'options': [] },
     { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
     { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
@@ -39,7 +40,7 @@ const getFilters = (productList) => {
         const propertyArray = [supplierDisplayName, units, price, size, qtyPerItem]
 
         filterOptions.forEach((filterOption, index) => {
-            if (filterOption.title === 'Supplier' || filterOption.title === 'Units') {
+            if (filterOption.title === 'Supplier' || filterOption.title === 'Units' || filterOption.title === 'Brand') {
                 if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
                     filterOptions[index].options.push(propertyArray[index])
                 }
@@ -251,9 +252,9 @@ export default class FilterModal extends React.Component {
 
                                                                 <AppButton
                                                                     onPress={() => this.sizeHandler(filterValue)}
-                                                                    text={label.replace('(Selected)', '')}
-                                                                    style={{ backgroundColor: label.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5 }}
-                                                                    textStyle={label.includes("Selected") ? styles.selectedText : styles.unselectedText} />
+                                                                    text={option}
+                                                                    style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5 }}
+                                                                    textStyle={selected ? styles.selectedText : styles.unselectedText} />
                                                             </View>
 
                                                         )
@@ -290,11 +291,11 @@ export default class FilterModal extends React.Component {
                                                                 label={label}
                                                                 uncheckedColor={'#E6F0FD'}
                                                                 color={colors.blue.primary}
-                                                                status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                                status={selected ? 'checked' : 'unchecked'}
                                                                 onPress={() => this.props.setFilter(filterValue)}
                                                             />
                                                             <View style={{ marginLeft: 7 }}>
-                                                                <Text style={commonStyles.text}>{label.replace('(Selected)', '')}</Text>
+                                                                <Text style={commonStyles.text}>{option}</Text>
                                                             </View>
                                                         </View>
 
