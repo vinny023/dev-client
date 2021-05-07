@@ -21,11 +21,15 @@ const OrderButton = ({ order }) => {
         /> */}
             <Image source={require('../../assets/woolco.png')} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
+                
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{ marginBottom: 2 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
             </View>
-            <Text style={[commonStyles.text, { fontSize: sizes.s17, flex: 0.8, textAlign: 'right' }]}>${order.supplierDetail.orderMinimum}</Text>
+            <View style={[commonStyles.row,styles.priceContainer]}>
+                <Text style={[commonStyles.text, { fontSize: sizes.s14, textAlign: 'right' }]}>$</Text>
+                <Text style={[commonStyles.text, { fontSize: sizes.s17, textAlign: 'right' }]}>{order.supplierDetail.orderMinimum}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
@@ -171,7 +175,7 @@ class ViewOrderScreen extends React.Component {
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter Orders</Text>
                         </View>
 
-                        <View style={{ paddingTop: 40 }}>
+                        <View style={{ paddingTop: 20 }}>
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
                         <View style={[commonStyles.card]}>
@@ -204,10 +208,10 @@ class ViewOrderScreen extends React.Component {
                         <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={{ marginTop: 50 }} />
                     </View>
                 </Modal>
-                <View style={{ paddingBottom: 60 }}>
+                <View style={{ paddingBottom: 60,paddingTop:5 }}>
                     {openOrders.length > 0 ?
                         <View>
-                            <View style={[commonStyles.row,{ paddingLeft: 10,justifyContent:'space-between',paddingVertical:0,paddingBottom:3 }]}>
+                            <View style={[commonStyles.row, { paddingLeft: 10, justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 3 }]}>
                                 <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
                                 <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter Orders</Text>
@@ -261,3 +265,11 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(ViewOrderScreen)
+const styles=StyleSheet.create({
+    priceContainer:{
+        paddingVertical:0,
+        alignSelf:'flex-start',
+        paddingLeft:2,
+        paddingTop:7
+    }
+})

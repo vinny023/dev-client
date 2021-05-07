@@ -89,16 +89,16 @@ export class SupplierCart extends React.Component {
                                     <Text style={styles.text}>{this.props.supplierDetail.displayName}</Text>
                                 </View> : <></>
                         }
-                        <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginVertical: 5 }}>
+                        <View style={commonStyles.card}>
                             <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
                         </View>
                         {/* ----------- Set Delivery Card ---------*/}
-                        <View style={styles.container}>
-                            <View style={[styles.row, { paddingVertical: 0, paddingTop: 10 }]}>
+                        <View style={[commonStyles.card]}>
+                            <View style={[styles.row,{paddingBottom:3}]}>
                                 <Text style={[styles.heading,{fontSize:sizes.s17}]}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
-                            <View style={[styles.row, { paddingVertical: 3 }]}>
+                            <View style={[styles.row,{paddingBottom:0} ]}>
                                 <TouchableOpacity  onPress={() => this.setState({ toggleDateFilter: true })}>
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
@@ -106,14 +106,14 @@ export class SupplierCart extends React.Component {
                             </View>
                         </View>
                         {/* ---------- Add notes Card ---------- */}
-                        <TouchableOpacity style={[styles.container,]} onPress={() => this.setState({ toggleNotesFilter: true })}>
+                        <TouchableOpacity style={[commonStyles.card]} onPress={() => this.setState({ toggleNotesFilter: true })}>
                             <View style={[commonStyles.row, { justifyContent: 'space-between', }]}>
                                 <Text style={styles.heading}>Add Order notes</Text>
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
                         </TouchableOpacity>
                         {(this.props.supplierDetail && this.props.supplierOrder) ?
-                            <View style={styles.container} >
+                            <View style={[commonStyles.card]} >
                                 {/* <View style={styles.row}>
                                     <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
                                     <Text>{orderTotal - deliveryFee}</Text>
@@ -137,7 +137,7 @@ export class SupplierCart extends React.Component {
                                 }*/}
 
                                 <View>
-                                    <View style={styles.row}>
+                                    <View style={[styles.row,{paddingTop:3}]}>
                                         <Text style={styles.lightText}>Free Delivery Minimum </Text>
                                         <Text style={styles.boldText}>$1024</Text>
                                     </View>
@@ -236,7 +236,8 @@ export class SupplierCart extends React.Component {
                             animationType="slide"
                             backdropOpacity={.5}
                             style={commonStyles.modalView}
-                            isVisible={this.state.toggleNotesFilter}
+                           isVisible={this.state.toggleNotesFilter}
+                           
                         >
                             <View style={[commonStyles.centeredView,]}>
                                 <ScrollView style={{ padding: 20 }} >
@@ -251,10 +252,10 @@ export class SupplierCart extends React.Component {
                                         <View style={{ paddingTop: 15 }}>
                                             <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
                                         </View>
-                                        <View style={{ marginTop: 15 }}>
+                                        <View style={{ marginTop: 15,height:sizes.large,backgroundColor:'white',borderRadius:10 }}>
                                             <TextInput
                                                 multiline
-                                                numberOfLines={16}
+                                               // numberOfLines={16}
                                                 style={styles.input}
                                                 onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }, index: index })} />
                                         </View>
@@ -284,7 +285,7 @@ export class SupplierCart extends React.Component {
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                        style={{ marginTop: 0, backgroundColor: 'black', }}
+                                        style={{  backgroundColor: 'black',marginVertical:0,elevation:0 }}
                                     //backgroundColor:'rgba(0,0,0,.4)'
                                     />
                                 </View>
@@ -307,7 +308,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 10
+        paddingBottom:10
+        //paddingVertical: 10
     },
     lightText: {
         //fontSize: sizes.s17,
@@ -343,12 +345,11 @@ const styles = StyleSheet.create({
     },
     input: {
         padding: 10,
-
         lineHeight: 23,
         flex: 2,
         textAlignVertical: 'top',
-        backgroundColor: 'white',
-        borderRadius: 10
+       // backgroundColor: 'white',
+       // borderRadius: 10
     },
 
 })

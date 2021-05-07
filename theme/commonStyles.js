@@ -15,17 +15,17 @@ const commonStyles = {
     borderRadius: 10,
     marginVertical: 20,
     elevation: 3,
-    shadowColor: 'rgba(0, 0, 0, 0.25)',
+    shadowColor: 'rgba(0,0,0,0.20)',
     shadowOffset: {
       width: 0,
-      height: 4
+      height: 3
     },
     //shadowRadius: 5,
     //shadowOpacity: 0.5
   },
   btnText: {
     color: colors.white,
-    fontSize: sizes.s16,
+    fontSize: sizes.s15,
      fontFamily: 'bold'
   },
   modalView: {
@@ -67,9 +67,10 @@ const commonStyles = {
 },
 card: {
   backgroundColor: colors.white,
-  padding: 15,
+  paddingHorizontal: 15,
+  paddingVertical:10,
   borderRadius: 10,
-  marginTop: 10
+  marginTop: 7
 },
 bannerText:{
   //fontSize:sizes.s16,

@@ -2,6 +2,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 
 const sizes={
    
+    large:hp("50%"),
     s28: hp("4%"),
     s25: hp("3.1%"),
     s20: hp("2.6%"),
@@ -12,5 +13,6 @@ const sizes={
     s15: hp("1.9%"),
     s14: hp("2%"),
     s13: hp("1.7%"),
+    
 }
 export default sizes;

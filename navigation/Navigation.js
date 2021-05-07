@@ -35,15 +35,15 @@ const myScreenOptions = {
   
 
 }
-const headerStyling = { backgroundColor: colors.background.primary, elevation: 0,height:85 }
-const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text}
+const headerStyling = { backgroundColor: colors.background.primary, elevation: 0, }
+const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text, textAlignVertical:'bottom',top:10}
 
 const PlaceOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>      
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle,headerRightContainerStyle:{top:10} }}>      
       <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />      
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />,}}  />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center'}} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center',}} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />     
       </OrderTabStack.Navigator>
@@ -52,7 +52,7 @@ const PlaceOrderTab = () => {
 
 const ManageOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle }}>
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle,headerRightContainerStyle:{top:10} }}>
     <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions,{headerTitle:'Manage Orders',headerRight:()=><CartButton />}} />  
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{headerTitle:null,}} />      
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center'}} />
@@ -94,7 +94,7 @@ export default function Navigation() {
         tabBarOptions={{
           activeTintColor   : colors.text,
           inactiveTintColor : colors.grey.light,
-          labelStyle        : { fontSize: sizes.s11, fontFamily: 'medium', marginBottom: 8,paddingTop:8 },
+          labelStyle        : { fontSize: sizes.s13, fontFamily: 'medium', marginBottom: 8,paddingTop:8 },
           style             : { height: 60,padding:10 }
         }}>
         <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />

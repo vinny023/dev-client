@@ -203,7 +203,7 @@ export class OrderDetailScreen extends React.Component {
           }
           <AppButton text='Contact Woolco' onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us') } style={{marginTop:5,backgroundColor:colors.black,elevation:0}} />        
         </ScrollView>
-        <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',width:'100%',padingHorizontal:10 }}>
+        <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',padingHorizontal:10,backgroundColor:'rgba(255,255,255,.3)',width:'100%' }}>
           {order.status === 'Delivered' ?
           <></>
           :

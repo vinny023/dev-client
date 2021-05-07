@@ -7,17 +7,17 @@ export default function StatusComponent({status,placeDate,confirmDate,deliverDat
         <View style={[commonStyles.row,{ marginHorizontal: 10,marginTop:5 }]}>
             <View>
                 <View style={[styles.line,{backgroundColor:colors.blue.primary}]} />
-                <Text style={styles.text}>Placed</Text>
+                <Text style={[styles.text,{fontSize:sizes.s14}]}>Placed</Text>
                 <Text style={styles.text}>{placeDate}</Text>
             </View>
             <View>
                 <View style={[styles.line,{backgroundColor:status!=='Placed'?colors.blue.primary:colors.background.primary}]} />
-                <Text style={[styles.text,{color:status!=="Placed"?colors.text:colors.grey.light}]}>Confirmed</Text>
+                <Text style={[styles.text,{fontSize:sizes.s14,color:status!=="Placed"?colors.text:colors.grey.light}]}>Confirmed</Text>
                 <Text style={[styles.text,{color:status!=="Placed"?colors.text:colors.grey.light}]}>{confirmDate}</Text>
             </View>
             <View>
                 <View style={[styles.line,{backgroundColor:status==='Delivered'?colors.blue.primary:colors.background.primary}]} />
-                <Text style={[styles.text,{color:status==="Delivered"?colors.text:colors.grey.light}]}>Delivered</Text>
+                <Text style={[styles.text,{fontSize:sizes.s14,color:status==="Delivered"?colors.text:colors.grey.light}]}>Delivered</Text>
                 <Text style={[styles.text,{color:status==="Delivered"?colors.text:colors.grey.light}]}>{deliverDate}</Text>
             </View>
         </View>
@@ -33,7 +33,7 @@ const styles=StyleSheet.create({
  text:{
      fontFamily:'medium',
      //fontSize:sizes.s16,
-     fontSize:sizes.s14,
+     fontSize:sizes.s13,
      textAlign:'center'
  }
 })

@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import * as actions from '../../redux/actions'
 import { connect } from 'react-redux'
-import _ from 'lodash';
+//import _ from 'lodash';
+import _, { floor, round } from 'lodash';
+
 import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from './AppButton'
 // export class ProductListItem extends React.Component {
@@ -93,113 +95,97 @@ class ProductListItem extends React.Component {
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
-                        {!this.props.reorderOnly &&
-                            // <AppButton
-                            //     text={item.supplierDisplayName}
-                            //     style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
-                            //     textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
-                            // />
-                            <>
-                            <View style={styles.tagContainer}>
-                                <Text style={[commonStyles.btnText,{fontSize:sizes.s12,fontFamily:'medium'}]}>{item.supplierDisplayName}</Text>
+                        <View style={{flex:0.9,alignSelf:'flex-start',paddingRight:3}}>
+                            {!this.props.reorderOnly &&
+                              
+                                //--------- Tags------------
+                                <View style={[styles.row, { justifyContent:'flex-start' }]}>
+                                    <View style={styles.tagContainer}>
+                                        <Text style={[commonStyles.btnText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
+                                    </View>
+                                    {item.brand ?
+                                        <View style={[styles.tagContainer, { marginLeft: 4 }]}>
+                                            <Text style={[commonStyles.btnText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.brand}</Text>
+                                        </View>
+                                        : <></>
+                                    }
+                                </View>
+                            }
+                             {/* -------Item name Price and Units------- */}
+                            <View >
+                                <Text style={styles.text}>{item.displayName}</Text>
+                                {this.props.reorderOnly ?
+                                    <View style={[styles.row, { marginTop: 5, justifyContent: 'flex-start' }]}>
+                                        <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5 }]}>
+                                            <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
+                                            <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular', }]}>{priceString}</Text>
+                                        </View>
+                                    </View>
+                                    :
+                                    <View>
+                                        <Text style={[commonStyles.lightText,{paddingTop:2}]}>{item.qtyString}</Text>
+                                        <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
+                                    </View>
+                                }
                             </View>
-                            {/* <View style={styles.tagContainer}>
-                                <Text style={[commonStyles.btnText,{fontSize:sizes.s12,fontFamily:'medium'}]}>{item.brand}</Text>
-                            </View> */}
-                            </>
-                        }
-                        {/* <AppButton
-                            text={item.brand}
-                            style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
-                            textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
-                        />  
-                           */}
+                        </View>
+                        <View>
                         {this.state.quantity >= 1 &&
-                            <View style={{ marginTop: 5, flex: 1 }} >
+                            <View style={{ marginTop: 0, flex: 1 }} >
                                 {item.price &&
-                                    <View style={{ paddingBottom: 3 }}>
-                                        <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price * this.state.quantity}</Text>
+                                    <View >
+                                        <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${round(item.price * this.state.quantity, 2)}</Text>
                                     </View>
                                 }
                                 <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size * item.qtyPerItem * this.state.quantity}{item.units}</Text>
                             </View>
                         }
-                    </View>
-                    <View style={styles.row}>
-                        <View style={{ flex: 0.9 }}>
-                            <Text style={styles.text}>{item.displayName}</Text>
-                            {this.props.reorderOnly ?
-                                <View style={[styles.row, { marginTop: 3 }]}>
-                                    <View style={[styles.addContainer, { borderRadius: 10 }]}>
-                                        <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
-                                        <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
-                                    </View>
-                                </View>
-                                :
-                                <View>
-                                    <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
-                                    <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
+                            {!this.props.reorderOnly &&
+                                <View style={{ paddingTop: 5 }}>
+                                    {this.state.quantity == 0 ?
+                                        <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
+                                            <Text style={[styles.boldText]}>+</Text>
+                                        </TouchableOpacity>
+                                        :
+                                        <>
+                                            <View style={styles.counterContainer}>
+                                                {/* MINUS BUTTON */}
+                                                <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
+                                                    <Text style={styles.boldText}>-</Text>
+                                                </TouchableOpacity>
+                                                <View style={styles.signContainer}>
+                                                    <Text style={styles.boldText}>{this.state.quantity}</Text>
+                                                </View>
+                                                {/* ADD BUTTON */}
+                                                <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
+                                                    <Text style={styles.boldText}>+</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 5 }}>
+                                                <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
+                                            </TouchableOpacity>
+                                        </>
+                                    }
+                                   
                                 </View>
                             }
+                            {this.props.reorderOnly &&
+                                <AppButton
+                                    text="Reorder"
+                                    style={{ paddingHorizontal: 24, height: 42,marginVertical:0,marginTop:5,elevation:0 }}
+                                    textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
+                                    onPress={this.addItemQty}
+                                />
+                                // <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
+                                //     <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
+                                // </TouchableOpacity>
+
+                            }
                         </View>
-                        {!this.props.reorderOnly &&
-                            <View style={{ paddingTop: 10 }}>
-
-                                {this.state.quantity == 0 ?
-                                    <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
-                                        <Text style={[styles.boldText]}>+</Text>
-                                    </TouchableOpacity>
-                                    :
-                                    <>
-                                        <View style={styles.counterContainer}>
-                                            {/* MINUS BUTTON */}
-                                            <TouchableOpacity style={styles.signContainer} onPress={this.subtractItem}>
-                                                <Text style={styles.boldText}>-</Text>
-                                            </TouchableOpacity>
-                                            <View style={styles.signContainer}>
-                                                <Text style={styles.boldText}>{this.state.quantity}</Text>
-                                            </View>
-                                            {/* ADD BUTTON */}
-                                            <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>
-                                                <Text style={styles.boldText}>+</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                        <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 10 }}>
-                                            <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
-                                        </TouchableOpacity>
-                                    </>
-                                }
-                                {/* {
-                                    (item.quantity >= 1) && (
-                                        // <Button
-                                        //     title="Remove"
-                                        //     onPress={this.removeItem}
-                                        // />
-
-                                        <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 10 }}>
-                                            <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
-                                        </TouchableOpacity>
-                                    )
-                                } */}
-                            </View>
-                        }
-                        {this.props.reorderOnly &&
-                            <AppButton
-                                text="Reorder"
-                                style={{ paddingHorizontal: 20, height: 42 }}
-                                textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
-                                onPress={this.addItemQty}
-                            />
-                            // <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
-                            //     <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
-                            // </TouchableOpacity>
-
-                        }
                     </View>
-
                 </View>
             }
             </View>
@@ -271,6 +257,11 @@ const styles = StyleSheet.create({
         width: 40,
         alignItems: 'center', justifyContent: 'center'
     },
-    tagContainer:{backgroundColor:colors.blue.primary,paddingVertical:4,paddingHorizontal:11,borderRadius:10,marginVertical:5}
+    tagContainer: { 
+        backgroundColor: colors.blue.primary,
+         paddingVertical: 4,
+          paddingHorizontal: 11, borderRadius: 10, 
+          marginBottom: 5 
+        }
 
 })
