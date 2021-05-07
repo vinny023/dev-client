@@ -38,7 +38,7 @@ export default class Banner extends React.Component {
                 message: message,
                 description: message.includes('Order has been placed') ? "Tap here to view order" : '',
                 backgroundColor: type === "error" ? colors.pink : type === 'success' ? colors.green : type === 'message' ? colors.blue.light : colors.pink, // background color
-                //autoHide: false,
+                autoHide: false,
                 statusBarHeight: 30,
                 titleStyle:commonStyles.bannerTitle,
                 textStyle: commonStyles.bannerText,
@@ -75,7 +75,14 @@ export default class Banner extends React.Component {
 const styles = StyleSheet.create({
     banner: {
         opacity: 1,
-        paddingVertical:28
+        paddingVertical:28,
+        elevation:3,
+        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowOffset: {
+          width: 0,
+          height: 4
+        },
+
     },
     bannerTitle: {
         fontSize: sizes.s14,
@@ -83,13 +90,7 @@ const styles = StyleSheet.create({
         fontFamily: 'regular',
         color: colors.white,
         textAlign: 'center',
-        elevation:3,
-        shadowColor: 'rgba(0, 0, 0, 0.25)',
-        shadowOffset: {
-          width: 3,
-          height: 6
-        },
-
+       
     }
 
 })

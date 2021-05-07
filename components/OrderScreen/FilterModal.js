@@ -202,7 +202,7 @@ export default class FilterModal extends React.Component {
                                             <AppButton
                                                 onPress={() => this.props.setSort(value)}
                                                 text={title.replace('(Selected)', '')}
-                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7}}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7,}}
                                                 textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
 
                                         </View>

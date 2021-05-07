@@ -82,7 +82,7 @@ class ProductListItem extends React.Component {
 
         let priceString = 'Pricing unavailable'
         if (item.price) {
-            priceString = '$'+item.price +' ($'+item.unitCost+ ' / '+item.units+')'
+            priceString = '$' + item.price + ' ($' + item.unitCost + ' / ' + item.units + ')'
         }
 
         //  console.log('PRODUCT LIST ITEM RENDERING')
@@ -94,23 +94,34 @@ class ProductListItem extends React.Component {
                 <View key={item.sku}>
                     <View style={styles.row}>
                         {!this.props.reorderOnly &&
-                            <AppButton
-                                text={item.supplierDisplayName}
-                                style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
-                                textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
-                            />                           
+                            // <AppButton
+                            //     text={item.supplierDisplayName}
+                            //     style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
+                            //     textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
+                            // />
+                            <>
+                            <View style={styles.tagContainer}>
+                                <Text style={[commonStyles.btnText,{fontSize:sizes.s12,fontFamily:'medium'}]}>{item.supplierDisplayName}</Text>
+                            </View>
+                            {/* <View style={styles.tagContainer}>
+                                <Text style={[commonStyles.btnText,{fontSize:sizes.s12,fontFamily:'medium'}]}>{item.brand}</Text>
+                            </View> */}
+                            </>
                         }
-                        <AppButton
+                        {/* <AppButton
                             text={item.brand}
                             style={{ height: 26, paddingHorizontal: 11, marginVertical: 5 }}
                             textStyle={{ fontSize: sizes.s12, fontFamily: 'medium' }}
-                        />    
+                        />  
+                           */}
                         {this.state.quantity >= 1 &&
-                            <View style={{ marginTop: 5,flex:1 }} > { item.price &&
-                                <View style={{ paddingBottom: 3 }}>
-                                    <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price*this.state.quantity}</Text>
-                                </View> }
-                                <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size*item.qtyPerItem*this.state.quantity} {item.units}</Text>
+                            <View style={{ marginTop: 5, flex: 1 }} >
+                                {item.price &&
+                                    <View style={{ paddingBottom: 3 }}>
+                                        <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${item.price * this.state.quantity}</Text>
+                                    </View>
+                                }
+                                <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size * item.qtyPerItem * this.state.quantity}{item.units}</Text>
                             </View>
                         }
                     </View>
@@ -124,13 +135,13 @@ class ProductListItem extends React.Component {
                                     </View>
                                     <View>
                                         <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
-                                        <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>{priceString}</Text>
+                                        <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
                                     </View>
                                 </View>
                                 :
                                 <View>
                                     <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
-                                    <Text style={[styles.text, { fontSize: sizes.s14, fontFamily: 'regular' }]}>{priceString}</Text>
+                                    <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
                                 </View>
                             }
                         </View>
@@ -149,7 +160,6 @@ class ProductListItem extends React.Component {
                                                 <Text style={styles.boldText}>-</Text>
                                             </TouchableOpacity>
                                             <View style={styles.signContainer}>
-
                                                 <Text style={styles.boldText}>{this.state.quantity}</Text>
                                             </View>
                                             {/* ADD BUTTON */}
@@ -260,6 +270,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         width: 40,
         alignItems: 'center', justifyContent: 'center'
-    }
+    },
+    tagContainer:{backgroundColor:colors.blue.primary,paddingVertical:4,paddingHorizontal:11,borderRadius:10,marginVertical:5}
 
 })
