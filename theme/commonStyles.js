@@ -8,6 +8,7 @@ const commonStyles = {
     paddingBottom: 20
   },
   btnContainer: {
+    marginHorizontal:10,
     backgroundColor: colors.blue.primary,
     alignItems: 'center',
     justifyContent: 'center',

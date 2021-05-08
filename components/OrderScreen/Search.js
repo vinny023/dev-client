@@ -72,7 +72,7 @@ setSuggestion=()=>{
                     <TextInput
                         placeholder="Search Items"
                         value={this.state.searchTerm}
-                        style={{ fontFamily: 'regular', width: '85%' }}
+                        style={{ fontFamily: 'regular', width: '85%',fontSize:sizes.s14 }}
                         onChangeText={text => this.updateSuggestions(text)}
                         onSubmitEditing={event => this.setSearch(event.nativeEvent.text)}
                         onFocus={this.setSuggestion}

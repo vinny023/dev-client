@@ -207,7 +207,7 @@ export class OrderDetailScreen extends React.Component {
           {order.status === 'Delivered' ?
           <></>
           :
-          <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginHorizontal:10}}  />
+          <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginHorizontal:20}}  />
           }
         </View>
       </>

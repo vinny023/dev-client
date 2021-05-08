@@ -94,13 +94,13 @@ export class SupplierCart extends React.Component {
                         </View>
                         {/* ----------- Set Delivery Card ---------*/}
                         <View style={[commonStyles.card]}>
-                            <View style={[styles.row,{paddingBottom:3}]}>
-                                <Text style={[styles.heading,{fontSize:sizes.s17}]}>Delivery</Text>
+                            <View style={[styles.row, { paddingBottom: 3 }]}>
+                                <Text style={[styles.heading, { fontSize: sizes.s18 }]}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
-                            <View style={[styles.row,{paddingBottom:0} ]}>
-                                <TouchableOpacity  onPress={() => this.setState({ toggleDateFilter: true })}>
-                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
+                            <View style={[styles.row, { paddingBottom: 0 }]}>
+                                <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })}>
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
                                 <Text style={commonStyles.lightText}>12AM - 5AM</Text>
                             </View>
@@ -137,7 +137,7 @@ export class SupplierCart extends React.Component {
                                 }*/}
 
                                 <View>
-                                    <View style={[styles.row,{paddingTop:3}]}>
+                                    <View style={[styles.row, { paddingTop: 3 }]}>
                                         <Text style={styles.lightText}>Free Delivery Minimum </Text>
                                         <Text style={styles.boldText}>$1024</Text>
                                     </View>
@@ -167,67 +167,69 @@ export class SupplierCart extends React.Component {
                                 isVisible={this.state.toggleDateFilter}
 
                             >
-                               
-                                    <View style={commonStyles.centeredView}>
-                                        <ScrollView contentContainerStyle={{ padding: 20 }}>
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
-                                                <TouchableOpacity style={{ alignSelf: 'flex-start' }}>
-                                                    <Ionicons name='ios-arrow-back' size={sizes.s25} />
-                                                </TouchableOpacity>
 
-                                                <Text style={{ fontSize: sizes.s20, fontFamily: 'regular', color: colors.text, flex: 1, textAlign: 'center' }}>Select Delivery</Text>
-                                            </View>
-                                            <Text style={styles.heading}>Select Day</Text>
-                                            <View style={[styles.container, { marginBottom: 10,marginTop:5 }]}>
-                                                {createDaySelection(this.props.supplierDetail).map(val => {
-                                                    const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
-                                                    return (
+                                <View style={commonStyles.centeredView}>
+                                    <ScrollView contentContainerStyle={{ padding: 20 }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.setState({ toggleDateFilter: false })} >
+                                                <Ionicons name='close' size={sizes.s20} />
+                                            </TouchableOpacity>
+                                            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
+                                        </View>
+                                        <View style={{paddingBottom:7}}>
+                                            <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
+                                        </View>
+                                        <Text style={styles.heading}>Select Day</Text>
+                                        <View style={[styles.container, { marginBottom: 10, marginTop: 5 }]}>
+                                            {createDaySelection(this.props.supplierDetail).map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
+                                                return (
 
-                                                        <View style={commonStyles.row}>
-                                                            <RadioButton
-                                                                value={label}
-                                                                label={label}
-                                                                uncheckedColor={'#E6F0FD'}
-                                                                color={colors.blue.primary}
-                                                                status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                                onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
-                                                            />
-                                                            <View style={{ marginLeft: 7 }}>
-                                                                <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
-                                                            </View>
+                                                    <View style={commonStyles.row}>
+                                                        <RadioButton
+                                                            value={label}
+                                                            label={label}
+                                                            uncheckedColor={'#E6F0FD'}
+                                                            color={colors.blue.primary}
+                                                            status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
+                                                        />
+                                                        <View style={{ marginLeft: 7 }}>
+                                                            <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
                                                         </View>
-                                                    )
-                                                })
-                                                }
-                                            </View>
+                                                    </View>
+                                                )
+                                            })
+                                            }
+                                        </View>
 
-                                            <Text style={styles.heading}>Select Time</Text>
-                                            <View style={styles.container}>
-                                                {this.props.supplierDetail.shippingTimeSlots.map(val => {
-                                                    const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
-                                                    return (
+                                        <Text style={styles.heading}>Select Time</Text>
+                                        <View style={styles.container}>
+                                            {this.props.supplierDetail.shippingTimeSlots.map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
+                                                return (
 
-                                                        <View style={commonStyles.row}>
-                                                            <RadioButton
-                                                                value={label}
-                                                                label={label}
-                                                                uncheckedColor={'#E6F0FD'}
-                                                                color={colors.blue.primary}
-                                                                status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                                onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
-                                                            <View style={{ marginLeft: 7 }}>
-                                                                <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
-                                                            </View>
+                                                    <View style={commonStyles.row}>
+                                                        <RadioButton
+                                                            value={label}
+                                                            label={label}
+                                                            uncheckedColor={'#E6F0FD'}
+                                                            color={colors.blue.primary}
+                                                            status={label.includes("Selected") ? 'checked' : 'unchecked'}
+                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
+                                                        <View style={{ marginLeft: 7 }}>
+                                                            <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
                                                         </View>
+                                                    </View>
 
-                                                    )
-                                                })
+                                                )
+                                            })
 
-                                                }
-                                            </View>
-                                        </ScrollView>
-                                        <AppButton text="APPLY" style={{ marginHorizontal: 10 }} onPress={() => this.setState({ toggleDateFilter: false })} />
-                                    </View>
+                                            }
+                                        </View>
+                                    </ScrollView>
+                                    <AppButton text="APPLY" style={{ marginHorizontal: 20 }} onPress={() => this.setState({ toggleDateFilter: false })} />
+                                </View>
 
                             </Modal>
                         }
@@ -236,8 +238,8 @@ export class SupplierCart extends React.Component {
                             animationType="slide"
                             backdropOpacity={.5}
                             style={commonStyles.modalView}
-                           isVisible={this.state.toggleNotesFilter}
-                           
+                            isVisible={this.state.toggleNotesFilter}
+
                         >
                             <View style={[commonStyles.centeredView,]}>
                                 <ScrollView style={{ padding: 20 }} >
@@ -252,10 +254,10 @@ export class SupplierCart extends React.Component {
                                         <View style={{ paddingTop: 15 }}>
                                             <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
                                         </View>
-                                        <View style={{ marginTop: 15,height:sizes.large,backgroundColor:'white',borderRadius:10 }}>
+                                        <View style={{ marginTop: 15, height: sizes.large, backgroundColor: 'white', borderRadius: 10 }}>
                                             <TextInput
                                                 multiline
-                                               // numberOfLines={16}
+                                                // numberOfLines={16}
                                                 style={styles.input}
                                                 onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }, index: index })} />
                                         </View>
@@ -263,7 +265,7 @@ export class SupplierCart extends React.Component {
                                 </ScrollView>
                                 <View>
 
-                                    <AppButton text="APPLY" style={{ marginHorizontal: 10}} onPress={() => this.setState({ toggleNotesFilter: false })} />
+                                    <AppButton text="APPLY" style={{ marginHorizontal: 20 }} onPress={() => this.setState({ toggleNotesFilter: false })} />
                                 </View>
                             </View>
                         </Modal>
@@ -285,7 +287,7 @@ export class SupplierCart extends React.Component {
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                        style={{  backgroundColor: 'black',marginVertical:0,elevation:0 }}
+                                        style={{ backgroundColor: 'black', marginVertical: 0, elevation: 0 }}
                                     //backgroundColor:'rgba(0,0,0,.4)'
                                     />
                                 </View>
@@ -308,32 +310,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingBottom:10
+        paddingBottom: 10
         //paddingVertical: 10
     },
     lightText: {
         //fontSize: sizes.s17,
-        fontSize: sizes.s15,
+        fontSize: sizes.s16,
         fontFamily: 'medium',
         color: colors.grey.primary
     },
     boldText: {
         fontFamily: 'medium',
-        fontSize: sizes.s16,
+        fontSize: sizes.s17,
         // fontSize: sizes.s19,
         color: colors.text
     },
     heading: {
         //paddingTop: 10,
         //fontSize: sizes.s17,
-        fontSize: sizes.s15,
+        fontSize: sizes.s16,
         fontFamily: 'medium',
         color: colors.grey.primary
     },
     container: {
         backgroundColor: colors.white,
         paddingVertical: 8,
-        paddingHorizontal:15,
+        paddingHorizontal: 15,
         borderRadius: 10,
         marginVertical: 5
     },
@@ -348,8 +350,8 @@ const styles = StyleSheet.create({
         lineHeight: 23,
         flex: 2,
         textAlignVertical: 'top',
-       // backgroundColor: 'white',
-       // borderRadius: 10
+        // backgroundColor: 'white',
+        // borderRadius: 10
     },
 
 })

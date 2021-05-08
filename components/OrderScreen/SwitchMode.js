@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
 
     },
     switchMode: {
-        fontSize: sizes.s15,
+        fontSize: sizes.s14,
         fontFamily: 'medium',
 
     },

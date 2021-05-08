@@ -104,8 +104,8 @@ class ProductListItem extends React.Component {
                                         <Text style={[commonStyles.btnText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
                                     </View>
                                     {item.brand ?
-                                        <View style={[styles.tagContainer, { marginLeft: 4 }]}>
-                                            <Text style={[commonStyles.btnText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.brand}</Text>
+                                        <View style={[styles.tagContainer, { marginLeft: 4,backgroundColor:colors.blue.light }]}>
+                                            <Text style={[styles.boldText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.brand}</Text>
                                         </View>
                                         : <></>
                                     }
@@ -165,7 +165,7 @@ class ProductListItem extends React.Component {
                                                 </TouchableOpacity>
                                             </View>
                                             <TouchableOpacity onPress={this.removeItem} style={{ paddingTop: 5 }}>
-                                                <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right' }]}>Remove Item</Text>
+                                                <Text style={[commonStyles.lightText, { color: colors.pink, textAlign: 'right', }]}>Remove Item</Text>
                                             </TouchableOpacity>
                                         </>
                                     }
@@ -175,7 +175,7 @@ class ProductListItem extends React.Component {
                             {this.props.reorderOnly &&
                                 <AppButton
                                     text="Reorder"
-                                    style={{ paddingHorizontal: 24, height: 42,marginVertical:0,marginTop:5,elevation:0 }}
+                                    style={{ paddingHorizontal: 24, height: 42,marginVertical:0,marginTop:5,elevation:0,marginHorizontal:0,alignSelf:'flex-end' }}
                                     textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
                                     onPress={this.addItemQty}
                                 />
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     },
     text: {
         // fontSize: sizes.s16,
-        fontSize: sizes.s15,
+        fontSize: sizes.s14,
         fontFamily: 'medium',
         color: colors.text,
     },
