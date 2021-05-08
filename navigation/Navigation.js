@@ -35,7 +35,7 @@ const myScreenOptions = {
   
 
 }
-const headerStyling = { backgroundColor: colors.background.primary, elevation: 0, }
+const headerStyling = { backgroundColor: colors.background.light, elevation: 0, }
 const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text, textAlignVertical:'bottom',top:10}
 
 const PlaceOrderTab = () => {
