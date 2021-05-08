@@ -4,7 +4,7 @@ const commonStyles = {
   container: {
     paddingTop: 10,
     paddingHorizontal: 10,
-    backgroundColor: colors.background.primary,
+    backgroundColor: colors.background.light,
     paddingBottom: 20
   },
   btnContainer: {
