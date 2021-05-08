@@ -95,17 +95,17 @@ class ProductListItem extends React.Component {
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
-                        <View style={{flex:0.9,alignSelf:'flex-start',paddingRight:3}}>
+                        <View style={{flex:0.7,alignSelf:'flex-start',paddingRight:3}}>
                             {!this.props.reorderOnly &&
                               
                                 //--------- Tags------------
                                 <View style={[styles.row, { justifyContent:'flex-start' }]}>
                                     <View style={styles.tagContainer}>
-                                        <Text style={[commonStyles.btnText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
+                                        <Text style={[commonStyles.btnText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
                                     </View>
                                     {item.brand ?
                                         <View style={[styles.tagContainer, { marginLeft: 4,backgroundColor:colors.blue.light }]}>
-                                            <Text style={[styles.boldText, { fontSize: sizes.s13, fontFamily: 'medium' }]}>{item.brand}</Text>
+                                            <Text style={[styles.boldText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.brand}</Text>
                                         </View>
                                         : <></>
                                     }
@@ -216,7 +216,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProductListItem)
 const styles = StyleSheet.create({
     productItem: {
         backgroundColor: colors.white,
-        paddingHorizontal: 8,
+       // paddingHorizontal: 8,
         paddingBottom: 15,
     },
     row: {

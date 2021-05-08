@@ -14,19 +14,19 @@ const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 10, }]} >
+        <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 7, }]} >
             {/* <AppButton
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
             <Image source={require('../../assets/woolco.png')} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
-                
+
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{ marginBottom: 2 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
             </View>
-            <View style={[commonStyles.row,styles.priceContainer]}>
+            <View style={[commonStyles.row, styles.priceContainer]}>
                 <Text style={[commonStyles.text, { fontSize: sizes.s14, textAlign: 'right' }]}>$</Text>
                 <Text style={[commonStyles.text, { fontSize: sizes.s17, textAlign: 'right' }]}>{order.supplierDetail.orderMinimum}</Text>
             </View>
@@ -178,7 +178,7 @@ class ViewOrderScreen extends React.Component {
                         <View style={{ paddingTop: 20 }}>
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
-                        <View style={[commonStyles.card]}>
+                        <View style={[commonStyles.card, { padding: 5 }]}>
                             {this.props.account.activeSuppliers.map(supplier => {
                                 console.log(supplier)
                                 //CHECK IF SELECTED
@@ -187,7 +187,7 @@ class ViewOrderScreen extends React.Component {
                                     selected = true;
                                 }
                                 return (
-                                    <View style={commonStyles.row}>
+                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
 
                                         <RadioButton
                                             //value={label}
@@ -197,7 +197,7 @@ class ViewOrderScreen extends React.Component {
                                             status={supplierFilter.indexOf(supplier) !== -1 ? 'checked' : 'unchecked'}
                                             onPress={() => this.handleFilterUpdate(supplier)}
                                         />
-                                        <View style={{ marginLeft: 7 }}>
+                                        <View>
                                             <Text style={commonStyles.text}>{supplier}</Text>
                                         </View>
                                     </View>
@@ -205,13 +205,13 @@ class ViewOrderScreen extends React.Component {
                             })
                             }
                         </View>
-                        <View style={{flex:1,justifyContent:'flex-end'}}>
+                        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
-                        <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={{ marginVertical:0, }} />
+                            <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={{ marginVertical: 0, }} />
                         </View>
                     </View>
                 </Modal>
-                <View style={{ paddingBottom: 60,paddingTop:5 }}>
+                <View style={{ paddingBottom: 40, paddingTop: 5 }}>
                     {openOrders.length > 0 ?
                         <View>
                             <View style={[commonStyles.row, { paddingLeft: 10, justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 3 }]}>
@@ -222,9 +222,10 @@ class ViewOrderScreen extends React.Component {
                             </View>
                             { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }
-                            <View style={[commonStyles.card, { marginBottom: 30 }]}>
+                            <View style={[commonStyles.card, { marginBottom: 30,paddingTop:4 }]}>
                                 {
                                     openOrders.map((order, i) => <OrderButton key={i} order={order} />)
+                                    
                                 }
 
                             </View>
@@ -237,10 +238,10 @@ class ViewOrderScreen extends React.Component {
                             <View style={{ paddingLeft: 10 }}>
                                 <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
                             </View>
-                            <View style={commonStyles.card}>
+                            <View style={[commonStyles.card,{paddingTop:0}]}>
                                 {
-                                    deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
-
+                                     deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
+                                    
                                 }
                                 {/* <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
                                     <Text style={commonStyles.lightText}>No Orders Delivered yet</Text>
@@ -268,11 +269,11 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(ViewOrderScreen)
-const styles=StyleSheet.create({
-    priceContainer:{
-        paddingVertical:0,
-        alignSelf:'flex-start',
-        paddingLeft:2,
-        paddingTop:7
+const styles = StyleSheet.create({
+    priceContainer: {
+        paddingVertical: 0,
+        alignSelf: 'flex-start',
+        paddingLeft: 2,
+        paddingTop: 7
     }
 })

@@ -3,12 +3,12 @@ import { colors, sizes } from ".";
 const commonStyles = {
   container: {
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: colors.background.light,
     paddingBottom: 20
   },
   btnContainer: {
-    marginHorizontal:10,
+    //marginHorizontal:10,
     backgroundColor: colors.blue.primary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,9 +68,10 @@ const commonStyles = {
 },
 card: {
   backgroundColor: colors.white,
-  paddingHorizontal: 15,
-  paddingVertical:10,
+  //paddingHorizontal: 10,
+  //paddingVertical:10,
   borderRadius: 10,
+  padding:10,
   marginTop: 7
 },
 bannerText:{

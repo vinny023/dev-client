@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { colors, commonStyles, sizes } from '../../theme';
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -31,7 +31,6 @@ export default class Banner extends React.Component {
 
     render() {
         const { show, type, message, buttonAction } = this.props.banner
-
         if (show && message != "Banner") {
             showMessage({
                 type: type,
@@ -40,14 +39,15 @@ export default class Banner extends React.Component {
                 backgroundColor: type === "error" ? colors.pink : type === 'success' ? colors.green : type === 'message' ? colors.blue.light : colors.pink, // background color
                 //autoHide: false,
                 //statusBarHeight: 30,
-                titleStyle:commonStyles.bannerTitle,
+                titleStyle: commonStyles.bannerTitle,
                 textStyle: commonStyles.bannerText,
                 style: styles.banner,
                 //default duration:1850
-                duration:1400,
-                color:type === 'message' ? colors.blue.primary : colors.white 
+                duration: 1400,
+                color: type === 'message' ? colors.blue.primary : colors.white
             })
         }
+        
         return (
             <View>
                 { show &&
@@ -75,14 +75,14 @@ export default class Banner extends React.Component {
 const styles = StyleSheet.create({
     banner: {
         opacity: 1,
-        paddingVertical:28,
-        elevation:3,
+        paddingVertical: 28,
+        elevation: 3,
         shadowColor: 'rgba(0, 0, 0, 0.25)',
         shadowOffset: {
-          width: 0,
-          height: 4
+            width: 0,
+            height: 4
         },
-
+//top:0
     },
     bannerTitle: {
         fontSize: sizes.s14,
@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
         fontFamily: 'regular',
         color: colors.white,
         textAlign: 'center',
-       
-       
+
+
     }
 
 })

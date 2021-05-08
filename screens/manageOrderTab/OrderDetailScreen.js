@@ -166,7 +166,7 @@ export class OrderDetailScreen extends React.Component {
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
             :
             <View>
-              <View style={{ paddingHorizontal: 15 }}>
+              <View style={{ paddingHorizontal: 5 }}>
                 <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0 ,}]}>
                   <View style={{width:'80%'}}>
                     <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
@@ -182,8 +182,8 @@ export class OrderDetailScreen extends React.Component {
                 <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.grey.primary }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
               <View style={[commonStyles.card,{paddingBottom:5}]}>
-                <View style={{paddingLeft:10}}>
-                <Text style={commonStyles.lightHeading}>Order Status</Text>
+                <View >
+                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Order Status</Text>
                 </View>
                   <Status status={order.status} />
               </View>

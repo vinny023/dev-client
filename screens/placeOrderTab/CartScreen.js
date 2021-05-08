@@ -243,7 +243,7 @@ export class CartScreen extends React.Component {
             <>
                 {this.state.masterOrder.length > 0 ?
                     <>
-                        <ScrollView style={[commonStyles.container,]} showsVerticalScrollIndicator={false}>
+                        <ScrollView style={[commonStyles.container]} showsVerticalScrollIndicator={false}>
                             {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
                             <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
                             {/*

@@ -213,7 +213,7 @@ export class LoginScreen extends React.Component {
         return (
             <View style={[commonStyles.container, { flex: 1 }]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                <View style={{ paddingLeft: 10 }}>
+                <View style={{ paddingLeft: 5 }}>
                     <Text style={{ fontSize: sizes.s25-2, fontFamily: 'bold', color: colors.text }}>Login to SupplyHero</Text>
                 </View>
                 <View style={{ marginTop: 60,}}>
@@ -221,7 +221,7 @@ export class LoginScreen extends React.Component {
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
-                    style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
+                    style={{ backgroundColor: colors.white, padding: 7, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
                    // secureTextEntry 
                     />
                 </View>

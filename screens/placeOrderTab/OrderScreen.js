@@ -257,7 +257,7 @@ export class OrderScreen extends React.Component {
     let numItems = (productList.length * numPages >= 900) ? '1000+' : (productList.length * numPages).toString()
 
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background.primary, paddingTop: 20 }}>
+      <View style={{ flex: 1, backgroundColor: colors.background.light, paddingTop: 20 }}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
         <ScrollView style={[commonStyles.container, { paddingTop: 0 }]} >
           <SwitchMode setMode={this.setMode} mode={this.state.title} />
@@ -306,7 +306,7 @@ export class OrderScreen extends React.Component {
                 <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
                 {
                   this.state.title == 'Order Guide' &&
-                  <AppButton text="Shop Full Catalog" style={{ paddingHorizontal: 20 }} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
+                  <AppButton text="Shop Full Catalog" style={{ paddingHorizontal: 20,height:32 }} textStyle={{fontSize:sizes.s13}} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
                 }
               </View>
   }

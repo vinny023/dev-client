@@ -173,7 +173,7 @@ export default class FilterModal extends React.Component {
 
                         <Text style={styles.heading}>Sort By</Text>
                         <View>
-                            <ScrollView horizontal>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
                                 {sortOptions.map((option, i) => {
 
@@ -202,7 +202,7 @@ export default class FilterModal extends React.Component {
                                             <AppButton
                                                 onPress={() => this.props.setSort(value)}
                                                 text={title.replace('(Selected)', '')}
-                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7,marginHorizontal:0}}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7,marginHorizontal:0,height:32}}
                                                 textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
 
                                         </View>
@@ -221,7 +221,7 @@ export default class FilterModal extends React.Component {
                                     <View key={i}>
                                         {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
                                         <View >
-                                            <ScrollView horizontal>
+                                            <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                                                 {
                                                     options.map((option, k) => {
                                                         let selected = (this.props.filter
@@ -253,7 +253,7 @@ export default class FilterModal extends React.Component {
                                                                 <AppButton
                                                                     onPress={() => this.sizeHandler(filterValue)}
                                                                     text={option}
-                                                                    style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5,marginHorizontal:0 }}
+                                                                    style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5,marginHorizontal:0,height:32 }}
                                                                     textStyle={selected ? styles.selectedText : styles.unselectedText} />
                                                             </View>
 
@@ -270,7 +270,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View key={i}>
                                         {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
-                                        <View style={[commonStyles.card,{paddingHorizontal:0}]}>
+                                        <View style={[commonStyles.card,{padding:5}]}>
                                             {
                                                 options.map((option, k) => {
                                                     let selected = (this.props.filter
@@ -284,19 +284,16 @@ export default class FilterModal extends React.Component {
                                                         filterValue = { ...filterValue, 'remove': true }
                                                     }
                                                     return (
-                                                        <View key={k} style={[commonStyles.row,{paddingVertical:5}]}>
-                                                            <View style={{height:25,alignItems:'center',justifyContent:'center',padding:8}}>
-                                                            <RadioButton
-                                                              
+                                                        <View key={k} style={[commonStyles.row,{paddingVertical:3}]}>
+                                                         
+                                                            <RadioButton   
                                                                 value={label}
                                                                 label={label}
                                                                 uncheckedColor={'#E6F0FD'}
-                                                               
                                                                 color={colors.blue.primary}
                                                                 status={selected ? 'checked' : 'unchecked'}
                                                                 onPress={() => this.props.setFilter(filterValue)}
                                                             />
-                                                            </View>
                                                             <View>
                                                                 <Text style={commonStyles.text}>{option}</Text>
                                                             </View>
@@ -335,7 +332,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View >
                                         <Text style={styles.heading}>Filter by {title}</Text>
-                                        <View style={[styles.container]}>
+                                        <View style={[commonStyles.card]}>
                                             {/* <Text style={styles.text}>Min ({min}):
                                              <TextInput
                                                     style={{ color: colors.blue.primary }}
@@ -358,13 +355,13 @@ export default class FilterModal extends React.Component {
                                                 {/* <Text style={styles.text}>Min </Text> */}
                                                 {(title == "Price") &&
                                                     <View>
-                                                        <View style={[commonStyles.row, { justifyContent: "center" }]}>
+                                                        <View style={[commonStyles.row, { justifyContent: "center",paddingVertical:5 }]}>
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                         </View>
                                              
-                                                        <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
+                                                        <View style={[commonStyles.row, { justifyContent: "space-between",paddingVertical:5 }]}>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
                                                             <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                         </View>
@@ -382,12 +379,12 @@ export default class FilterModal extends React.Component {
                                                         {this.state.isUnitSelected ?
                                                             //Size
                                                             <View >
-                                                                <View style={[commonStyles.row, { justifyContent: "center" }]}>
+                                                                <View style={[commonStyles.row, { justifyContent: "center",paddingVertical:5 }]}>
                                                                     <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
                                                                     <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>
                                                                 </View>
                                                                
-                                                                <View style={[commonStyles.row, { justifyContent: "space-between" }]}>
+                                                                <View style={[commonStyles.row, { justifyContent: "space-between",paddingVertical:5 }]}>
                                                                     <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(min, 0)}</Text>
                                                                     <Text style={[commonStyles.lightText, { color: '#C9CDD1' }]}>${round(max, 0)}</Text>
                                                                 </View>
@@ -429,7 +426,7 @@ export default class FilterModal extends React.Component {
                                                     //     onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [parseFloat(text.nativeEvent.text)] })}
                                                     // />
                                                     <View>
-                                                        <View style={[commonStyles.row, { justifyContent: "center" }]}>
+                                                        <View style={[commonStyles.row, { justifyContent: "center",paddingVertical:5 }]}>
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}>${round(min, 0)} -</Text>
 
                                                             <Text style={[commonStyles.text, { fontSize: sizes.s18 }]}> ${round(max, 0)}</Text>

@@ -7,8 +7,8 @@ const OrderTotal = (props) => {
     const { deliveryFee, orderTotal } = order
 
     return (
-        <View style={[commonStyles.card,{padding:0,paddingHorizontal:15,paddingVertical:5}]}>
-            <View style={[commonStyles.row, { justifyContent: 'space-between' }]}>
+        <View style={[commonStyles.card]}>
+            <View style={[styles.row, { justifyContent: 'space-between' }]}>
                 <Text style={styles.lightText}>{deliveryFee > 0 ? "Subtotal" : "Total"}</Text>
                 <Text style={styles.boldText}>${orderTotal - deliveryFee}</Text>
             </View>

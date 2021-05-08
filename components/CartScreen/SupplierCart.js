@@ -93,21 +93,21 @@ export class SupplierCart extends React.Component {
                             <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
                         </View>
                         {/* ----------- Set Delivery Card ---------*/}
-                        <View style={[commonStyles.card]}>
+                        <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })} style={[commonStyles.card]}>
                             <View style={[styles.row, { paddingBottom: 3 }]}>
-                                <Text style={[styles.heading, { fontSize: sizes.s18 }]}>Delivery</Text>
+                                <Text style={[styles.heading]}>Delivery</Text>
                                 <Text style={styles.boldText}>Monday - 4/12</Text>
                             </View>
                             <View style={[styles.row, { paddingBottom: 0 }]}>
-                                <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })}>
-                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular' }}>Tap to Edit</Text>
+                                <TouchableOpacity >
+                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
                                 <Text style={commonStyles.lightText}>12AM - 5AM</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         {/* ---------- Add notes Card ---------- */}
                         <TouchableOpacity style={[commonStyles.card]} onPress={() => this.setState({ toggleNotesFilter: true })}>
-                            <View style={[commonStyles.row, { justifyContent: 'space-between', }]}>
+                            <View style={[commonStyles.row, { justifyContent: 'space-between',paddingVertical:0 }]}>
                                 <Text style={styles.heading}>Add Order notes</Text>
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
@@ -137,7 +137,7 @@ export class SupplierCart extends React.Component {
                                 }*/}
 
                                 <View>
-                                    <View style={[styles.row, { paddingTop: 3 }]}>
+                                    <View style={[styles.row]}>
                                         <Text style={styles.lightText}>Free Delivery Minimum </Text>
                                         <Text style={styles.boldText}>$1024</Text>
                                     </View>
@@ -176,16 +176,15 @@ export class SupplierCart extends React.Component {
                                             </TouchableOpacity>
                                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                                         </View>
-                                        <View style={{paddingBottom:7}}>
+                                        <View style={{ paddingBottom: 7 }}>
                                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
-                                        <View style={[styles.container, { marginBottom: 10, marginTop: 5 }]}>
+                                        <View style={[commonStyles.card, { padding: 5 }]}>
                                             {createDaySelection(this.props.supplierDetail).map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
                                                 return (
-
-                                                    <View style={commonStyles.row}>
+                                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
                                                             value={label}
                                                             label={label}
@@ -194,7 +193,7 @@ export class SupplierCart extends React.Component {
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
                                                             onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
                                                         />
-                                                        <View style={{ marginLeft: 7 }}>
+                                                        <View >
                                                             <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
                                                         </View>
                                                     </View>
@@ -204,12 +203,11 @@ export class SupplierCart extends React.Component {
                                         </View>
 
                                         <Text style={styles.heading}>Select Time</Text>
-                                        <View style={styles.container}>
+                                        <View style={[commonStyles.card,{padding:5}]}>
                                             {this.props.supplierDetail.shippingTimeSlots.map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
                                                 return (
-
-                                                    <View style={commonStyles.row}>
+                                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
                                                             value={label}
                                                             label={label}
@@ -217,14 +215,12 @@ export class SupplierCart extends React.Component {
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
                                                             onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
-                                                        <View style={{ marginLeft: 7 }}>
+                                                        <View >
                                                             <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
                                                         </View>
                                                     </View>
-
                                                 )
                                             })
-
                                             }
                                         </View>
                                     </ScrollView>
@@ -265,7 +261,7 @@ export class SupplierCart extends React.Component {
                                 </ScrollView>
                                 <View>
 
-                                    <AppButton text="APPLY" style={{ marginHorizontal: 20 }} onPress={() => this.setState({ toggleNotesFilter: false })} />
+                                    <AppButton text="APPLY" style={{ marginHorizontal: 10 }} onPress={() => this.setState({ toggleNotesFilter: false })} />
                                 </View>
                             </View>
                         </Modal>
@@ -321,7 +317,7 @@ const styles = StyleSheet.create({
     },
     boldText: {
         fontFamily: 'medium',
-        fontSize: sizes.s17,
+        fontSize: sizes.s15,
         // fontSize: sizes.s19,
         color: colors.text
     },
