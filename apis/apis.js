@@ -33,8 +33,8 @@ export const getOrders = async({query, sort}) => {
 
 
 export const placeOrder = async({supplierOrder})  => {
-    console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
-    const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
+    console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder).replace(/#/g,"HTAG")))
+    const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder).replaceAll(/#/g,"HTAG")))
     if (returnval.status === 200 && returnval.data.orderSent) {
         return returnval.data.orderSent   
     }  else {

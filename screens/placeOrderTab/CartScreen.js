@@ -20,6 +20,7 @@ const setOrderDetails = ({ masterCart, account }) => {
     //APPEND ACCOUNT DETAILS TO ORDER
     return masterCart
         .map(supplierOrder => {
+            console.log(supplierOrder.supplierId)
             return (
                 {
                     accountId: id,
@@ -38,18 +39,18 @@ const setOrderDetails = ({ masterCart, account }) => {
 
 const calcTotalsAddSupplier = ({ masterOrder, supplierDetail }) => {
     //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
-    return masterOrder.map((supplierOrder, index) => {
-        //  const orderTotal = supplierOrder.cart.reduce((item,total) => item.price*item.quantity + total, 0)
-        const orderTotal = 100
+    return masterOrder.map((supplierOrder, index) => {        
+        let total = 0;
+        supplierOrder.cart.forEach(item => item.price ? total = total + item.price*item.quantity : total = total)
+
         console.log('CaLCED ORDER TOTAL')
-        console.log(orderTotal)
-        let deliveryFee = 0
-        if (orderTotal < supplierDetail[index].orderMinimum) { deliveryFee = supplierDetail[index].deliveryFee }
+        console.log(total)
+
         return (
             {
                 ...supplierOrder, supplierDetail: supplierDetail[index],
-                orderTotal: orderTotal + deliveryFee,
-                deliveryFee: deliveryFee
+                orderTotal: total + supplierDetail[index].deliveryFee,
+                deliveryFee: supplierDetail[index].deliveryFee
             }
         )
     })
@@ -145,6 +146,15 @@ export class CartScreen extends React.Component {
         if (!order.selectedDeliveryDate || !order.selectedDeliveryTimeSlot) {
             this.setState({
                 banner: { show: true, type: 'error', message: 'Please select a delivery date and time for' + order.supplierId }
+            })
+            return null
+        }
+
+        //check if order total is less than minimum
+
+        if (order.orderTotal < order.supplierDetail.orderMinimum) {
+            this.setState({
+                banner: {show: true, type: 'error', message: order.supplierDetail.displayName+' order total less than minimum. Tap below to place order anyway'}
             })
             return null
         }
@@ -256,6 +266,9 @@ export class CartScreen extends React.Component {
                             <View style={{ paddingBottom: 80 }}>
                                 {
                                     this.state.masterOrder.map((supplierOrder, index) => {
+
+                                        console.log('PASSING IN SUPPLIER DETAIL')
+                                        console.log(this.state.supplierDetail[index])
                                         return (
                                             <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
                                                 {/* <Text style={styles.text}>Supplier </Text> */}
@@ -267,6 +280,7 @@ export class CartScreen extends React.Component {
                                                     index={index}
                                                     placeOrder={this.placeOrder}
                                                     updateOrderDetails={this.updateOrderDetails}
+                                                    supplierDeliverySettings={this.props.account.supplierDeliverySettings[supplierOrder.supplierId]}
                                                 />
                                             </View>
                                         )

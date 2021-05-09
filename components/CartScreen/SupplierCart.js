@@ -9,28 +9,51 @@ import ProductList from '../Global/ProductList'
 import OrderTotal from '../Global/OrderTotal'
 import { RadioButton } from 'react-native-paper';
 import Modal from 'react-native-modal'
-import { Ionicons } from '@expo/vector-icons';
+import { createIconSetFromFontello, Ionicons } from '@expo/vector-icons';
+import _ from 'lodash';
 
 
-const createDaySelection = ({ shippingDoW, shippingCutoff, shippingDays }) => {
-    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    const availableDays = weekdays.filter((val, i) => shippingDoW.indexOf(i) !== -1)
-    const currentTime = new Date();
-    const offset = currentTime.getHours() > shippingCutoff ? 1 : 0
-    const firstDay = currentTime.getDay() + shippingDays + offset
+const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
-    return Array(shippingDoW.length).fill(0).map((val, i) => {
-        const day = availableDays[(firstDay + i) % availableDays.length]
-        const dateOffset = firstDay + i + (firstDay + i) % availableDays.length
-        const date = new Date()
+//     console.log('SHIPPING Cuttoff')
+//     console.log(shippingCutoff)
 
-        date.setDate(currentTime.getDate() + dateOffset)
-        return ({
-            day: day,
-            date: date.getMonth() + '/' + date.getDate()
-        }
-        )
-    })
+//    console.log('SHIPPING DAYS')
+//    console.log(shippingDays)
+
+   
+//    console.log('DOW')
+//    console.log(DoW)
+    
+    const millisecondsInDays = 86400000
+
+    //take the next seven days of dates
+    const now = new Date()
+
+
+    //find earliest possible delivery day based on shipping days & cutoff time and 7 days after that
+    const offset = now.getHours() > shippingCutoff ? 1 : 0   
+
+    const next7 = Array(7).fill(null).map((val,i) => {
+        let nextDay = new Date(now.getTime() + (shippingDays + offset+i)*millisecondsInDays)
+        return nextDay
+    })    
+
+   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday', 'Saturday']
+
+   console.log('NEXT 7')
+   console.log(next7)
+    
+    //if it fits the category - in DoW and within 7 days
+    const returnVal = next7.filter((val, i) => DoW.indexOf(val.getDay()) !== -1 && val.getTime() - now.getTime() < 7*millisecondsInDays)
+        .map((val, i) => {
+            return { day: daysOfWeek[val.getDay()], date: (val.getMonth()+1).toString() + '/'+  val.getDate()}
+        })       
+        
+        console.log('RETURN VAL')
+        console.log(returnVal)
+
+        return returnVal
 }
 
 export class SupplierCart extends React.Component {
@@ -42,22 +65,69 @@ export class SupplierCart extends React.Component {
             orderPlaced: false,
             placeOrderError: false,
             toggleDateFilter: false,
-            toggleNotesFilter: false
+            toggleNotesFilter: false,            
         }
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
+
+        console.log('OCNSTRUCTIONS UPPLIER CART')
+        console.log(this.props.supplierDeliverySettings)
+        
     }
 
-    //PASS STATE UP
-    updateOrderDetails = (update) => {
-        this.props.updateOrderDetails({ index: this.props.index, update: update })
+    //WRITE ORDER UPDATE TO STORE
+    updateOrderDetails = ({update}) => {
+        console.log('Running update order details')
+        console.log(update)
+        this.props.updateOrderDetails({ supplierId: this.props.supplierDetail.id, update: update })
     }
 
     placeOrder = () => {
         this.props.placeOrder({ index: this.props.index })
     }
 
+    setDefaultDelivery = () => {
+        if (this.props.supplierDetail ) {
+            const {selectedDeliveryDate, selectedDeliveryTimeSlot} = this.props.supplierOrder
+    
+            const deliveryDays = createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail})
+            console.log('DELIVERY DAYS')
+            console.log(deliveryDays)
+    
+            let update = {}
+            
+            if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
+                update = { selectedDeliveryDate: deliveryDays[0],
+                    selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
+            } else if (!selectedDeliveryTimeSlot) {
+                update = {selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
+            } else if (!selectedDeliveryTimeSlot) {
+                update = { selectedDeliveryDate: deliveryDays[0] }
+            }
+            
+            if ((!selectedDeliveryDate || !selectedDeliveryTimeSlot)) {
+                this.updateOrderDetails({update: update})
+            }
+            }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('COMPONTENT DID UPDATE')
+        console.log(this.props)
+        if (!_.isEqual(prevProps.supplierDetail, this.props.supplierDetail)) {
+            this.setDefaultDelivery()
+        }
+        
+    }
+    componentDidMount() {
+        console.log('COMPONTENT DID MOUNT')
+        console.log(this.props)
+        this.setDefaultDelivery()
+
+    }
+
     render() {
+        console.log('RENDER')
         const { navigation, index } = this.props
 
         let { shippingTimeSlots } = {}
@@ -137,21 +207,21 @@ export class SupplierCart extends React.Component {
                                 }*/}
 
                                 <View>
-                                    <View style={[styles.row]}>
-                                        <Text style={styles.lightText}>Free Delivery Minimum </Text>
-                                        <Text style={styles.boldText}>$1024</Text>
+                                   <View style={[styles.row]}>
+                                        <Text style={styles.lightText}>Minimum </Text>
+                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2)}</Text>
+                            </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.lightText}>Subtotal</Text>
+                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2)}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Subtotal: </Text>
-                                        <Text style={styles.boldText}>$1,100.00</Text>
+                                        <Text style={styles.lightText}>Delivery fee</Text>
+                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2)}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Delivery Fee: </Text>
-                                        <Text style={styles.boldText}>$20</Text>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.lightText}>Total </Text>
-                                        <Text style={styles.boldText}>$1,500</Text>
+                                        <Text style={styles.lightText}>Total</Text>
+                                        <Text style={styles.boldText}>${orderTotal.toFixed(2)}</Text>
                                     </View>
                                 </View>
                             </View> : <></>
@@ -181,7 +251,7 @@ export class SupplierCart extends React.Component {
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
                                         <View style={[commonStyles.card, { padding: 5 }]}>
-                                            {createDaySelection(this.props.supplierDetail).map(val => {
+                                            {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
@@ -191,7 +261,7 @@ export class SupplierCart extends React.Component {
                                                             uncheckedColor={'#E6F0FD'}
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryDate: val }, index: index })}
+                                                            onPress={() => this.updateOrderDetails({update:{ selectedDeliveryDate: val }})}
                                                         />
                                                         <View >
                                                             <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
@@ -204,7 +274,7 @@ export class SupplierCart extends React.Component {
 
                                         <Text style={styles.heading}>Select Time</Text>
                                         <View style={[commonStyles.card,{padding:5}]}>
-                                            {this.props.supplierDetail.shippingTimeSlots.map(val => {
+                                            {this.props.supplierDeliverySettings.windows.map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
@@ -214,7 +284,7 @@ export class SupplierCart extends React.Component {
                                                             uncheckedColor={'#E6F0FD'}
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.props.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val }, index: index })} />
+                                                            onPress={() => this.updateOrderDetails({update:{ selectedDeliveryTimeSlot: val}})} />
                                                         <View >
                                                             <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
                                                         </View>
@@ -255,7 +325,7 @@ export class SupplierCart extends React.Component {
                                                 multiline
                                                 // numberOfLines={16}
                                                 style={styles.input}
-                                                onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }, index: index })} />
+                                                onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }})} />
                                         </View>
                                     </View>
                                 </ScrollView>
@@ -297,7 +367,9 @@ export class SupplierCart extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => {
-    return { removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)) }
+    return { removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)),
+             updateOrderDetails: params => dispatch(actions.updateOrderDetails(params))
+             }
 }
 
 export default connect(null, mapDispatchToProps)(SupplierCart)

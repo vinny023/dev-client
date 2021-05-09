@@ -18,6 +18,22 @@ const cartReducer = (state={}, action) => {
             const newMasterCart = state.masterCart.filter(supplierCart => supplierCart.supplierId !== action.payload)                          
             return {...state, masterCart: newMasterCart}
         }
+
+        case('UPDATE_ORDER_DETAILS'): {
+
+            console.log('udpate shipping order reducter')
+            console.log(action.payload)
+            const {supplierId, update} = action.payload
+            const newMasterCart = state.masterCart.map(supplierCart => {
+                if (supplierCart.supplierId === supplierId) {
+                    console.log({...supplierCart, ...update})
+                    return {...supplierCart, ...update}
+                } else {
+                    return {...supplierCart}
+                }
+            })
+            return {...state, masterCart:newMasterCart}
+        }
         
         case('SET_SHIPPING_OPTION'): {
             const {supplierId, option} = action.payload

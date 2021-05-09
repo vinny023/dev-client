@@ -169,8 +169,7 @@ export class LoginScreen extends React.Component {
                     type: 'error',
                     message: 'Trouble logging in. Please close and reopen app'
                 }
-            })
-            
+            })           
 
             return
         }
