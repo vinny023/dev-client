@@ -224,13 +224,21 @@ export class SupplierCart extends React.Component {
                         <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })} style={[commonStyles.card]}>
                             <View style={[styles.row, { paddingBottom: 3 }]}>
                                 <Text style={[styles.heading]}>Delivery</Text>
-                                <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                {this.props.supplierOrder.selectedDeliveryDate &&
+                                    <>
+                                    <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                    </>
+                                }
                             </View>
                             <View style={[styles.row, { paddingBottom: 0 }]}>
                                 <TouchableOpacity >
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
+                                {this.props.supplierOrder.selectedDeliveryTimeSlot &&
+                                    <>
                                 <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
+                                </>
+                                }
                             </View>
                         </TouchableOpacity>
                         {/* ---------- Add notes Card ---------- */}
