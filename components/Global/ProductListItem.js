@@ -80,11 +80,19 @@ class ProductListItem extends React.Component {
 
     render() {
 
+        
+
         const { item } = this.props
+        const today = new Date()        
+
+        //check if recently orderd
+        let recent = (item.lastOrderDate && item.lastOrderDate - today.getDate() > 14*86400000) 
+
+        const activeSupplier = (this.props.account.activeSuppliers.indexOf(item.supplierId) !== -1) //CHECK IF SUPPLIER IS ACTIVE - IF NOT DON'T LET ADDINg
 
         let priceString = 'Pricing unavailable'
         if (item.price) {
-            priceString = '$' + item.price + ' ($' + item.unitCost + ' / ' + item.units + ')'
+            priceString = '$' + item.price.toFixed(2) + ' ($' + item.unitCost.toFixed(2) + ' / ' + item.units + ')'
         }
 
         //  console.log('PRODUCT LIST ITEM RENDERING')
@@ -103,12 +111,13 @@ class ProductListItem extends React.Component {
                                     <View style={styles.tagContainer}>
                                         <Text style={[commonStyles.btnText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
                                     </View>
+                           
                                     {item.brand ?
                                         <View style={[styles.tagContainer, { marginLeft: 4,backgroundColor:colors.blue.light }]}>
                                             <Text style={[styles.boldText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.brand}</Text>
                                         </View>
                                         : <></>
-                                    }
+                                    }                                    
                                 </View>
                             }
                              {/* -------Item name Price and Units------- */}
@@ -137,12 +146,14 @@ class ProductListItem extends React.Component {
                             <View style={{ marginTop: 0, flex: 1 }} >
                                 {item.price &&
                                     <View >
-                                        <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${round(item.price * this.state.quantity, 2)}</Text>
+                                        <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${(item.price * this.state.quantity).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                 }
                                 <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size * item.qtyPerItem * this.state.quantity}{item.units}</Text>
                             </View>
                         }
+                        {!activeSupplier ? <Text>Inactive Supplier</Text> :
+                            <>
                             {!this.props.reorderOnly &&
                                 <View style={{ paddingTop: 5 }}>
                                     {this.state.quantity == 0 ?
@@ -184,6 +195,8 @@ class ProductListItem extends React.Component {
                                 // </TouchableOpacity>
 
                             }
+                            </>
+                        }
                         </View>
                     </View>
                 </View>
@@ -206,7 +219,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
     return (
         {
-            masterCart: state.cartState.masterCart
+            masterCart: state.cartState.masterCart,
+            account: state.accountState.account
         }
     )
 }

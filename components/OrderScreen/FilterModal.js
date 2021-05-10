@@ -16,34 +16,48 @@ const dimensions = Dimensions.get('window')
 const sortOptions = [
     { 'title': 'Price Low To High', 'value': { 'price': 1 } },
     { 'title': 'Price High To Low', 'value': { 'price': -1 } },
-    { 'title': 'Recently Ordered', 'value': { 'orderHistory': 1 } },
+    { 'title': 'Recently Ordered', 'value': { 'lastOrderDate': -1 } },
     { 'title': 'Size Low To High', 'value': { 'size': 1 } },
     { 'title': 'Size High To Low', 'value': { 'size': -1 } },
     { 'title': 'Qty Low To High', 'value': { 'qtyPerItem': 1 } },
     { 'title': 'Qty High To Low', 'value': { 'qtyPerItem': -1 } }
 ]
 
+//THIS ARAY DETERMINES THE ORDER OF FILTERS ON THE PAGE
 const filterOptions = [
+
+    { 'title': 'Size', 'field': 'qtyString', 'options': [] },
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
     { 'title': 'Brand', 'field': 'brand', 'options': [] },
-    { 'title': 'Units', 'field': 'units', 'options': [] },
+    // { 'title': 'Units', 'field': 'units', 'options': [] },    
     { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
-    { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
-    { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
+    // { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
+    // { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
 const getFilters = (productList) => {
     // console.log('IN FUCNTION PLIST')
     // console.log(productList)
 
     productList.forEach(product => {
-        const { supplierDisplayName, supplierId, units, price, size, qtyPerItem } = product
-        const propertyArray = [supplierDisplayName, units, price, size, qtyPerItem]
+        const { supplierDisplayName, supplierId, brand, units, price, size, qtyPerItem } = product
+
+        //THIS ARRAY NEEDS TO MATCH THE ARRAY ABOVE
+        const propertyArray = [supplierDisplayName, brand, units, price, size, qtyPerItem]
 
         filterOptions.forEach((filterOption, index) => {
-            if (filterOption.title === 'Supplier' || filterOption.title === 'Units' || filterOption.title === 'Brand') {
-                if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
-                    filterOptions[index].options.push(propertyArray[index])
+            console.log('EXISTS IN FILTER' +filterOption.title);
+            const selectorFilters = ['Supplier', 'Units', 'Brand', 'Size']
+            console.log(selectorFilters.indexOf(filterOption.title));
+            if (selectorFilters.indexOf(filterOption.title) !== -1) {
+                const {options, field} = filterOption
+                // if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
+                //     filterOptions[index].options.push(propertyArray[index])
+                // }
+                if (options.indexOf(product[field]) === -1) {
+                    filterOptions[index].options.push(product[field])
                 }
+
+
             } else {
                 let newVal = propertyArray[index]
                 if (newVal > filterOptions[index].max) { filterOptions[index].max = newVal }
@@ -53,11 +67,16 @@ const getFilters = (productList) => {
         return filterOptions
 
     })
+
+    console.log('FILTER OPTIONS')
+    console.log(filterOptions)
+  
     return filterOptions
 }
 
 export default class FilterModal extends React.Component {
 
+    
     state = { low: 0, high: 100 }
 
     renderThumb = () => <View style={styles.thumb} />;
@@ -138,8 +157,28 @@ export default class FilterModal extends React.Component {
             highSize: 0,
             lowQty: 0,
             highQty: 0,
-            field: ''
+            field: '',
+            filterOptions: [],            
         }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('FILTER COMPEOENT DID UPDATE')
+        console.log(prevProps.productList);
+        console.log(this.props.productList);
+        if (!_.isEqual(this.props.productList, prevProps.productList)) {
+            console.log('RERENDING FILTER')
+            this.setState({
+                filterOptions: getFilters(this.props.productList)
+            })
+        }
+
+    }
+
+    componentDidMount() {
+        this.setState({
+            filterOptions: getFilters(this.props.productList)
+        })
     }
 
     render() {
@@ -147,7 +186,6 @@ export default class FilterModal extends React.Component {
         // console.log(this.props.productList)
 
         const filterOptions = getFilters(this.props.productList)
-
 
         return (
 
@@ -165,7 +203,9 @@ export default class FilterModal extends React.Component {
                             <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.close(false)}>
                                 <Ionicons name='close' size={sizes.s20} />
                             </TouchableOpacity>
+                            <TouchableOpacity onClick={() => this.props.clearFilter()}>
                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
+                            </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={{paddingBottom:7}}>
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter and Sort</Text>
@@ -213,9 +253,10 @@ export default class FilterModal extends React.Component {
                             </ScrollView>
                         </View>
                         {/* <Text>Filter</Text> */}
-                        {filterOptions.map((filterOption, i) => {
+                        {   
+                            this.state.filterOptions.map((filterOption, i) => {
                             const { title, field, options, min, max } = filterOption
-                            if (title === 'Units') {
+                            if (title === 'Units' || title === 'Size') {
                                 //SELECTION FILTER
                                 return (
                                     <View key={i}>
@@ -265,7 +306,8 @@ export default class FilterModal extends React.Component {
                                     </View>
                                 )
                             }
-                            if (title === 'Supplier') {
+                            if (title === 'Supplier' || title === 'Brand') {
+                                
                                 //SELECTION FILTER
                                 return (
                                     <View key={i}>
@@ -273,6 +315,8 @@ export default class FilterModal extends React.Component {
                                         <View style={[commonStyles.card,{padding:5}]}>
                                             {
                                                 options.map((option, k) => {
+                                                    // console.log('FILTER');
+                                                    // console.log(this.props.filter)
                                                     let selected = (this.props.filter
                                                         .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
 
@@ -283,6 +327,10 @@ export default class FilterModal extends React.Component {
                                                         label = label + '(Selected)'
                                                         filterValue = { ...filterValue, 'remove': true }
                                                     }
+
+                                                    if (!option) {
+                                                        return 
+                                                    } else {
                                                     return (
                                                         <View key={k} style={[commonStyles.row,{paddingVertical:3}]}>
                                                          
@@ -300,6 +348,7 @@ export default class FilterModal extends React.Component {
                                                         </View>
 
                                                     )
+                                                    }
                                                 })
                                             }
                                         </View>
@@ -374,7 +423,7 @@ export default class FilterModal extends React.Component {
                                                             onSubmitEditing={text => this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [parseFloat(text.nativeEvent.text)] })} /> */}
                                                     </View>
                                                 }
-                                                {title == "Size" &&
+                                                {title == "NONE" &&
                                                     <View>
                                                         {this.state.isUnitSelected ?
                                                             //Size

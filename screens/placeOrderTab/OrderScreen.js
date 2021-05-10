@@ -71,6 +71,7 @@ export class OrderScreen extends React.Component {
     this.setSuggestion = this.setSuggestion.bind(this)
     this.setSort = this.setSort.bind(this)
     this.setFilter = this.setFilter.bind(this)
+    this.clearFilter = this.clearFilter.bind(this)
     // this.setProductList = this.setProductList.bind(this)
   }
 
@@ -105,10 +106,18 @@ export class OrderScreen extends React.Component {
     
   }
 
+  clearFilter() {
+    this.setState({
+      filter:[],
+      sort:[],
+    })
+  }
+
   setFilter(newFilter) {
     //handle Remove    
     let type = 'qty'
-    if (newFilter.field === 'supplierDisplayName' || newFilter.field === 'units') {
+    const selectorFields = ['supplierDisplayName', 'units', 'brand', 'qtyString']
+    if (selectorFields.indexOf(newFilter.field) !== -1) {
       type = 'select'
       newFilter.values = [newFilter.value]
       delete newFilter.value
@@ -173,27 +182,28 @@ export class OrderScreen extends React.Component {
 
   setSort(newSort) {
 
-    //ONLY ALLOW ONE SORT  - this.setState({sort: [newSort]})
+    // ONLY ALLOW ONE SORT  - 
+    this.setState({sort: [newSort]})
 
-    let isNew = true;
-    let matchIndex = -1
-    let sortList = this.state.sort.map((sortEntry, i) => {
-      console.log({ ...sortEntry, ...newSort })
-      if (_.isEqual({ ...sortEntry, ...newSort }, newSort) || _.isEqual({ ...sortEntry, ...newSort }, sortEntry)) {
-        isNew = false
-        matchIndex = i
-        return newSort
-      } else {
-        return sortEntry
-      }
-    })
-    if (isNew && !newSort.remove) {
-      sortList.push(newSort)
-    }
-    if (newSort.remove) {
-      sortList.splice(matchIndex, 1)
-    }
-    this.setState({ sort: sortList })
+    // let isNew = true;
+    // let matchIndex = -1
+    // let sortList = this.state.sort.map((sortEntry, i) => {
+    //   console.log({ ...sortEntry, ...newSort })
+    //   if (_.isEqual({ ...sortEntry, ...newSort }, newSort) || _.isEqual({ ...sortEntry, ...newSort }, sortEntry)) {
+    //     isNew = false
+    //     matchIndex = i
+    //     return newSort
+    //   } else {
+    //     return sortEntry
+    //   }
+    // })
+    // if (isNew && !newSort.remove) {
+    //   sortList.push(newSort)
+    // }
+    // if (newSort.remove) {
+    //   sortList.splice(matchIndex, 1)
+    // }
+    // this.setState({ sort: sortList })
   }
 
   hideBanner = () => {
@@ -284,6 +294,7 @@ export class OrderScreen extends React.Component {
                     filter={this.state.filter}
                     setFilter={this.setFilter}
                     setSort={this.setSort}
+                    clearFilter={this.clearFilter}
                     productList={this.state.productList}
                   />
                 </View>

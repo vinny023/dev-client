@@ -89,6 +89,7 @@ export class OrderDetailScreen extends React.Component {
     catch (error) {
       console.log(error)
       this.setState({
+        banner: { show: true, type: 'error', message: 'Issue updating order. Please reach out to support if error persists.' },
         setOrderLoading: false,
         setOrderError: true
       })
@@ -128,7 +129,7 @@ export class OrderDetailScreen extends React.Component {
         i++
       })
       this.setState({
-        banner: { show: true, type: 'success', message: 'All ' + i + 'items added to cart!' }
+        banner: { show: true, type: 'success', message: 'All ' + i + ' item(s) added to cart!' }
       })
     } catch (err) {
       console.log(err)
