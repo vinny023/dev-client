@@ -24,11 +24,15 @@ const OrderButton = ({ order }) => {
 
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
                 <View style={{ marginBottom: 2 }} />
-                <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day},{order.selectedDeliveryTimeSlot}</Text>
+                <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day}: {order.selectedDeliveryTimeSlot}</Text>
             </View>
             <View style={[commonStyles.row, styles.priceContainer]}>
-                <Text style={[commonStyles.text, { fontSize: sizes.s14, textAlign: 'right' }]}>$</Text>
-                <Text style={[commonStyles.text, { fontSize: sizes.s17, textAlign: 'right' }]}>{order.supplierDetail.orderMinimum}</Text>
+                
+                {order.orderTotal &&
+                    <>
+                    <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${order.orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                    </>
+                }
             </View>
         </TouchableOpacity>
     )
@@ -49,27 +53,17 @@ class ViewOrderScreen extends React.Component {
         }
     }
 
-    getOrders = async () => {
-        for (let i = 0; i < 3; i++) {
+    getOrders = async () => {  
             try {
-                console.log(i + ' ATTEMPT')
                 this.setState({ getOrdersLoading: true })
                 const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
                 this.setState({
                     orderList: orders,
                     getOrderLoading: false,
                 })
-                break;
             }
             catch (error) {
-                console.log(error)
-                if (i < 2) {
-                    this.setState({
-                        getOrdersLoading: false,
-                        getOrdersError: true,
-                        banner: { show: true, type: 'error', message: 'Issue loading orders - trying again.' }
-                    })
-                } else {
+                console.log(error)               
                     //show errors if item is not loading, & try again
                     this.setState({
                         banner: {
@@ -80,10 +74,8 @@ class ViewOrderScreen extends React.Component {
                         }
                     })
                     //Sentry.Native.captureException(error)
-                    //log error with sentry
-                }
-            }
-        }
+                    //log error with sentry                
+            }       
 
     }
 

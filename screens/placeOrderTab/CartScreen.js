@@ -71,7 +71,7 @@ export class CartScreen extends React.Component {
             getSuppliersError: false,
             placeOrderLoading: Array(100).fill(false),
             placeOrderError: Array(100).fill(false),
-            banner: { show: true, type: '', message: 'Banner' },
+            banner: { show: false, type: '', message: 'Banner' },
 
         }
 
@@ -108,6 +108,7 @@ export class CartScreen extends React.Component {
         catch (error) {
             console.log(error)
             this.setState({
+                banner: {show:true,type:'error', message: 'Issue loading suppliers. Please exit cart and come back.' },
                 getSuppliersLoading: false,
                 getSupplierError: true
             })
@@ -120,6 +121,7 @@ export class CartScreen extends React.Component {
 
     placeOrder = async ({ index, supplierOrder }) => {
 
+         
         console.log('RUNNING PLACE ORDER')
         console.log(index)
         console.log((index))
@@ -147,7 +149,9 @@ export class CartScreen extends React.Component {
             this.setState({
                 banner: { show: true, type: 'error', message: 'Please select a delivery date and time for' + order.supplierId }
             })
-            return null
+            setTimeout(() => {}, 2000)
+       
+            // return null
         }
 
         //check if order total is less than minimum
@@ -156,7 +160,9 @@ export class CartScreen extends React.Component {
             this.setState({
                 banner: {show: true, type: 'error', message: order.supplierDetail.displayName+' order total less than minimum. Tap below to place order anyway'}
             })
-            return null
+            setTimeout(() => {}, 2000)
+          
+            // return null
         }
 
         console.log('Running rest of place order')
@@ -196,14 +202,21 @@ export class CartScreen extends React.Component {
                 }
             })
         }
-        return null
+
+        // setTimeout(() => {}, 2000)
+        
+        //return null
+ 
     }
 
     placeFullOrder = async () => {
         const initOrders = [...this.state.masterOrder]
+        console.log('Starting place full order');
         for (let i = 0; i < initOrders.length; i++) {
             console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
-            this.placeOrder({ supplierOrder: initOrders[i] })
+            await this.placeOrder({ supplierOrder: initOrders[i] })
+            console.log('first place order done')
+            setTimeout(() => console.log('Running next place order'), 2000)
         }
     }
 

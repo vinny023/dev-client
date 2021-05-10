@@ -16,7 +16,13 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 const syncStore = ({ accountId }) => {
+
+    //should write needs to instantiate as true on first login or else it won't write to firebase
+    //shouldwrite needs to instantiate as false on later logins in order to not rewrite the cart
     let shouldWrite = false;
+    if (shouldWrite) {
+        shouldWrite = true;
+    }
 
     //WRITE CHANGES TO FIREBASE
     store.subscribe(() => {
@@ -87,10 +93,15 @@ export class LoginScreen extends React.Component {
     manualLogin = async () => {
         // ADD QUERY VALIDATION - [TAG]
 
+
+        if (this.state.accountId !== '') {
+            this.login(this.state.accountId)
+        } else {
+
         try {
             this.setState({
                 getAccountLoading: true,
-                banner: { show: true, type: 'message', message: "Verifying your unique codee... " }
+                banner: { show: true, type: 'message', message: "Verifying your passcode... " }
             })
             const account = await getAccount({ query: { code: this.state.code } })  //query for id by code
             console.log("CDD")
@@ -98,7 +109,7 @@ export class LoginScreen extends React.Component {
             console.log("ACCOUNT")
             console.log(account)
 
-            if (account) { //if code query returns non-empty array
+            if (account !== 'account not found') { //if code query returns an undefined
                 //set redux store
                 this.props.setAccount(account)
                 //store data to asyncstorage
@@ -116,7 +127,7 @@ export class LoginScreen extends React.Component {
                 //success message
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'message', message: "Success. Logging in.. " + account.displayName + "..." }
+                    banner: { show: true, type: 'message', message: "Hello " + account.displayName + "!" }
                 })
 
                 this.login(account.id)
@@ -126,7 +137,7 @@ export class LoginScreen extends React.Component {
             } else {
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'error', message: "Incorrect code, please try again" }
+                    banner: { show: true, type: 'error', message: "Sorry! Looks like your code is invalid. Please try again." }
                 })
                
             }
@@ -134,8 +145,9 @@ export class LoginScreen extends React.Component {
             console.log(error)
             this.setState({
                 getAccountLoading: false,
-                banner: { show: true, type: 'error', message: "Sorry! Looks like your code is invalid. Please try again." }
+                banner: { show: true, type: 'error', message: "Sorry! we're having trouble with this request Please try again." }
             })
+        }
         }
     }
     login = async (accountId) => {
@@ -149,7 +161,7 @@ export class LoginScreen extends React.Component {
                 banner: {
                     show: true,
                     type: 'error',
-                    message: 'Trouble logging in. Please close and reopen app'
+                    message: 'Trouble logging in automatically - please tap login button below. If error persists - please contact support'
                 }
             })
 
@@ -167,7 +179,7 @@ export class LoginScreen extends React.Component {
                 banner: {
                     show: true,
                     type: 'error',
-                    message: 'Trouble logging in. Please close and reopen app'
+                    message: 'Trouble logging in automatically - please tap login button below. If error persists - please contact support'
                 }
             })           
 
@@ -187,6 +199,7 @@ export class LoginScreen extends React.Component {
                 banner: { show: true, type: 'success', message: 'Device not recongized. Use your unique code to log in' }
             })
         } else {
+            this.setState({accountId: accountId})
             await this.login(accountId)
         }
 
@@ -215,14 +228,21 @@ export class LoginScreen extends React.Component {
                 <View style={{ paddingLeft: 5 }}>
                     <Text style={{ fontSize: sizes.s25-2, fontFamily: 'bold', color: colors.text }}>Login to SupplyHero</Text>
                 </View>
+
                 <View style={{ marginTop: 60,}}>
 
+                {this.state.accountId !== '' ?
+                <><Text>Account found on device</Text></>
+                :
+                     <>
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
                     style={{ backgroundColor: colors.white, paddingHorizontal: 11, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s14,height:36 }}
                    // secureTextEntry 
                     />
+                    </>
+                }
                 </View>
                 <AppButton
                     text="Login"
@@ -230,10 +250,11 @@ export class LoginScreen extends React.Component {
                 />
 
 
-                {/* <Button
+            {/*    <Button
             title="Remove Key"
             onPress={async() => AsyncStorage.removeItem('accountId')}
-        /> */}
+        /> 
+            */}
             </View>
         )
     }

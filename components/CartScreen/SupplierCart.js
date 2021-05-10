@@ -13,6 +13,54 @@ import { createIconSetFromFontello, Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 
 
+class SpecialNotesBox  extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            specialNotes: this.props.specialNotes ? this.props.specialNotes : ''
+        }
+    }
+
+    render() {
+        return (
+        <View style={[commonStyles.centeredView,]}>
+        
+    
+        <ScrollView style={{ padding: 20 }} >
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.hideNotesModal()} >
+                <Ionicons name='close' size={sizes.s20} />
+            </TouchableOpacity>
+            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
+        </View>
+        <View>
+            <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Add order notes</Text>
+            <View style={{ paddingTop: 15 }}>
+                <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
+            </View>
+            <View style={{ marginTop: 15, height: sizes.large, backgroundColor: 'white', borderRadius: 10 }}>
+                <TextInput
+                    multiline={true}
+                    numberOfLines={16}
+                    defaultValue={this.state.specialNotes ? this.state.specialNotes : ''}
+                    style={styles.input}
+                    onChangeText={text => this.setState({specialNotes: text})} />
+            </View>
+        </View>
+    </ScrollView>
+    <View>
+        <AppButton text="Add notes" style={{ marginHorizontal: 10 }} onPress={() => {
+            this.props.updateOrderDetails({ update: { specialNotes: this.state.specialNotes }})
+            this.props.hideNotesModal()
+        }} />
+    </View>
+    </View>
+        )
+    }
+}
+
+
+
 const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
 //     console.log('SHIPPING Cuttoff')
@@ -82,6 +130,10 @@ export class SupplierCart extends React.Component {
         this.props.updateOrderDetails({ supplierId: this.props.supplierDetail.id, update: update })
     }
 
+    hideNotesModal = () => {
+        this.setState({toggleNotesFilter: false})
+    }
+
     placeOrder = () => {
         this.props.placeOrder({ index: this.props.index })
     }
@@ -109,6 +161,12 @@ export class SupplierCart extends React.Component {
                 this.updateOrderDetails({update: update})
             }
             }
+    }
+
+    setSpecialNotes = (specialNotes) => {
+        this.setState({
+            specialNotes:specialNotes
+        })
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -166,13 +224,13 @@ export class SupplierCart extends React.Component {
                         <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })} style={[commonStyles.card]}>
                             <View style={[styles.row, { paddingBottom: 3 }]}>
                                 <Text style={[styles.heading]}>Delivery</Text>
-                                <Text style={styles.boldText}>Monday - 4/12</Text>
+                                <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
                             </View>
                             <View style={[styles.row, { paddingBottom: 0 }]}>
                                 <TouchableOpacity >
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
-                                <Text style={commonStyles.lightText}>12AM - 5AM</Text>
+                                <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
                             </View>
                         </TouchableOpacity>
                         {/* ---------- Add notes Card ---------- */}
@@ -307,33 +365,7 @@ export class SupplierCart extends React.Component {
                             isVisible={this.state.toggleNotesFilter}
 
                         >
-                            <View style={[commonStyles.centeredView,]}>
-                                <ScrollView style={{ padding: 20 }} >
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.setState({ toggleNotesFilter: false })} >
-                                            <Ionicons name='close' size={sizes.s20} />
-                                        </TouchableOpacity>
-                                        <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Add Order Notes</Text>
-                                        <View style={{ paddingTop: 15 }}>
-                                            <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
-                                        </View>
-                                        <View style={{ marginTop: 15, height: sizes.large, backgroundColor: 'white', borderRadius: 10 }}>
-                                            <TextInput
-                                                multiline
-                                                // numberOfLines={16}
-                                                style={styles.input}
-                                                onSubmitEditing={text => this.props.updateOrderDetails({ update: { specialNotes: text }})} />
-                                        </View>
-                                    </View>
-                                </ScrollView>
-                                <View>
-
-                                    <AppButton text="APPLY" style={{ marginHorizontal: 10 }} onPress={() => this.setState({ toggleNotesFilter: false })} />
-                                </View>
-                            </View>
+                            <SpecialNotesBox hideNotesModal={this.hideNotesModal} updateOrderDetails={this.updateOrderDetails} specialNotes={this.props.supplierOrder.specialNotes} />
                         </Modal>
                     </View>
                 }
