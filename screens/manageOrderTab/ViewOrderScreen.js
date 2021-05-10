@@ -155,7 +155,7 @@ class ViewOrderScreen extends React.Component {
 
             //show loading until orders has been pulled
 
-            <ScrollView style={[commonStyles.container, { paddingHorizontal: 15 }]}>
+            <ScrollView style={[commonStyles.container]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
 
                 <Modal
@@ -178,7 +178,7 @@ class ViewOrderScreen extends React.Component {
                         <View style={{ paddingTop: 20 }}>
                             <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
                         </View>
-                        <View style={[commonStyles.card, { padding: 5 }]}>
+                        <View style={[commonStyles.card, { padding: 5,marginTop:7 }]}>
                             {this.props.account.activeSuppliers.map(supplier => {
                                 console.log(supplier)
                                 //CHECK IF SELECTED
@@ -215,14 +215,14 @@ class ViewOrderScreen extends React.Component {
                     {openOrders.length > 0 ?
                         <View>
                             <View style={[commonStyles.row, { paddingLeft: 10, justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 3 }]}>
-                                <Text style={[commonStyles.lightHeading]}>Open Orders</Text>
+                                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Open Orders</Text>
                                 <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter Orders</Text>
                                 </TouchableOpacity>
                             </View>
                             { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }
-                            <View style={[commonStyles.card, { marginBottom: 30,paddingTop:4 }]}>
+                            <View style={[commonStyles.card, { marginBottom: 20,paddingTop:4,marginTop:7 }]}>
                                 {
                                     openOrders.map((order, i) => <OrderButton key={i} order={order} />)
                                     
@@ -236,9 +236,9 @@ class ViewOrderScreen extends React.Component {
                     {deliveredOrders.length > 0 ?
                         <View>
                             <View style={{ paddingLeft: 10 }}>
-                                <Text style={[commonStyles.lightHeading]}>Delivered Orders</Text>
+                                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Delivered Orders</Text>
                             </View>
-                            <View style={[commonStyles.card,{paddingTop:0}]}>
+                            <View style={[commonStyles.card,{marginTop:7,paddingTop:7}]}>
                                 {
                                      deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
                                     

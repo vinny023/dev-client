@@ -35,7 +35,7 @@ export default class Banner extends React.Component {
 
     render() {
         const { show, type, message, buttonAction } = this.props.banner
-        if (show) {
+        if (show && message!= 'Banner' ) {
             showMessage({
                 type: type,
                 message: message,
@@ -81,7 +81,8 @@ export default class Banner extends React.Component {
 const styles = StyleSheet.create({
     banner: {
         opacity: 1,
-        paddingVertical: 28,
+        paddingTop: 32,
+        paddingBottom:20,
         elevation: 3,
         shadowColor: 'rgba(0, 0, 0, 0.25)',
         shadowOffset: {

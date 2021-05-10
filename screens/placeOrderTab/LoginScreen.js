@@ -220,7 +220,7 @@ export class LoginScreen extends React.Component {
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
-                    style={{ backgroundColor: colors.white, padding: 7, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
+                    style={{ backgroundColor: colors.white, paddingHorizontal: 11, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s14,height:36 }}
                    // secureTextEntry 
                     />
                 </View>
