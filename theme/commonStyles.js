@@ -71,8 +71,8 @@ card: {
   //paddingHorizontal: 10,
   //paddingVertical:10,
   borderRadius: 10,
-  padding:10,
-  marginTop: 7
+  padding:17,
+  marginBottom: 13
 },
 bannerText:{
   //fontSize:sizes.s16,

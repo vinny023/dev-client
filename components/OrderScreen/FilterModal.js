@@ -242,7 +242,7 @@ export default class FilterModal extends React.Component {
                                             <AppButton
                                                 onPress={() => this.props.setSort(value)}
                                                 text={title.replace('(Selected)', '')}
-                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginVertical:7,marginHorizontal:0,height:32}}
+                                                style={{ backgroundColor: title.includes("Selected") ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 10 ,marginTop:7,marginHorizontal:0,height:32,marginBottom:12}}
                                                 textStyle={title.includes("Selected") ? styles.selectedText : styles.unselectedText} />
 
                                         </View>
@@ -294,7 +294,7 @@ export default class FilterModal extends React.Component {
                                                                 <AppButton
                                                                     onPress={() => this.sizeHandler(filterValue)}
                                                                     text={option}
-                                                                    style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginVertical:5,marginHorizontal:0,height:32 }}
+                                                                    style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginTop:7,marginHorizontal:0,height:32,marginBottom:12 }}
                                                                     textStyle={selected ? styles.selectedText : styles.unselectedText} />
                                                             </View>
 
@@ -312,7 +312,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View key={i}>
                                         {options.length > 0 && <Text style={styles.heading}>{title}</Text>}
-                                        <View style={[commonStyles.card,{padding:5}]}>
+                                        <View style={[commonStyles.card,{padding:5,marginTop:7}]}>
                                             {
                                                 options.map((option, k) => {
                                                     // console.log('FILTER');
@@ -381,7 +381,7 @@ export default class FilterModal extends React.Component {
                                 return (
                                     <View >
                                         <Text style={styles.heading}>Filter by {title}</Text>
-                                        <View style={[commonStyles.card]}>
+                                        <View style={[commonStyles.card,{marginTop:7}]}>
                                             {/* <Text style={styles.text}>Min ({min}):
                                              <TextInput
                                                     style={{ color: colors.blue.primary }}

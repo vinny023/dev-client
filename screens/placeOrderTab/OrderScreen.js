@@ -306,7 +306,7 @@ export class OrderScreen extends React.Component {
 <Text>{JSON.stringify(this.state.filter)}</Text> */}
           {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
              this.state.productList.length>0?
-           <View style={{ padding: 10, backgroundColor: colors.white, borderRadius: 10, marginBottom: 10 }}>
+           <View style={commonStyles.card}>
                 <ProductList
                   navigation={this.props.navigation}
                   productList={this.state.productList}

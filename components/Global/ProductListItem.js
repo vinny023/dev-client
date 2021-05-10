@@ -122,22 +122,26 @@ class ProductListItem extends React.Component {
                             }
                              {/* -------Item name Price and Units------- */}
                             <View >
-                                <Text style={styles.text}>{item.displayName}</Text>
+                                <Text style={[styles.text,{fontSize:sizes.s15}]}>{item.displayName}</Text>
                                 {this.props.reorderOnly ?
                                     <View style={[styles.row, { marginTop: 5, justifyContent: 'flex-start' }]}>
                                         <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5 }]}>
                                             <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
                                         </View>
-                                        <View>
-                                            <Text style={[commonStyles.lightText,]}>{item.qtyString}</Text>
-                                            <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular', }]}>{priceString}</Text>
+                                        <View style={{paddingTop:2}}>
+                                            <Text style={[commonStyles.lightText,{fontSize:sizes.s14}]}>{item.qtyString}</Text>
+                                            <View style={{paddingTop:2}}>
+                                            <Text style={[styles.text, { fontFamily: 'regular', }]}>{priceString}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                     :
-                                    <View>
-                                        <Text style={[commonStyles.lightText,{paddingTop:2}]}>{item.qtyString}</Text>
-                                        <Text style={[styles.text, { fontSize: sizes.s13, fontFamily: 'regular' }]}>{priceString}</Text>
+                                    <View style={{paddingTop:2}}>
+                                    <Text style={[commonStyles.lightText,{fontSize:sizes.s14}]}>{item.qtyString}</Text>
+                                    <View style={{paddingTop:2}}>
+                                    <Text style={[styles.text, { fontFamily: 'regular', }]}>{priceString}</Text>
                                     </View>
+                                </View>
                                 }
                             </View>
                         </View>
@@ -275,7 +279,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.blue.primary,
          paddingVertical: 4,
           paddingHorizontal: 11, borderRadius: 10, 
-          marginBottom: 5 
+          marginBottom: 7
         }
 
 })

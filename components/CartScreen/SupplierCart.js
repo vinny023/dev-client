@@ -274,20 +274,20 @@ export class SupplierCart extends React.Component {
 
                                 <View>
                                    <View style={[styles.row]}>
-                                        <Text style={styles.lightText}>Minimum </Text>
-                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.heading}>Minimum </Text>
+                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2)}</Text>
                             </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Subtotal</Text>
-                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.heading}>Subtotal</Text>
+                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2)}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Delivery fee</Text>
-                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.heading}>Delivery fee</Text>
+                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2)}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.lightText}>Total</Text>
-                                        <Text style={styles.boldText}>${orderTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.heading}>Total</Text>
+                                        <Text style={styles.boldText}>${orderTotal.toFixed(2)}</Text>
                                     </View>
                                 </View>
                             </View> : <></>
@@ -312,11 +312,11 @@ export class SupplierCart extends React.Component {
                                             </TouchableOpacity>
                                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                                         </View>
-                                        <View style={{ paddingBottom: 7 }}>
+                                        <View style={{ paddingBottom: 12 }}>
                                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
-                                        <View style={[commonStyles.card, { padding: 5 }]}>
+                                        <View style={[commonStyles.card, { padding: 5,marginTop:7, }]}>
                                             {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
                                                 return (
@@ -339,7 +339,7 @@ export class SupplierCart extends React.Component {
                                         </View>
 
                                         <Text style={styles.heading}>Select Time</Text>
-                                        <View style={[commonStyles.card,{padding:5}]}>
+                                        <View style={[commonStyles.card,{padding:5,marginTop:7}]}>
                                             {this.props.supplierDeliverySettings.windows.map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
                                                 return (
@@ -421,12 +421,12 @@ const styles = StyleSheet.create({
         paddingBottom: 10
         //paddingVertical: 10
     },
-    lightText: {
-        //fontSize: sizes.s17,
-        fontSize: sizes.s16,
-        fontFamily: 'medium',
-        color: colors.grey.primary
-    },
+    // lightText: {
+    //     //fontSize: sizes.s17,
+    //     fontSize: sizes.s16,
+    //     fontFamily: 'medium',
+    //     color: colors.grey.primary
+    // },
     boldText: {
         fontFamily: 'medium',
         fontSize: sizes.s15,
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
         //paddingTop: 10,
         //fontSize: sizes.s17,
         fontSize: sizes.s16,
-        fontFamily: 'medium',
+        fontFamily: 'regular',
         color: colors.grey.primary
     },
     container: {
