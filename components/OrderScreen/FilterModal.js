@@ -198,7 +198,7 @@ export default class FilterModal extends React.Component {
                 style={commonStyles.modalView}
             >
                 <View style={commonStyles.centeredView} >
-                    <ScrollView contentContainerStyle={{ padding: 15 }}>
+                    <ScrollView contentContainerStyle={{ padding: 20 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.close(false)}>
                                 <Ionicons name='close' size={sizes.s20} />

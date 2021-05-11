@@ -269,7 +269,7 @@ export class OrderScreen extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background.light, paddingTop: 20 }}>
         <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-        <ScrollView style={[commonStyles.container, { paddingTop: 0 }]} >
+        <View style={[commonStyles.container, { paddingTop: 0 }]} >
           <SwitchMode setMode={this.setMode} mode={this.state.title} />
           {/* <Text>{this.state.title}</Text> */}
           <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} />
@@ -306,12 +306,10 @@ export class OrderScreen extends React.Component {
 <Text>{JSON.stringify(this.state.filter)}</Text> */}
           {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
              this.state.productList.length>0?
-           <View style={commonStyles.card}>
-                <ProductList
-                  navigation={this.props.navigation}
-                  productList={this.state.productList}
-                />
-              </View>
+             <ProductList
+             navigation={this.props.navigation}
+             productList={this.state.productList}
+           />
             :
             <View style={{ padding: 50, alignItems: 'center', justifyContent: 'center', }}>
                 <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
@@ -324,7 +322,7 @@ export class OrderScreen extends React.Component {
             </>
            // :<></>
           }
-        </ScrollView>
+        </View>
       </View>
 
     )

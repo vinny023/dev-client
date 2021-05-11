@@ -4,7 +4,7 @@ import { colors, commonStyles, sizes } from '../../theme'
 
 export default function StatusComponent({status,placeDate,confirmDate,deliverDate}) {
     return (
-        <View style={[commonStyles.row,{ marginHorizontal: 10,marginTop:5 }]}>
+        <View style={[commonStyles.row,{ marginTop:5 }]}>
             <View>
                 <View style={[styles.line,{backgroundColor:colors.blue.primary}]} />
                 <Text style={[styles.text,{fontSize:sizes.s15}]}>Placed</Text>

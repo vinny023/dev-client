@@ -232,7 +232,7 @@ export class LoginScreen extends React.Component {
                 <View style={{ marginTop: 60,}}>
 
                 {this.state.accountId !== '' ?
-                <><Text>Account found on device</Text></>
+                <><Text style={commonStyles.text}>Account found on device</Text></>
                 :
                      <>
                     <TextInput 

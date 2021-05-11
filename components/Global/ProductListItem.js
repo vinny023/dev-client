@@ -78,6 +78,18 @@ class ProductListItem extends React.Component {
         this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity })
     }
 
+    setCounterValue = (val) => {
+        if(val!=''){
+            if (val < this.state.quantity) {
+                this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - val })
+            } else {
+                this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity })
+            }
+        }else{
+            this.removeItem();
+        }
+    }
+
     render() {
 
         
@@ -172,7 +184,7 @@ class ProductListItem extends React.Component {
                                                     <Text style={styles.boldText}>-</Text>
                                                 </TouchableOpacity>
                                                 <View style={styles.signContainer}>
-                                                    <Text style={styles.boldText}>{this.state.quantity}</Text>
+                                                <TextInput style={[styles.boldText,{fontFamily:"medium"}]}  onChangeText={this.setCounterValue} value={this.state.quantity.toString()} />
                                                 </View>
                                                 {/* ADD BUTTON */}
                                                 <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>

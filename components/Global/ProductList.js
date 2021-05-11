@@ -3,6 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {FlatList, View, ScrollView} from 'react-native';
 import ProductListItem from './ProductListItem'
+import { commonStyles } from '../../theme';
 
 const NUM_SHOW_ITEMS = 10
 
@@ -58,7 +59,8 @@ render() {
                 initialNumToRender = {NUM_SHOW_ITEMS}
                 removeClippedSubviews={true}
                 onEndReached={this.loadNext}
-                onEndReachedThreshold={0.5}           
+                onEndReachedThreshold={0.5}  
+                style={commonStyles.card}         
                 renderItem={({item}) => <ProductListItem item={item}/>}
             />              
         )

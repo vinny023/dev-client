@@ -9,9 +9,9 @@ import RNRestart from 'react-native-restart';
 
 export default class Banner extends React.Component {
 
-    constructor(props) {
-        super(props)
-    }
+    // constructor(props) {
+    //     super(props)
+    // }
 
     // buttonAction = () => {
     //     const {buttonAction} = this.props.banner
@@ -29,9 +29,7 @@ export default class Banner extends React.Component {
     //         />
     // }
 
-    componentDidMount() {
- 
-    }
+  
 
     render() {
         const { show, type, message, buttonAction } = this.props.banner
@@ -40,9 +38,9 @@ export default class Banner extends React.Component {
                 type: type,
                 message: message,
                 description: message.includes('Order has been placed') ? "Tap here to view order" : '',
-                backgroundColor: type === "error" ? colors.pink : type === 'success' ? colors.green : type === 'message' ? colors.blue.light : colors.pink, // background color
+                backgroundColor: type === "error" ?'rgba(244, 85, 152, 0.96)': type === 'success' ? 'rgba(37, 240, 167, 0.96)' : type === 'message' ? colors.blue.light : colors.pink, // background color
                 // autoHide: false,
-                //statusBarHeight: 30,
+                statusBarHeight: 30,
                 titleStyle: commonStyles.bannerTitle,
                 textStyle: commonStyles.bannerText,
                 style: styles.banner,
@@ -51,7 +49,7 @@ export default class Banner extends React.Component {
                 color: type === 'message' ? colors.blue.primary : colors.white
             })
 
-            setTimeout(this.props.hideBanner(), 2000)
+            // setTimeout(this.props.hideBanner(), 2000)
         }
         
         return (
@@ -81,19 +79,18 @@ export default class Banner extends React.Component {
 const styles = StyleSheet.create({
     banner: {
         opacity: 1,
-        paddingTop: 32,
-        paddingBottom:20,
+        padding: 28,
         elevation: 3,
-        shadowColor: 'rgba(0, 0, 0, 0.25)',
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
         shadowOffset: {
             width: 0,
-            height: 4
+            height: 4,  
         },
-//top:0
+       //top:0,
+       shadowRadius:10
     },
     bannerTitle: {
         fontSize: sizes.s14,
-        //  fontSize:sizes.s16,
         fontFamily: 'regular',
         color: colors.white,
         textAlign: 'center',

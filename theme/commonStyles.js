@@ -41,7 +41,7 @@ const commonStyles = {
     paddingTop: 20,
     marginTop: 80,
     borderTopRightRadius: 35,
-    borderTopLeftRadius: 35
+    borderTopLeftRadius: 35,
   },
   row: {
     flexDirection: 'row',

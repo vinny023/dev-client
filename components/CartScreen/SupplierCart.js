@@ -13,7 +13,7 @@ import { createIconSetFromFontello, Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 
 
-class SpecialNotesBox  extends React.Component {
+class SpecialNotesBox extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,38 +23,38 @@ class SpecialNotesBox  extends React.Component {
 
     render() {
         return (
-        <View style={[commonStyles.centeredView,]}>
-        
-    
-        <ScrollView style={{ padding: 20 }} >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.hideNotesModal()} >
-                <Ionicons name='close' size={sizes.s20} />
-            </TouchableOpacity>
-            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
-        </View>
-        <View>
-            <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Add order notes</Text>
-            <View style={{ paddingTop: 15 }}>
-                <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
+            <View style={[commonStyles.centeredView,]}>
+
+
+                <ScrollView style={{ padding: 20 }} >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.hideNotesModal()} >
+                            <Ionicons name='close' size={sizes.s20} />
+                        </TouchableOpacity>
+                        <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
+                    </View>
+                    <View>
+                        <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Add order notes</Text>
+                        <View style={{ paddingTop: 15 }}>
+                            <Text style={commonStyles.lightText}>Type in any special requests or notes.</Text>
+                        </View>
+                        <View style={{ marginTop: 15, height: sizes.large, backgroundColor: 'white', borderRadius: 10 }}>
+                            <TextInput
+                                multiline={true}
+                                numberOfLines={16}
+                                defaultValue={this.state.specialNotes ? this.state.specialNotes : ''}
+                                style={styles.input}
+                                onChangeText={text => this.setState({ specialNotes: text })} />
+                        </View>
+                    </View>
+                </ScrollView>
+                <View>
+                    <AppButton text="Add notes" style={{ marginHorizontal: 10 }} onPress={() => {
+                        this.props.updateOrderDetails({ update: { specialNotes: this.state.specialNotes } })
+                        this.props.hideNotesModal()
+                    }} />
+                </View>
             </View>
-            <View style={{ marginTop: 15, height: sizes.large, backgroundColor: 'white', borderRadius: 10 }}>
-                <TextInput
-                    multiline={true}
-                    numberOfLines={16}
-                    defaultValue={this.state.specialNotes ? this.state.specialNotes : ''}
-                    style={styles.input}
-                    onChangeText={text => this.setState({specialNotes: text})} />
-            </View>
-        </View>
-    </ScrollView>
-    <View>
-        <AppButton text="Add notes" style={{ marginHorizontal: 10 }} onPress={() => {
-            this.props.updateOrderDetails({ update: { specialNotes: this.state.specialNotes }})
-            this.props.hideNotesModal()
-        }} />
-    </View>
-    </View>
         )
     }
 }
@@ -63,16 +63,16 @@ class SpecialNotesBox  extends React.Component {
 
 const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
-//     console.log('SHIPPING Cuttoff')
-//     console.log(shippingCutoff)
+    //     console.log('SHIPPING Cuttoff')
+    //     console.log(shippingCutoff)
 
-//    console.log('SHIPPING DAYS')
-//    console.log(shippingDays)
+    //    console.log('SHIPPING DAYS')
+    //    console.log(shippingDays)
 
-   
-//    console.log('DOW')
-//    console.log(DoW)
-    
+
+    //    console.log('DOW')
+    //    console.log(DoW)
+
     const millisecondsInDays = 86400000
 
     //take the next seven days of dates
@@ -80,28 +80,28 @@ const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
 
     //find earliest possible delivery day based on shipping days & cutoff time and 7 days after that
-    const offset = now.getHours() > shippingCutoff ? 1 : 0   
+    const offset = now.getHours() > shippingCutoff ? 1 : 0
 
-    const next7 = Array(7).fill(null).map((val,i) => {
-        let nextDay = new Date(now.getTime() + (shippingDays + offset+i)*millisecondsInDays)
+    const next7 = Array(7).fill(null).map((val, i) => {
+        let nextDay = new Date(now.getTime() + (shippingDays + offset + i) * millisecondsInDays)
         return nextDay
-    })    
+    })
 
-   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday', 'Saturday']
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-   console.log('NEXT 7')
-   console.log(next7)
-    
+    console.log('NEXT 7')
+    console.log(next7)
+
     //if it fits the category - in DoW and within 7 days
-    const returnVal = next7.filter((val, i) => DoW.indexOf(val.getDay()) !== -1 && val.getTime() - now.getTime() < 7*millisecondsInDays)
+    const returnVal = next7.filter((val, i) => DoW.indexOf(val.getDay()) !== -1 && val.getTime() - now.getTime() < 7 * millisecondsInDays)
         .map((val, i) => {
-            return { day: daysOfWeek[val.getDay()], date: (val.getMonth()+1).toString() + '/'+  val.getDate()}
-        })       
-        
-        console.log('RETURN VAL')
-        console.log(returnVal)
+            return { day: daysOfWeek[val.getDay()], date: (val.getMonth() + 1).toString() + '/' + val.getDate() }
+        })
 
-        return returnVal
+    console.log('RETURN VAL')
+    console.log(returnVal)
+
+    return returnVal
 }
 
 export class SupplierCart extends React.Component {
@@ -113,25 +113,25 @@ export class SupplierCart extends React.Component {
             orderPlaced: false,
             placeOrderError: false,
             toggleDateFilter: false,
-            toggleNotesFilter: false,            
+            toggleNotesFilter: false,
         }
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
 
         console.log('OCNSTRUCTIONS UPPLIER CART')
         console.log(this.props.supplierDeliverySettings)
-        
+
     }
 
     //WRITE ORDER UPDATE TO STORE
-    updateOrderDetails = ({update}) => {
+    updateOrderDetails = ({ update }) => {
         console.log('Running update order details')
         console.log(update)
         this.props.updateOrderDetails({ supplierId: this.props.supplierDetail.id, update: update })
     }
 
     hideNotesModal = () => {
-        this.setState({toggleNotesFilter: false})
+        this.setState({ toggleNotesFilter: false })
     }
 
     placeOrder = () => {
@@ -139,33 +139,35 @@ export class SupplierCart extends React.Component {
     }
 
     setDefaultDelivery = () => {
-        if (this.props.supplierDetail ) {
-            const {selectedDeliveryDate, selectedDeliveryTimeSlot} = this.props.supplierOrder
-    
-            const deliveryDays = createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail})
+        if (this.props.supplierDetail) {
+            const { selectedDeliveryDate, selectedDeliveryTimeSlot } = this.props.supplierOrder
+
+            const deliveryDays = createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail })
             console.log('DELIVERY DAYS')
             console.log(deliveryDays)
-    
+
             let update = {}
-            
+
             if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
-                update = { selectedDeliveryDate: deliveryDays[0],
-                    selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
+                update = {
+                    selectedDeliveryDate: deliveryDays[0],
+                    selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0]
+                }
             } else if (!selectedDeliveryTimeSlot) {
-                update = {selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
+                update = { selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
             } else if (!selectedDeliveryTimeSlot) {
                 update = { selectedDeliveryDate: deliveryDays[0] }
             }
-            
+
             if ((!selectedDeliveryDate || !selectedDeliveryTimeSlot)) {
-                this.updateOrderDetails({update: update})
+                this.updateOrderDetails({ update: update })
             }
-            }
+        }
     }
 
     setSpecialNotes = (specialNotes) => {
         this.setState({
-            specialNotes:specialNotes
+            specialNotes: specialNotes
         })
     }
 
@@ -175,7 +177,7 @@ export class SupplierCart extends React.Component {
         if (!_.isEqual(prevProps.supplierDetail, this.props.supplierDetail)) {
             this.setDefaultDelivery()
         }
-        
+
     }
     componentDidMount() {
         console.log('COMPONTENT DID MOUNT')
@@ -224,7 +226,10 @@ export class SupplierCart extends React.Component {
                         <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })} style={[commonStyles.card]}>
                             <View style={[styles.row, { paddingBottom: 3 }]}>
                                 <Text style={[styles.heading]}>Delivery</Text>
-                                <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                {this.props.supplierOrder.selectedDeliveryDate &&
+
+                                    <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                }
                             </View>
                             <View style={[styles.row, { paddingBottom: 0 }]}>
                                 <TouchableOpacity >
@@ -235,7 +240,7 @@ export class SupplierCart extends React.Component {
                         </TouchableOpacity>
                         {/* ---------- Add notes Card ---------- */}
                         <TouchableOpacity style={[commonStyles.card]} onPress={() => this.setState({ toggleNotesFilter: true })}>
-                            <View style={[commonStyles.row, { justifyContent: 'space-between',paddingVertical:0 }]}>
+                            <View style={[commonStyles.row, { justifyContent: 'space-between', paddingVertical: 0 }]}>
                                 <Text style={styles.heading}>Add Order notes</Text>
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
@@ -265,10 +270,10 @@ export class SupplierCart extends React.Component {
                                 }*/}
 
                                 <View>
-                                   <View style={[styles.row]}>
+                                    <View style={[styles.row]}>
                                         <Text style={styles.heading}>Minimum </Text>
                                         <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2)}</Text>
-                            </View>
+                                    </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Subtotal</Text>
                                         <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2)}</Text>
@@ -308,8 +313,8 @@ export class SupplierCart extends React.Component {
                                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
-                                        <View style={[commonStyles.card, { padding: 5,marginTop:7, }]}>
-                                            {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
+                                        <View style={[commonStyles.card, { padding: 5, marginTop: 7, }]}>
+                                            {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail }).map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
@@ -319,7 +324,7 @@ export class SupplierCart extends React.Component {
                                                             uncheckedColor={'#E6F0FD'}
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.updateOrderDetails({update:{ selectedDeliveryDate: val }})}
+                                                            onPress={() => this.updateOrderDetails({ update: { selectedDeliveryDate: val } })}
                                                         />
                                                         <View >
                                                             <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
@@ -331,7 +336,7 @@ export class SupplierCart extends React.Component {
                                         </View>
 
                                         <Text style={styles.heading}>Select Time</Text>
-                                        <View style={[commonStyles.card,{padding:5,marginTop:7}]}>
+                                        <View style={[commonStyles.card, { padding: 5, marginTop: 7 }]}>
                                             {this.props.supplierDeliverySettings.windows.map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
                                                 return (
@@ -342,7 +347,7 @@ export class SupplierCart extends React.Component {
                                                             uncheckedColor={'#E6F0FD'}
                                                             color={colors.blue.primary}
                                                             status={label.includes("Selected") ? 'checked' : 'unchecked'}
-                                                            onPress={() => this.updateOrderDetails({update:{ selectedDeliveryTimeSlot: val}})} />
+                                                            onPress={() => this.updateOrderDetails({ update: { selectedDeliveryTimeSlot: val } })} />
                                                         <View >
                                                             <Text style={commonStyles.text}>{val.replace('(Selected)', '')}</Text>
                                                         </View>
@@ -385,7 +390,8 @@ export class SupplierCart extends React.Component {
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                        style={{ backgroundColor: 'black', marginVertical: 0, elevation: 0 }}
+                                        style={{ backgroundColor: colors.blue.light, marginVertical: 0, elevation: 0 }}
+                                        textStyle={{color:colors.blue.primary}}
                                     //backgroundColor:'rgba(0,0,0,.4)'
                                     />
                                 </View>
@@ -399,9 +405,10 @@ export class SupplierCart extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => {
-    return { removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)),
-             updateOrderDetails: params => dispatch(actions.updateOrderDetails(params))
-             }
+    return {
+        removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)),
+        updateOrderDetails: params => dispatch(actions.updateOrderDetails(params))
+    }
 }
 
 export default connect(null, mapDispatchToProps)(SupplierCart)
@@ -421,14 +428,14 @@ const styles = StyleSheet.create({
     // },
     boldText: {
         fontFamily: 'medium',
-        fontSize: sizes.s15,
+        fontSize: sizes.s17,
         // fontSize: sizes.s19,
         color: colors.text
     },
     heading: {
         //paddingTop: 10,
         //fontSize: sizes.s17,
-        fontSize: sizes.s16,
+        fontSize: sizes.s15,
         fontFamily: 'regular',
         color: colors.grey.primary
     },

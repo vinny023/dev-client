@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Banner from '../../components/Global/Banner'
 import ProductList from '../../components/Global/ProductList'
 import OrderTotal from '../../components/Global/OrderTotal'
-import { View, Text, Button, ScrollView, Image, ActivityIndicator,Linking } from 'react-native';
+import { View, Text, Button, ScrollView, Image, ActivityIndicator, Linking } from 'react-native';
 import { getOrders, setOrder } from '../../apis/apis'
 import * as actions from '../../redux/actions'
 import _ from 'lodash'
@@ -24,7 +24,7 @@ const Status = (props) => {
       return (
         <StatusComponent status="Placed" placeDate="4/14" confirmDate="4/14" deliverDate="est 5/14" />
       )
-      case 'Unqueued':
+    case 'Unqueued':
       return (
         <StatusComponent status="Placed" placeDate="4/14" confirmDate="4/14" deliverDate="est 5/14" />
       )
@@ -59,7 +59,7 @@ export class OrderDetailScreen extends React.Component {
     let order = {}
     let orderId = props.route.params.orderId
     if (props.route.params.order) {
-      order = props.route.params.order  
+      order = props.route.params.order
       orderId = props.route.params.order.id
     }
 
@@ -161,32 +161,32 @@ export class OrderDetailScreen extends React.Component {
     //console.log(order.selectedDeliveryDate,"date test")
     return (
       <>
-        <ScrollView contentContainerStyle={[commonStyles.container,{paddingBottom:60,}]}>
+        <ScrollView contentContainerStyle={[commonStyles.container, { paddingBottom: 60, }]}>
           <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
             :
             <View>
               <View style={{ paddingHorizontal: 5 }}>
-                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0 ,}]}>
-                  <View style={{width:'80%'}}>
+                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0, }]}>
+                  <View style={{ width: '80%' }}>
                     <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
                     <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplier.displayName}</Text>
                   </View>
-                  <Image source={{uri:order.supplierDetail.logo}} resizeMode='contain' style={{ width: 60, height: 60 }} />
+                  <Image source={{ uri: order.supplierDetail.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
                 </View>
                 <View style={[commonStyles.row, { paddingBottom: 0 }]}>
                   <Image source={TruckLogo} style={{ marginRight: 10 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
-                  <Text style={{ fontSize: sizes.s17, fontFamily: 'medium', color: colors.grey.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5,10)}</Text>
+                  <Text style={{ fontSize: sizes.s17, fontFamily: 'medium', color: colors.grey.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5, 10)}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.grey.primary }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
-              <View style={[commonStyles.card,{paddingBottom:5}]}>
+              <View style={[commonStyles.card, { paddingBottom: 5, marginTop: 10 }]}>
                 <View >
-                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Order Status</Text>
+                  <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Order Status</Text>
                 </View>
-                  <Status status={order.status} />
+                <Status status={order.status} />
               </View>
               <View style={commonStyles.card}>
                 <ProductList
@@ -200,15 +200,22 @@ export class OrderDetailScreen extends React.Component {
             </View>
           }
           {//this.state.order.cart.length >1 &&
-          <AppButton text='Reorder all items' onPress={() => this.reorderAllItems()} style={{ backgroundColor: colors.black,elevation:0,marginTop:30 }} />
+            <AppButton text='Reorder all items'
+              onPress={() => this.reorderAllItems()}
+              style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
+              textStyle={{ color: colors.blue.primary }} />
           }
-          <AppButton text='Contact Woolco' onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us') } style={{marginTop:5,backgroundColor:colors.black,elevation:0}} />        
+          <AppButton
+            text='Contact Woolco'
+            onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us')}
+            style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
+            textStyle={{ color: colors.blue.primary }} />
         </ScrollView>
-        <View style={{ position: 'absolute',bottom:0, flex: 1, alignSelf: 'center',padingHorizontal:10,backgroundColor:'rgba(255,255,255,.3)',width:'100%' }}>
+        <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', padingHorizontal: 10, backgroundColor: 'rgba(255,255,255,.3)', width: '100%' }}>
           {order.status === 'Delivered' ?
-          <></>
-          :
-          <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{marginHorizontal:20}}  />
+            <></>
+            :
+            <AppButton text='Confirm Delivery' onPress={() => this.setOrderDetail({ status: "Delivered" })} style={{ marginHorizontal: 20 }} />
           }
         </View>
       </>

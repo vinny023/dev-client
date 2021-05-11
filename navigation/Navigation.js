@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 
 //Place Order Tab SCREENS
@@ -22,45 +23,43 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {syncCartStateToDB} from '../redux/firebaseActions'
+import { syncCartStateToDB } from '../redux/firebaseActions'
 import { useDispatch } from 'react-redux';
-import {db} from '../firebaseConfig';
+import { db } from '../firebaseConfig';
 
 const OrderTabStack = createStackNavigator();
 
 const myScreenOptions = {
 
   headerRight: () => <CartButton />,
-  
-  
-
 }
-const headerStyling = { backgroundColor: colors.background.light, elevation: 0, }
-const titleStyle={fontSize:sizes.s20+1,fontFamily:'bold',color:colors.text, textAlignVertical:'bottom',top:10}
+const headerStyling = { backgroundColor: colors.background.light, elevation: 0, shadowOpacity: 0 }
+const titleStyle = { fontSize: sizes.s20 + 1, fontFamily: 'bold', color: colors.text, textAlignVertical: 'bottom', top: 10 }
 
 const PlaceOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle,headerRightContainerStyle:{top:10} }}>      
-      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen}  />      
-      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerLeft:()=>null,headerRight:()=><CartButton />,}}  />      
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center',}} />
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle, headerRightContainerStyle: { top: 10 } }}>
+      <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} />
+      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{ headerLeft: () => null, headerRight: () => <CartButton />, }} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center', }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
-      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />     
-      </OrderTabStack.Navigator>
+      <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
+    </OrderTabStack.Navigator>
   )
 }
 
 const ManageOrderTab = () => {
   return (
-    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling,headerTitleStyle:titleStyle,headerRightContainerStyle:{top:10} }}>
-    <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions,{headerTitle:'Manage Orders',headerRight:()=><CartButton />}} />  
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{headerTitle:null,}} />      
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{headerTitle:'Place Order', headerRight:()=><CartButton />,headerTitleAlign:'center'}} />
+    <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle, headerRightContainerStyle: { top: 10 } }}>
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions, { headerTitle: 'Manage Orders', headerRight: () => <CartButton /> }} />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, }} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center' }} />
     </OrderTabStack.Navigator>
   )
 }
 
-const Tab = createBottomTabNavigator();
+//const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 export default function Navigation() {
   // const dispatch = useDispatch();
@@ -74,28 +73,38 @@ export default function Navigation() {
   //   }
   //   syncDataWithDb()
   // }, [])
- 
+
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused}) => {
-          let imageName;
-          let imageType;
-          if (route.name === 'Shop & Order') {
-            imageType='bag'
-            imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
-          } else if (route.name === 'Track & Manage') {
-            imageType='truck'
-            imageName = focused ? require('../assets/truck-black.png')        : require('../assets/truck-grey.png');
-          }
-          return <Image source={imageName} style={{ marginTop: 10,width:imageType==='bag'?19:30,height:imageType==='bag'?22:31 }} resizeMode={'contain'} />;
-        },
-      })}
+      <Tab.Navigator
+
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let imageName;
+            let imageType;
+            if (route.name === 'Shop & Order') {
+              imageType = 'bag'
+              imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
+            } else if (route.name === 'Track & Manage') {
+              imageType = 'truck'
+              imageName = focused ? require('../assets/truck-black.png') : require('../assets/truck-grey.png');
+            }
+            return <Image source={imageName} style={{ marginTop: 7, width: imageType === 'bag' ? 19 : 30, height: imageType === 'bag' ? 22 : 31 }} resizeMode={'contain'} />;
+          },
+        })}
+
+        tabBarPosition={'bottom'}
+       
         tabBarOptions={{
-          activeTintColor   : colors.text,
-          inactiveTintColor : colors.grey.light,
-          labelStyle        : { fontSize: sizes.s13, fontFamily: 'medium', marginBottom: 8,paddingTop:8 },
-          style             : { height: 60,padding:10 }
+          activeTintColor: colors.text,
+          inactiveTintColor: colors.grey.light,
+          labelStyle: { fontSize: sizes.s13, fontFamily: 'medium',textTransform: 'none' },
+          showLabel: true,
+          showIcon: true,
+          tabStyle:{height:60,paddingBottom:10},
+          allowFontScaling:true,     
+          keyboardHidesTabBar: true,
+          renderIndicator: () => null
         }}>
         <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
         <Tab.Screen name="Track & Manage" component={ManageOrderTab} />
