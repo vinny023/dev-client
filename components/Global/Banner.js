@@ -40,7 +40,7 @@ export default class Banner extends React.Component {
                 description: message.includes('Order has been placed') ? "Tap here to view order" : '',
                 backgroundColor: type === "error" ?'rgba(244, 85, 152, 0.96)': type === 'success' ? 'rgba(37, 240, 167, 0.96)' : type === 'message' ? colors.blue.light : colors.pink, // background color
                 // autoHide: false,
-                statusBarHeight: 30,
+                statusBarHeight: 50,
                 titleStyle: commonStyles.bannerTitle,
                 textStyle: commonStyles.bannerText,
                 style: styles.banner,

@@ -25,7 +25,7 @@ export default function StatusComponent({status,placeDate,confirmDate,deliverDat
 }
 const styles=StyleSheet.create({
  line:{
-     height:4,
+     height:3,
      width:90,
      marginBottom:10,
      marginRight:5

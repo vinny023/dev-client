@@ -137,7 +137,7 @@ class ProductListItem extends React.Component {
                                 <Text style={[styles.text,{fontSize:sizes.s15}]}>{item.displayName}</Text>
                                 {this.props.reorderOnly ?
                                     <View style={[styles.row, { marginTop: 5, justifyContent: 'flex-start' }]}>
-                                        <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5 }]}>
+                                        <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5,height:35 }]}>
                                             <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
                                         </View>
                                         <View style={{paddingTop:2}}>
@@ -202,7 +202,7 @@ class ProductListItem extends React.Component {
                             {this.props.reorderOnly &&
                                 <AppButton
                                     text="Reorder"
-                                    style={{ paddingHorizontal: 24, height: 42,marginVertical:0,marginTop:5,elevation:0,marginHorizontal:0,alignSelf:'flex-end' }}
+                                    style={{ paddingHorizontal: 24, height: 35,marginVertical:0,marginTop:5,elevation:0,marginHorizontal:0,alignSelf:'flex-end' }}
                                     textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
                                     onPress={this.addItemQty}
                                 />

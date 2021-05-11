@@ -409,7 +409,7 @@ export class SupplierCart extends React.Component {
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                        style={{ backgroundColor: colors.blue.light, marginVertical: 0, elevation: 0 }}
+                                        style={{ backgroundColor: colors.blue.light, marginVertical: -20,marginBottom: 20, elevation: 0 }}
                                         textStyle={{color:colors.blue.primary}}
                                     //backgroundColor:'rgba(0,0,0,.4)'
                                     />
