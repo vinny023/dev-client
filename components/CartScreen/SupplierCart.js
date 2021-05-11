@@ -148,6 +148,7 @@ export class SupplierCart extends React.Component {
     
             let update = {}
             
+
             if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
                 update = { selectedDeliveryDate: deliveryDays[0],
                     selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
@@ -155,6 +156,19 @@ export class SupplierCart extends React.Component {
                 update = {selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
             } else if (!selectedDeliveryTimeSlot) {
                 update = { selectedDeliveryDate: deliveryDays[0] }
+            } else if (selectedDeliveryDate) {
+                //if dates are selected - make sure they are in range - if not set as default
+                let selectedDateInRange = false
+                for (const day in deliveryDays) {
+                    if (_.isEqual(selectedDeliveryDate,day)) {
+                        selectedDateInRange = true
+                    }
+                }
+                if (!selectedDateInRange) {
+                                    update = { selectedDeliveryDate: deliveryDays[0], }
+                    this.updateOrderDetails({update: update})                
+                }
+                
             }
             
             if ((!selectedDeliveryDate || !selectedDeliveryTimeSlot)) {
@@ -318,7 +332,7 @@ export class SupplierCart extends React.Component {
                                         <Text style={styles.heading}>Select Day</Text>
                                         <View style={[commonStyles.card, { padding: 5,marginTop:7, }]}>
                                             {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
-                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate,val) ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
