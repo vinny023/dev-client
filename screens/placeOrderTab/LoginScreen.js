@@ -13,18 +13,25 @@ import AppButton from '../../components/Global/AppButton';
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
+let shouldWrite = false;
 
 
 const syncStore = ({ accountId }) => {
 
     //should write needs to instantiate as true on first login or else it won't write to firebase
-    //shouldwrite needs to instantiate as false on later logins in order to not rewrite the cart
-    let shouldWrite = false;
-    if (shouldWrite) {
-        shouldWrite = true;
-    }
+    //shouldwrite needs to instantiate as false on later logins in order to not to clear the cart
+
+    //so every manual login should assume shouldWrite - or every time device isn't found in store no its based on account object & then ?
+    // let shouldWrite = false;
+    // if (shouldWrite) {
+    //     shouldWrite = true;
+    // }
+
+    console.log('FIREBASE SYNC STORE');
+    console.log(shouldWrite);
 
     //WRITE CHANGES TO FIREBASE
+    try {
     store.subscribe(() => {
         if (shouldWrite) {
         console.log('writing to firebase')
@@ -34,8 +41,14 @@ const syncStore = ({ accountId }) => {
             })
         }
     })
+    }
+    catch (error) {
+        console.log('non-critical firebase error')
+    }
 
     //LISTEN TO FIREBASE FOR STATE CHAGNES
+
+    try {
     firebaseApp.database().ref('customers/' + accountId).on('value', data => {
 
         //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
@@ -51,6 +64,10 @@ const syncStore = ({ accountId }) => {
         })
         shouldWrite = true;
     })
+} catch(error) {
+    //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
+    console.log(error)
+}
 
 }
 
@@ -110,7 +127,11 @@ export class LoginScreen extends React.Component {
             console.log(account)
 
             if (account !== 'account not found') { //if code query returns an undefined
+                
+                //handle if first Login - (set shouldWrite = true)
+                shouldWrite = true
                 //set redux store
+
                 this.props.setAccount(account)
                 //store data to asyncstorage
                 const storeResponse = await storeData('accountId', account.id)
@@ -250,11 +271,12 @@ export class LoginScreen extends React.Component {
                 />
 
 
-            {/*    <Button
-            title="Remove Key"
+            {/*   <Button
+            title="Remove Key"  
             onPress={async() => AsyncStorage.removeItem('accountId')}
         /> 
             */}
+            
             </View>
         )
     }

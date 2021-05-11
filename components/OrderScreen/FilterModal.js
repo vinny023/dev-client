@@ -203,7 +203,7 @@ export default class FilterModal extends React.Component {
                             <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.close(false)}>
                                 <Ionicons name='close' size={sizes.s20} />
                             </TouchableOpacity>
-                            <TouchableOpacity onClick={() => this.props.clearFilter()}>
+                            <TouchableOpacity onPress={() => this.props.clearFilter()}>
                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                             </TouchableOpacity>
                         </View>

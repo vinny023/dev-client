@@ -87,7 +87,8 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
     //PUT QUOTES AROUND STRING VALUES FOR FILTER SO ALGOLIA CAN ACCEPT THEM
     const modFilter = filter.map(filter => {
         const moddedFilter = {...filter}
-        if (filter.field === 'supplierDisplayName' || filter.field === 'units') {
+        
+        if (['supplierDisplayName', 'units', 'qtyString', 'sku', 'brand'].indexOf(filter.field) !== -1) {
             moddedFilter.values = moddedFilter.values.map(value => `"${value}"`)
         }
         return moddedFilter

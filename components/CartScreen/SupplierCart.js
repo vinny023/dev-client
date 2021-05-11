@@ -147,6 +147,7 @@ export class SupplierCart extends React.Component {
             console.log(deliveryDays)
 
             let update = {}
+            
 
             if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
                 update = {
@@ -157,6 +158,19 @@ export class SupplierCart extends React.Component {
                 update = { selectedDeliveryTimeSlot: this.props.supplierDeliverySettings.windows[0] }
             } else if (!selectedDeliveryTimeSlot) {
                 update = { selectedDeliveryDate: deliveryDays[0] }
+            } else if (selectedDeliveryDate) {
+                //if dates are selected - make sure they are in range - if not set as default
+                let selectedDateInRange = false
+                for (const day in deliveryDays) {
+                    if (_.isEqual(selectedDeliveryDate,day)) {
+                        selectedDateInRange = true
+                    }
+                }
+                if (!selectedDateInRange) {
+                                    update = { selectedDeliveryDate: deliveryDays[0], }
+                    this.updateOrderDetails({update: update})                
+                }
+                
             }
 
             if ((!selectedDeliveryDate || !selectedDeliveryTimeSlot)) {
@@ -227,15 +241,20 @@ export class SupplierCart extends React.Component {
                             <View style={[styles.row, { paddingBottom: 3 }]}>
                                 <Text style={[styles.heading]}>Delivery</Text>
                                 {this.props.supplierOrder.selectedDeliveryDate &&
-
+                                    <>
                                     <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                    </>
                                 }
                             </View>
                             <View style={[styles.row, { paddingBottom: 0 }]}>
                                 <TouchableOpacity >
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
+                                {this.props.supplierOrder.selectedDeliveryTimeSlot &&
+                                    <>
                                 <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
+                                </>
+                                }
                             </View>
                         </TouchableOpacity>
                         {/* ---------- Add notes Card ---------- */}
@@ -313,9 +332,9 @@ export class SupplierCart extends React.Component {
                                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
-                                        <View style={[commonStyles.card, { padding: 5, marginTop: 7, }]}>
-                                            {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail }).map(val => {
-                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && this.props.supplierOrder.selectedDeliveryDate.day === val.day ? '(Selected)' : '')
+                                        <View style={[commonStyles.card, { padding: 5,marginTop:7, }]}>
+                                            {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate,val) ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton

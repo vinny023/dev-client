@@ -154,7 +154,7 @@ export class OrderDetailScreen extends React.Component {
     // console.log(this.state.order.cart)
     // console.log(this.state.order)
     const { order } = this.state
-    const supplier = order.supplierDetail
+    const {supplierDetail} = order
     // let orderDay=await order.selectedDeliveryDate.date;
     // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
     // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
@@ -171,7 +171,7 @@ export class OrderDetailScreen extends React.Component {
                 <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0, }]}>
                   <View style={{ width: '80%' }}>
                     <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
-                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplier.displayName}</Text>
+                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplierDetail.displayName}</Text>
                   </View>
                   <Image source={{ uri: order.supplierDetail.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
                 </View>

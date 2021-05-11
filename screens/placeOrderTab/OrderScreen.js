@@ -107,6 +107,7 @@ export class OrderScreen extends React.Component {
   }
 
   clearFilter() {
+    console.log('RUNNING CLEAR FILTER ORDERSCREEN');
     this.setState({
       filter:[],
       sort:[],
