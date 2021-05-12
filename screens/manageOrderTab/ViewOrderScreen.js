@@ -115,33 +115,34 @@ class ViewOrderScreen extends React.Component {
         const { supplierFilter, orderList, showFilterModal } = this.state
 
         //filter by supplierFilter.
-        let renderOrderList = [...orderList]
-        if (supplierFilter.length > 0) {
-            renderOrderList = orderList.filter(order => supplierFilter.indexOf(order.supplierDetail.displayName) !== -1)
-        }
+        // let renderOrderList = [...orderList]
+        // if (supplierFilter.length > 0) {
+        //     renderOrderList = orderList.filter(order => supplierFilter.indexOf(order.supplierDetail.displayName) !== -1)
+        // }
 
-        console.log('FILTERED LIST')
-        console.log(renderOrderList)
+        // console.log('FILTERED LIST')
+        // console.log(renderOrderList)
 
-        //group orders between open & completed, which sits on top of sorting    
+        //group orders between open & completed, which sits on top of sorting 
+        let renderOrderList=[]   
         let deliveredOrders = []
         let openOrders = []
 
-        renderOrderList.forEach(order => {
-            if (order.status === 'Delivered') {
-                deliveredOrders.push(order)
+        // renderOrderList.forEach(order => {
+        //     if (order.status === 'Delivered') {
+        //         deliveredOrders.push(order)
 
-            } else {
-                openOrders.push(order)
-                // this.setState({})
-            }
-        })
+        //     } else {
+        //         openOrders.push(order)
+        //         // this.setState({})
+        //     }
+        // })
 
-        console.log('OPEN ORDERS')
-        console.log(openOrders)
+        // console.log('OPEN ORDERS')
+        // console.log(openOrders)
 
-        console.log('DELIVERED ORDERS')
-        console.log(deliveredOrders)
+        // console.log('DELIVERED ORDERS')
+        // console.log(deliveredOrders)
 
         return (
 
@@ -214,13 +215,13 @@ class ViewOrderScreen extends React.Component {
                             </View>
                             { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }
-                            <View style={[commonStyles.card, { marginBottom: 20,paddingTop:4,marginTop:7 }]}>
+                            <ScrollView style={[commonStyles.card, { marginBottom: 20,paddingTop:4,marginTop:7 }]}>
                                 {
                                     openOrders.map((order, i) => <OrderButton key={i} order={order} />)
                                     
                                 }
 
-                            </View>
+                            </ScrollView>
                         </View>
                         : <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
 
@@ -230,7 +231,7 @@ class ViewOrderScreen extends React.Component {
                             <View style={{ paddingLeft: 10 }}>
                                 <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Delivered Orders</Text>
                             </View>
-                            <View style={[commonStyles.card,{marginTop:7,paddingTop:7}]}>
+                            <ScrollView style={[commonStyles.card,{marginTop:7,paddingTop:7}]}>
                                 {
                                      deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
                                     
@@ -238,7 +239,7 @@ class ViewOrderScreen extends React.Component {
                                 {/* <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
                                     <Text style={commonStyles.lightText}>No Orders Delivered yet</Text>
                                 </View> */}
-                            </View>
+                            </ScrollView>
                         </View>
                         : <></>
                     }

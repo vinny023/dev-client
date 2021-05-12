@@ -15,14 +15,15 @@ const commonStyles = {
     height: 41,
     borderRadius: 10,
     marginVertical: 20,
-    elevation: 3,
-    shadowColor: 'rgba(0,0,0,0.20)',
+    elevation: 3, 
+    shadowColor: 'rgba(6, 102, 235, 0.8)',
     shadowOffset: {
       width: 0,
       height: 3
     },
+    // zIndex:999
     //shadowRadius: 5,
-    //shadowOpacity: 0.5
+    shadowOpacity: 10
   },
   btnText: {
     color: colors.white,
@@ -89,6 +90,7 @@ bannerTitle:{
  // color:colors.white,
   textAlign:'center',
 
-}
+},
+errorBoundary:{ flex:1,alignItems: 'center', justifyContent: 'center',paddingHorizontal:30 }
 }
 export default commonStyles;

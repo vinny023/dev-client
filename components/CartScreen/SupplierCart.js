@@ -310,7 +310,9 @@ export class SupplierCart extends React.Component {
                         }
                         {/*-------- Select Delivery Modal --------- */}
                         {!this.props.supplierDetail ?
-                            <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
+                        <></>
+                        :
+                            // <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                             this.state.toggleDateFilter &&
                             <Modal
                                 animationType="slide"
@@ -378,7 +380,6 @@ export class SupplierCart extends React.Component {
                                     </ScrollView>
                                     <AppButton text="APPLY" style={{ marginHorizontal: 20 }} onPress={() => this.setState({ toggleDateFilter: false })} />
                                 </View>
-
                             </Modal>
                         }
                         {/* -------- Add notes Modal ------------ */}
@@ -404,7 +405,9 @@ export class SupplierCart extends React.Component {
                         </View>
                         : <View>
                             {this.state.placingOrder ?
-                                <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
+                                // <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
+                                <></>
+                                :
                                 <View>
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}

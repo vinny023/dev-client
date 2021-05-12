@@ -207,7 +207,7 @@ export class LoginScreen extends React.Component {
             return
         }
         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
-        this.props.navigation.navigate('OrderScreen')
+        this.props.navigation.navigate('Tabs',{screen:'OrderScreen'})
     }
 
     autoLogin = async () => {
@@ -244,14 +244,13 @@ export class LoginScreen extends React.Component {
 //     title ="Automatic Login"9450
     render() {
         return (
-            <View style={[commonStyles.container, { flex: 1 }]}>
+            <View style={[commonStyles.container, { flex: 1}]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                <View style={{ paddingLeft: 5 }}>
+                <View style={{ paddingTop:100 }}>
                     <Text style={{ fontSize: sizes.s25-2, fontFamily: 'bold', color: colors.text }}>Login to SupplyHero</Text>
                 </View>
 
                 <View style={{ marginTop: 60,}}>
-
                 {this.state.accountId !== '' ?
                 <><Text style={commonStyles.text}>Account found on device</Text></>
                 :

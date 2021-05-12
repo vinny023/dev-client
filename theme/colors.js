@@ -14,8 +14,8 @@ const colors ={
     background:{
         primary:'#E5E5E5',
         light:'#F0F2F5',
-        dark:"#E0E2E5"
-       
+        dark:"#E0E2E5",
+        bg:'#F1F1F1',
     },
     pink:"#F45598",
     green:'#25F0A7'

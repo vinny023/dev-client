@@ -98,19 +98,19 @@ export class OrderScreen extends React.Component {
 
   setSearch(term) {
     this.setState({ search: term })
-    this.setState({isSuggestionSet:false})
+    this.setState({ isSuggestionSet: false })
 
   }
   setSuggestion(val) {
-      this.setState({ isSuggestionSet: val })
-    
+    this.setState({ isSuggestionSet: val })
+
   }
 
   clearFilter() {
     console.log('RUNNING CLEAR FILTER ORDERSCREEN');
     this.setState({
-      filter:[],
-      sort:[],
+      filter: [],
+      sort: [],
     })
   }
 
@@ -184,7 +184,7 @@ export class OrderScreen extends React.Component {
   setSort(newSort) {
 
     // ONLY ALLOW ONE SORT  - 
-    this.setState({sort: [newSort]})
+    this.setState({ sort: [newSort] })
 
     // let isNew = true;
     // let matchIndex = -1
@@ -215,9 +215,9 @@ export class OrderScreen extends React.Component {
 
   async componentDidMount() {
     //BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    console.log("CURRENT SEARCH------",this.state.search)
-    console.log("CURRENT SEARCH SUGGESTION------",this.state.isSuggestionSet)
-    
+    console.log("CURRENT SEARCH------", this.state.search)
+    console.log("CURRENT SEARCH SUGGESTION------", this.state.isSuggestionSet)
+
     await this.getProducts()
   }
 
@@ -269,61 +269,71 @@ export class OrderScreen extends React.Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: colors.background.light, paddingTop: 20 }}>
-        <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-        <View style={[commonStyles.container, { paddingTop: 0 }]} >
-          <SwitchMode setMode={this.setMode} mode={this.state.title} />
-          {/* <Text>{this.state.title}</Text> */}
-          <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} />
-          {/* <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
+        {this.state.isError ?
+          // ----Error Boundary-----
+          <View style={commonStyles.errorBoundary}>
+            <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>Sorry, we’re running into an error. Please tap the button below to restar the app.</Text>
+            <AppButton text={"Restart App"} style={{width:'100%'}} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
+          </View>
+          :
+          <>
+            <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+            <View style={[commonStyles.container, { paddingTop: 0 }]} >
+              <SwitchMode setMode={this.setMode} mode={this.state.title} />
+              {/* <Text>{this.state.title}</Text> */}
+              <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} />
+              {/* <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
             <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
           </View> */}
-          {
-            !this.state.isSuggestionSet &&
-            <>
-              <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 10, paddingHorizontal: 5 }]}>
-                <Text style={commonStyles.lightText}>{numItems} Items</Text>
-                <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
-                  <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
-                </TouchableOpacity>
-              </View>
-              {this.state.showFilter &&
-                <View>
-                  <FilterModal
-                    visible={this.toggleFilterModal}
-                    close={this.toggleFilterModal}
-                    sort={this.state.sort}
-                    filter={this.state.filter}
-                    setFilter={this.setFilter}
-                    setSort={this.setSort}
-                    clearFilter={this.clearFilter}
-                    productList={this.state.productList}
-                  />
-                </View>
-              }
-              {/* 
+              {
+                !this.state.isSuggestionSet &&
+                <>
+                  <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 10, paddingHorizontal: 5 }]}>
+                    <Text style={commonStyles.lightText}>{numItems} Items</Text>
+                    <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
+                      <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
+                    </TouchableOpacity>
+                  </View>
+                  {this.state.showFilter &&
+                    <View>
+                      <FilterModal
+                        visible={this.toggleFilterModal}
+                        close={this.toggleFilterModal}
+                        sort={this.state.sort}
+                        filter={this.state.filter}
+                        setFilter={this.setFilter}
+                        setSort={this.setSort}
+                        clearFilter={this.clearFilter}
+                        productList={this.state.productList}
+                      />
+                    </View>
+                  }
+                  {/* 
 <Text>SORT</Text>
 <Text>{JSON.stringify(this.state.sort)}</Text>
 <Text>FILTER</Text>
 <Text>{JSON.stringify(this.state.filter)}</Text> */}
-          {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
-             this.state.productList.length>0?
-             <ProductList
-             navigation={this.props.navigation}
-             productList={this.state.productList}
-           />
-            :
-            <View style={{ padding: 50, alignItems: 'center', justifyContent: 'center', }}>
-                <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
-                {
-                  this.state.title == 'Order Guide' &&
-                  <AppButton text="Shop Full Catalog" style={{ paddingHorizontal: 20,height:32 }} textStyle={{fontSize:sizes.s13}} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
-                }
-              </View>
-  }
-            </>
-           // :<></>
-          }
-        </View>
+                  {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
+                    this.state.productList.length > 0 ?
+                      <ProductList
+                        navigation={this.props.navigation}
+                        productList={this.state.productList}
+                      />
+                      :
+                      <View style={{ paddingTop: 50, alignItems: 'center', justifyContent: 'center',paddingHorizontal:20 }}>
+                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
+                        {
+                          this.state.title == 'Order Guide' &&
+                          <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
+                        }
+                      </View>
+                  }
+                </>
+                // :<></>
+              }
+            </View>
+          </>
+        }
       </View>
 
     )
