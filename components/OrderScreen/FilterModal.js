@@ -497,7 +497,7 @@ export default class FilterModal extends React.Component {
 
                     </ScrollView>
 
-                    <AppButton text={"APPLY"} style={{ marginHorizontal: 20 }} onPress={() => this.props.close(false)} />
+                    <AppButton text={"APPLY"} style={[commonStyles.shadow,{ marginHorizontal: 20 }]} onPress={() => this.props.close(false)} />
 
                 </View>
             </Modal>

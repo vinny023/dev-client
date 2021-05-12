@@ -200,7 +200,7 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
-                            <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={{ marginVertical: 0, }} />
+                            <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
                         </View>
                     </View>
                 </Modal>

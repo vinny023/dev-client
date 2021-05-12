@@ -265,6 +265,7 @@ export class LoginScreen extends React.Component {
                 }
                 </View>
                 <AppButton
+                style={commonStyles.shadow}
                     text="Login"
                     onPress={this.manualLogin}
                 />

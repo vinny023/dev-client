@@ -303,7 +303,7 @@ export class CartScreen extends React.Component {
                         <View style={{ position: 'absolute', bottom: 0, flex: 1, alignSelf: 'center', width: '100%',backgroundColor:'rgba(255,255,255,.3)'}}>
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
-                                    style={{marginHorizontal:20}}
+                                    style={[commonStyles.shadow,{marginHorizontal:20}]}
                                     text="Place Full Order"
                                     onPress={this.placeFullOrder}
                                 />

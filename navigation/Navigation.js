@@ -43,7 +43,7 @@ const PlaceOrderTab = () => {
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{ headerTitle: 'Browse Items', headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left' }} />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center', }} />
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions, { headerTitle: 'Manage Orders', headerRight: () => <CartButton /> }} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerRight: () => <CartButton /> }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
@@ -54,7 +54,7 @@ const PlaceOrderTab = () => {
 const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle}}>
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={myScreenOptions, { headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton /> }} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton /> }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> }} />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center' }} />
     </OrderTabStack.Navigator>

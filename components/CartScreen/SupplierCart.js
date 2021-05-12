@@ -49,10 +49,12 @@ class SpecialNotesBox extends React.Component {
                     </View>
                 </ScrollView>
                 <View>
-                    <AppButton text="Add notes" style={{ marginHorizontal: 10 }} onPress={() => {
-                        this.props.updateOrderDetails({ update: { specialNotes: this.state.specialNotes } })
-                        this.props.hideNotesModal()
-                    }} />
+                    <AppButton text="Add notes"
+                        style={[commonStyles.shadow,{marginHorizontal: 10,}]}
+                         onPress={() => {
+                            this.props.updateOrderDetails({ update: { specialNotes: this.state.specialNotes } })
+                            this.props.hideNotesModal()
+                        }} />
                 </View>
             </View>
         )
@@ -147,7 +149,7 @@ export class SupplierCart extends React.Component {
             console.log(deliveryDays)
 
             let update = {}
-            
+
 
             if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
                 update = {
@@ -162,15 +164,15 @@ export class SupplierCart extends React.Component {
                 //if dates are selected - make sure they are in range - if not set as default
                 let selectedDateInRange = false
                 for (const day in deliveryDays) {
-                    if (_.isEqual(selectedDeliveryDate,day)) {
+                    if (_.isEqual(selectedDeliveryDate, day)) {
                         selectedDateInRange = true
                     }
                 }
                 if (!selectedDateInRange) {
-                                    update = { selectedDeliveryDate: deliveryDays[0], }
-                    this.updateOrderDetails({update: update})                
+                    update = { selectedDeliveryDate: deliveryDays[0], }
+                    this.updateOrderDetails({ update: update })
                 }
-                
+
             }
 
             if ((!selectedDeliveryDate || !selectedDeliveryTimeSlot)) {
@@ -242,7 +244,7 @@ export class SupplierCart extends React.Component {
                                 <Text style={[styles.heading]}>Delivery</Text>
                                 {this.props.supplierOrder.selectedDeliveryDate &&
                                     <>
-                                    <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                        <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
                                     </>
                                 }
                             </View>
@@ -252,8 +254,8 @@ export class SupplierCart extends React.Component {
                                 </TouchableOpacity>
                                 {this.props.supplierOrder.selectedDeliveryTimeSlot &&
                                     <>
-                                <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
-                                </>
+                                        <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
+                                    </>
                                 }
                             </View>
                         </TouchableOpacity>
@@ -310,8 +312,8 @@ export class SupplierCart extends React.Component {
                         }
                         {/*-------- Select Delivery Modal --------- */}
                         {!this.props.supplierDetail ?
-                        <></>
-                        :
+                            <></>
+                            :
                             // <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                             this.state.toggleDateFilter &&
                             <Modal
@@ -334,9 +336,9 @@ export class SupplierCart extends React.Component {
                                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Select Delivery</Text>
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
-                                        <View style={[commonStyles.card, { padding: 5,marginTop:7, }]}>
-                                            {createDaySelection({DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail}).map(val => {
-                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate,val) ? '(Selected)' : '')
+                                        <View style={[commonStyles.card, { padding: 5, marginTop: 7, }]}>
+                                            {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail }).map(val => {
+                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate, val) ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
@@ -378,7 +380,7 @@ export class SupplierCart extends React.Component {
                                             }
                                         </View>
                                     </ScrollView>
-                                    <AppButton text="APPLY" style={{ marginHorizontal: 20 }} onPress={() => this.setState({ toggleDateFilter: false })} />
+                                    <AppButton text="APPLY" style={[commonStyles.shadow,{ marginHorizontal: 20 }]} onPress={() => this.setState({ toggleDateFilter: false })} />
                                 </View>
                             </Modal>
                         }
@@ -412,8 +414,8 @@ export class SupplierCart extends React.Component {
                                     <AppButton
                                         text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
-                                        style={{ backgroundColor: colors.blue.light, marginVertical: -20,marginBottom: 20, elevation: 0 }}
-                                        textStyle={{color:colors.blue.primary}}
+                                        style={{ backgroundColor: colors.blue.light, marginVertical: -20, marginBottom: 20, elevation: 0 }}
+                                        textStyle={{ color: colors.blue.primary }}
                                     //backgroundColor:'rgba(0,0,0,.4)'
                                     />
                                 </View>
@@ -482,5 +484,5 @@ const styles = StyleSheet.create({
         // backgroundColor: 'white',
         // borderRadius: 10
     },
-
+   
 })
