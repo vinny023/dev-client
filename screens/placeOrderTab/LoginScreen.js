@@ -227,7 +227,7 @@ export class LoginScreen extends React.Component {
     }
     async componentDidMount() {
         
-        this.autoLogin()
+        // this.autoLogin()
     }
 
 
@@ -253,7 +253,7 @@ export class LoginScreen extends React.Component {
                 <View style={{ marginTop: 60,}}>
 
                 {this.state.accountId !== '' ?
-                <><Text style={commonStyles.text}>Account found on device</Text></>
+                <></>
                 :
                      <>
                     <TextInput 

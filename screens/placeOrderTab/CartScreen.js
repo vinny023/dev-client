@@ -119,6 +119,13 @@ export class CartScreen extends React.Component {
         this.setState({ banner: { ...this.state.banner, show: false } })
     }
 
+    bannerAction = (action, actionParam) => {
+        switch (action) {
+            case 'placeBelowMinimumOrder':            
+            this.placeOrder(actionParam)
+        }
+    }
+
     placeOrder = async ({ index, supplierOrder }) => {
 
          
@@ -156,13 +163,19 @@ export class CartScreen extends React.Component {
 
         //check if order total is less than minimum
 
-        if (order.orderTotal < order.supplierDetail.orderMinimum) {
+        if (order.orderTotal < order.supplierDetail.orderMinimum && !order.confirmBelowMinimum) {
             this.setState({
-                banner: {show: true, type: 'error', message: order.supplierDetail.displayName+' order total less than minimum. Tap below to place order anyway'}
+                banner: {show: true, 
+                        type: 'error', 
+                        message: order.supplierDetail.displayName+' order total less than minimum. Tap here to confirm place order anyway',
+                        action: 'placeBelowMinimumOrder',
+                        duration: 5000,
+                        actionParam: {supplierOrder: {...order, confirmBelowMinimum: true}}
+                    }
             })
             setTimeout(() => {}, 2000)
           
-            // return null
+           return null
         }
 
         console.log('Running rest of place order')
@@ -205,7 +218,7 @@ export class CartScreen extends React.Component {
 
         // setTimeout(() => {}, 2000)
         
-        //return null
+        return null
  
     }
 
@@ -268,7 +281,7 @@ export class CartScreen extends React.Component {
                     <>
                         <ScrollView style={[commonStyles.container]} showsVerticalScrollIndicator={false}>
                             {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
-                            <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+                            <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
                             {/*
                  <Button 
                       title   = "Go Back"

@@ -206,8 +206,8 @@ export class OrderDetailScreen extends React.Component {
               textStyle={{ color: colors.blue.primary }} />
           }
           <AppButton
-            text='Contact Woolco'
-            onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us')}
+            text={'Contact '+order.supplierDetail.displayName}
+            onPress={() => Linking.openURL('mailto:'+this.props.account.supplierContact[order.supplierId].contact)}
             style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
             textStyle={{ color: colors.blue.primary }} />
         </ScrollView>

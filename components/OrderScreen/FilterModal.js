@@ -14,9 +14,9 @@ import Modal from 'react-native-modal'
 
 const dimensions = Dimensions.get('window')
 const sortOptions = [
-    { 'title': 'Price Low To High', 'value': { 'price': 1 } },
-    { 'title': 'Price High To Low', 'value': { 'price': -1 } },
     { 'title': 'Recently Ordered', 'value': { 'lastOrderDate': -1 } },
+    { 'title': 'Price Low To High', 'value': { 'price': 1 } },
+    { 'title': 'Price High To Low', 'value': { 'price': -1 } },    
     { 'title': 'Size Low To High', 'value': { 'size': 1 } },
     { 'title': 'Size High To Low', 'value': { 'size': -1 } },
     { 'title': 'Qty Low To High', 'value': { 'qtyPerItem': 1 } },
@@ -30,7 +30,7 @@ const filterOptions = [
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
     { 'title': 'Brand', 'field': 'brand', 'options': [] },
     // { 'title': 'Units', 'field': 'units', 'options': [] },    
-    { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
+    // { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
     // { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
     // { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]

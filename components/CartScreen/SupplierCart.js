@@ -205,9 +205,9 @@ export class SupplierCart extends React.Component {
         const { navigation, index } = this.props
 
         let { shippingTimeSlots } = {}
-        let deliveryFee, orderTotal;
+        let deliveryFee, orderTotal, supplierDetail;
         if (this.props.supplierOrder) {
-            ({ deliveryFee, orderTotal } = this.props.supplierOrder)
+            ({ deliveryFee, orderTotal, supplierDetail } = this.props.supplierOrder)
         }
 
         // }    
@@ -403,11 +403,11 @@ export class SupplierCart extends React.Component {
                             />
                         </View>
                         : <View>
-                            {this.state.placingOrder ?
+                            {(this.state.placingOrder || !supplierDetail) ?
                                 <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
                                 <View>
                                     <AppButton
-                                        text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
+                                        text={"Place "+supplierDetail.displayName+" Order"}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
                                         style={{ backgroundColor: colors.blue.light, marginVertical: -20,marginBottom: 20, elevation: 0 }}
                                         textStyle={{color:colors.blue.primary}}
