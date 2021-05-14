@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Layout, Text } from '@ui-kitten/components';
-import { View, Text, Button, ScrollView, TouchableOpacity, ActivityIndicator, BackHandler, ToastAndroid } from 'react-native';
+import { View, Text, Button, ScrollView, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback , BackHandler, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux'
 import SwitchMode from '../../components/OrderScreen/SwitchMode'
 import FilterModal from '../../components/OrderScreen/FilterModal'
@@ -14,6 +14,12 @@ import _ from 'lodash'
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AppButton from '../../components/Global/AppButton';
+
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback 
+  onPress={() => Keyboard.dismiss()}> {children}
+  </TouchableWithoutFeedback>
+);
 
 export class OrderScreen extends React.Component {
 
@@ -225,9 +231,9 @@ export class OrderScreen extends React.Component {
   //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
   async componentDidUpdate(prevProps, prevState) {
 
-    console.log('COMPONENT DID UPDATE')
-    console.log(prevState.filter)
-    console.log(this.state.filter)
+    // console.log('COMPONENT DID UPDATE')
+    // console.log(prevState.filter)
+    // console.log(this.state.filter)
 
     if (!_.isEqual([prevState.search, prevState.initialFilter, prevState.filter, prevState.sort],
       [this.state.search, this.state.initialFilter, this.state.filter, this.state.sort])) {
@@ -281,7 +287,9 @@ export class OrderScreen extends React.Component {
             <View style={[commonStyles.container, { paddingTop: 0 }]} >
               <SwitchMode setMode={this.setMode} mode={this.state.title} />
               {/* <Text>{this.state.title}</Text> */}
-              <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} />
+         
+              <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} filter={this.state.filter} />
+         
               {/* <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
             <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
           </View> */}
@@ -324,7 +332,7 @@ export class OrderScreen extends React.Component {
                         <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
                         {
                           this.state.title == 'Order Guide' &&
-                          <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
+                          <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setMode('Catalog')} />
                         }
                       </View>
                   }

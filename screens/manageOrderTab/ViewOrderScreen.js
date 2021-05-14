@@ -10,6 +10,8 @@ import AppButton from '../../components/Global/AppButton'
 import Modal from 'react-native-modal'
 import { Ionicons } from '@expo/vector-icons'
 import { RadioButton } from 'react-native-paper'
+
+
 const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
@@ -29,9 +31,9 @@ const OrderButton = ({ order }) => {
             <View style={[commonStyles.row, styles.priceContainer]}>
                 
                 {order.orderTotal &&
-                    <>
+                    <View>
                     <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${order.orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                    </>
+                    </View>
                 }
             </View>
         </TouchableOpacity>
@@ -49,17 +51,25 @@ class ViewOrderScreen extends React.Component {
             getOrdersLoading: false,
             getOrdersError: false,
             banner: { show: false, type: '', message: '', buttonAction: {} },
-            showFilterModal: false
+            showFilterModal: false,
+            openOrders: [],
+            deliveredOrders: []
         }
     }
 
     getOrders = async () => {  
             try {
+                console.log('RUNNING GET ORDERS');
                 this.setState({ getOrdersLoading: true })
+
                 const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
+                console.log(orders);
+                const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders.slice(0,10), supplierFilter: this.state.supplierFilter})           
                 this.setState({
-                    orderList: orders,
+                    orderList: orders.slice(0,20),
                     getOrderLoading: false,
+                    openOrders: openOrders,
+                    deliveredOrders: deliveredOrders
                 })
             }
             catch (error) {
@@ -86,21 +96,55 @@ class ViewOrderScreen extends React.Component {
     handleFilterUpdate = (newSupplier) => {
         console.log('running filter update')
         const index = this.state.supplierFilter.indexOf(newSupplier)
+        let newSupplierFilter = []
         if (index === -1) {
-            this.setState({
-                supplierFilter: [...this.state.supplierFilter, newSupplier]
-            })
+            newSupplierFilter = [...this.state.supplierFilter, newSupplier]            
         } else {
-            let newSupplierFilter = [...this.state.supplierFilter]
+            newSupplierFilter = [...this.state.supplierFilter]
             newSupplierFilter.splice(index, 1)
             this.setState({
                 supplierFilter: newSupplierFilter
             })
         }
+        const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: this.state.orderList, supplierFilter: newSupplierFilter})           
+        this.setState({
+            supplierFilter: newSupplierFilter,
+            openOrders: openOrders,
+            deliveredOrders: deliveredOrders
+        })
         console.log(this.state.supplierFilter)
-    }
+    }  
 
-    //filters - status, supplier  
+
+    setFilteredOrders = ({orderList, supplierFilter}) => {
+         
+
+        let openOrders = []
+        let deliveredOrders = []
+        
+        //group orders between open & completed, which sits on top of sorting 
+        orderList.forEach(order => {
+            if (supplierFilter.indexOf(order.supplierId) !== -1 || supplierFilter.length === 0) {
+            if (order.status === 'Delivered') {
+                deliveredOrders.push(order)
+            } else {
+                openOrders.push(order)
+               
+            }
+        }
+        })
+
+        console.log('SUPPLIER FILTER');
+        console.log(supplierFilter);
+
+        console.log('OPEN ORDERS')
+        console.log(openOrders)
+
+        console.log('DELIVERED ORDERS')
+        console.log(deliveredOrders)
+
+        return {openOrders: openOrders, deliveredOrders: deliveredOrders}
+    }
 
 
 
@@ -112,7 +156,7 @@ class ViewOrderScreen extends React.Component {
 
     render() {
 
-        const { supplierFilter, orderList, showFilterModal } = this.state
+        const { supplierFilter, deliveredOrders, openOrders, orderList, showFilterModal } = this.state
 
         //filter by supplierFilter.
         // let renderOrderList = [...orderList]
@@ -122,12 +166,8 @@ class ViewOrderScreen extends React.Component {
 
         // console.log('FILTERED LIST')
         // console.log(renderOrderList)
-
         //group orders between open & completed, which sits on top of sorting 
-        let renderOrderList=[]   
-        let deliveredOrders = []
-        let openOrders = []
-
+ 
         // renderOrderList.forEach(order => {
         //     if (order.status === 'Delivered') {
         //         deliveredOrders.push(order)
@@ -173,7 +213,7 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <View style={[commonStyles.card, { padding: 5,marginTop:7 }]}>
                             {!!this.props.account.activeSuppliers && this.props.account.activeSuppliers.map(supplier => {
-                                console.log(supplier)
+                                // console.log(supplier)
                                 //CHECK IF SELECTED
                                 let selected = false;
                                 if (supplierFilter.indexOf(supplier) !== -1) {
@@ -200,7 +240,7 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
-                            <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
+                            <AppButton text="Apply" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
                         </View>
                     </View>
                 </Modal>

@@ -205,12 +205,17 @@ export class SupplierCart extends React.Component {
     render() {
         console.log('RENDER')
         const { navigation, index } = this.props
+        let checkoutString = 'Checkout'
 
         let { shippingTimeSlots } = {}
         let deliveryFee, orderTotal;
         if (this.props.supplierOrder) {
             ({ deliveryFee, orderTotal } = this.props.supplierOrder)
+            if (this.props.supplierOrder.supplierDetail) {
+                checkoutString = 'Checkout '+this.props.supplierOrder.supplierDetail.displayName
+            }
         }
+        
 
         // }    
         const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -293,19 +298,19 @@ export class SupplierCart extends React.Component {
                                 <View>
                                     <View style={[styles.row]}>
                                         <Text style={styles.heading}>Minimum </Text>
-                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2)}</Text>
+                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Subtotal</Text>
-                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2)}</Text>
+                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Delivery fee</Text>
-                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2)}</Text>
+                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Total</Text>
-                                        <Text style={styles.boldText}>${orderTotal.toFixed(2)}</Text>
+                                        <Text style={styles.boldText}>${orderTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                 </View>
                             </View> : <></>
@@ -412,7 +417,7 @@ export class SupplierCart extends React.Component {
                                 :
                                 <View>
                                     <AppButton
-                                        text={"Place Order (" + this.props.supplierOrder.cart.length + ")"}
+                                        text={checkoutString}
                                         onPress={() => this.props.placeOrder({ index: this.props.index })}
                                         style={{ backgroundColor: colors.blue.light, marginVertical: -20, marginBottom: 20, elevation: 0 }}
                                         textStyle={{ color: colors.blue.primary }}

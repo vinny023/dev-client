@@ -32,25 +32,29 @@ export default class Banner extends React.Component {
   
 
     render() {
-        const { show, type, message, buttonAction } = this.props.banner
+        let { show, type, message, action, actionParam, duration } = this.props.banner
+        if (!duration) {
+            duration = 2000
+        }
         if (show && message!= 'Banner' ) {
             showMessage({
                 type: type,
                 message: message,
-                description: message.includes('Order has been placed') ? "Tap here to view order" : '',
+                // description: message.includes('Order has been placed') ? "Tap here to view order" : '',
                 backgroundColor: type === "error" ?'rgba(244, 85, 152, 0.96)': type === 'success' ? 'rgba(37, 240, 167, 0.96)' : type === 'message' ? colors.blue.light : colors.pink, // background color
                 // autoHide: false,
                // statusBarHeight: 50,
                 titleStyle: commonStyles.bannerTitle,
                 textStyle: commonStyles.bannerText,
                 style: styles.banner,
-                //default duration:1850
-                duration: 2000,
-                color: type === 'message' ? colors.blue.primary : colors.white
+                //default duration:1850a
+                duration: duration,
+                color: type === 'message' ? colors.blue.primary : colors.white,
+                onPress: () => this.props.bannerAction(action, actionParam)
             })
-
-            // setTimeout(this.props.hideBanner(), 2000)
         }
+
+        setTimeout(() => this.props.hideBanner(), duration)
         
         return (
             <View>

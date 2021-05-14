@@ -24,6 +24,19 @@ export const getAccount = async({query}) => {
 
 }
 
+export const setAccount = async({id, update}) => { 
+    console.log(NETLIFY+'setAccount?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    
+    for (let i = 0; i< apiTries; i++) {
+    const returnval = await axios.get(NETLIFY+'setAccount?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    if (returnval.status === 200 && returnval.data.response) {
+        return returnval.data.response             
+    }  else if (i === apiTries-1) {
+        throw 500
+    } 
+}
+}
+
 export const setOrder = async({id, update}) => { 
     console.log(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
     

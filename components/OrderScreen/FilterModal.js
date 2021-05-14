@@ -14,9 +14,9 @@ import Modal from 'react-native-modal'
 
 const dimensions = Dimensions.get('window')
 const sortOptions = [
-    { 'title': 'Price Low To High', 'value': { 'price': 1 } },
-    { 'title': 'Price High To Low', 'value': { 'price': -1 } },
     { 'title': 'Recently Ordered', 'value': { 'lastOrderDate': -1 } },
+    { 'title': 'Price Low To High', 'value': { 'price': 1 } },
+    { 'title': 'Price High To Low', 'value': { 'price': -1 } },    
     { 'title': 'Size Low To High', 'value': { 'size': 1 } },
     { 'title': 'Size High To Low', 'value': { 'size': -1 } },
     { 'title': 'Qty Low To High', 'value': { 'qtyPerItem': 1 } },
@@ -30,7 +30,7 @@ const filterOptions = [
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
     { 'title': 'Brand', 'field': 'brand', 'options': [] },
     // { 'title': 'Units', 'field': 'units', 'options': [] },    
-    { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
+    // { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
     // { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
     // { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
@@ -45,9 +45,9 @@ const getFilters = (productList) => {
         const propertyArray = [supplierDisplayName, brand, units, price, size, qtyPerItem]
 
         filterOptions.forEach((filterOption, index) => {
-            console.log('EXISTS IN FILTER' +filterOption.title);
+            // console.log('EXISTS IN FILTER' +filterOption.title);
             const selectorFilters = ['Supplier', 'Units', 'Brand', 'Size']
-            console.log(selectorFilters.indexOf(filterOption.title));
+            // console.log(selectorFilters.indexOf(filterOption.title));
             if (selectorFilters.indexOf(filterOption.title) !== -1) {
                 const {options, field} = filterOption
                 // if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
@@ -67,6 +67,8 @@ const getFilters = (productList) => {
         return filterOptions
 
     })
+
+    // filterOptions.push({ 'title': 'Active Suppliers', 'field': 'supplierId', 'options': ['Active Suppliers Only', 'All Suppliers'] },)
 
     console.log('FILTER OPTIONS')
     console.log(filterOptions)
@@ -163,14 +165,27 @@ export default class FilterModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('FILTER COMPEOENT DID UPDATE')
-        console.log(prevProps.productList);
-        console.log(this.props.productList);
-        if (!_.isEqual(this.props.productList, prevProps.productList)) {
-            console.log('RERENDING FILTER')
-            this.setState({
-                filterOptions: getFilters(this.props.productList)
-            })
+        console.log('FILTER COMPONENT DID UPDATE');
+        // console.log('PRODUCT LIST PASSED TO FILTER');
+        // console.log(this.props.productList)
+        // console.log(prevProps.productList)
+        // console.log(_.isEqual(this.props.productList, prevProps.productList))
+        // console.log(!_.isEqual(this.props.productList, prevProps.productList));
+        // console.log(JSON.stringify(this.props.productList) === JSON.stringify(prevProps.productList))
+
+        if (_.isEqual(this.props.productList, prevProps.productList)) {
+        //     console.log('PROPS WHEN CONDIITON MET');
+        //     console.log(this.props.productList)
+        // console.log(prevProps.productList)
+        } else {
+            console.log('PROPS WHEN FUCNTION FIRES');
+            console.log(this.props.productList)
+           console.log(prevProps.productList)
+           console.log('RERENDING FILTER')
+           this.setState({
+               filterOptions: getFilters(this.props.productList)
+           })
+          
         }
 
     }
@@ -185,7 +200,7 @@ export default class FilterModal extends React.Component {
         // console.log('PROPS')
         // console.log(this.props.productList)
 
-        const filterOptions = getFilters(this.props.productList)
+        // const filterOptions = getFilters(this.props.productList)       
 
         return (
 
@@ -217,8 +232,7 @@ export default class FilterModal extends React.Component {
 
                                 {sortOptions.map((option, i) => {
 
-                                    let selected = (this.props.sort.filter(currOptionVal => _.isEqual(currOptionVal, option.value)).length > 0)
-                                    console.log(selected)
+                                    let selected = (this.props.sort.filter(currOptionVal => _.isEqual(currOptionVal, option.value)).length > 0)                                   
                                     let { value, title } = option
                                     if (selected) {
                                         value = { ...option.value, 'remove': true }
@@ -256,7 +270,7 @@ export default class FilterModal extends React.Component {
                         {   
                             this.state.filterOptions.map((filterOption, i) => {
                             const { title, field, options, min, max } = filterOption
-                            if (title === 'Units' || title === 'Size') {
+                            if (title === 'Units' || title === 'Size' || title === 'Active Suppliers') {
                                 //SELECTION FILTER
                                 return (
                                     <View key={i}>

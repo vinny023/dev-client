@@ -71,7 +71,7 @@ export class CartScreen extends React.Component {
             getSuppliersError: false,
             placeOrderLoading: Array(100).fill(false),
             placeOrderError: Array(100).fill(false),
-            banner: { show: false, type: '', message: 'Banner' },
+            banner: { show: false, type: '', message: '' },
 
         }
 
@@ -119,7 +119,19 @@ export class CartScreen extends React.Component {
         this.setState({ banner: { ...this.state.banner, show: false } })
     }
 
-    placeOrder = async ({ index, supplierOrder }) => {
+    bannerAction = (action, actionParam) => {
+        switch (action) {
+            case 'placeBelowMinimumOrder':            
+            this.setState({banner: {
+                show: true, type: 'message',
+                message: 'Placing order to ' + actionParam.supplierOrder.supplierDetail.displayName
+            }})
+            this.placeOrder(actionParam)
+        }
+    }
+
+
+    placeOrder = async ({ index, supplierOrder, fullOrder }) => {
 
          
         console.log('RUNNING PLACE ORDER')
@@ -151,18 +163,29 @@ export class CartScreen extends React.Component {
             })
             setTimeout(() => {}, 2000)
        
-            // return null
+            return null
         }
 
         //check if order total is less than minimum
 
-        if (order.orderTotal < order.supplierDetail.orderMinimum) {
+        console.log('ORDER TOTALS');
+        console.log(order.orderTotal);
+        console.log(order.supplierDetail.orderMinimum);
+        console.log((order.orderTotal < order.supplierDetail.orderMinimum));
+
+        if (order.orderTotal < order.supplierDetail.orderMinimum && !order.confirmBelowMinimum) {
             this.setState({
-                banner: {show: true, type: 'error', message: order.supplierDetail.displayName+' order total less than minimum. Tap below to place order anyway'}
+                banner: {show: true, 
+                        type: 'error', 
+                        message: order.supplierDetail.displayName+' order total less than minimum. Tap here to confirm place order anyway',
+                        action: 'placeBelowMinimumOrder',
+                        duration: 2500,
+                        actionParam: {supplierOrder: {...order, confirmBelowMinimum: true}}
+                    }
             })
             setTimeout(() => {}, 2000)
           
-            // return null
+           return null
         }
 
         console.log('Running rest of place order')
@@ -176,23 +199,32 @@ export class CartScreen extends React.Component {
 
         //write to db & send email
         try {
+            if (!fullOrder) { //don't show individual order banners when placing full order
             this.setState({
                 banner: {
                     show: true, type: 'message',
                     message: 'Placing order to ' + order.supplierDetail.displayName
                 }
             })
+        }
             const response = await placeOrder({ supplierOrder: order })
             console.log(response)
             const body = response.data
             console.log('Success')
-            this.props.removeOrderedCart(order.supplierId)
-            this.setState({
+           
+            // this.props.removeOrderedCart(order.supplierId)
+
+            if (!fullOrder) {
+            this.setState({ //don't show individual order banners when placing full order
                 banner: {
                     show: true, type: 'success',
                     message: 'Your order to ' + order.supplierDetail.displayName + ' was placed!'
                 }
             })
+        }
+
+        return order.supplierDetail.displayName
+
         } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.
             console.log(err)
             this.setState({
@@ -203,21 +235,47 @@ export class CartScreen extends React.Component {
             })
         }
 
-        // setTimeout(() => {}, 2000)
+        setTimeout(() => {}, 2000)
         
-        //return null
+        return null
  
     }
 
     placeFullOrder = async () => {
         const initOrders = [...this.state.masterOrder]
+        let ordersPlaced = [];
         console.log('Starting place full order');
+
+        let bannerString = 'Placing order to '+initOrders.map(order => order.supplierDetail.displayName).join(', ')
+        bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
+
+        this.setState({ //don't show individual order banners when placing full order
+            banner: {
+                show: true, type: 'message',
+                message: bannerString,
+                duration: 2500
+            }
+        })
         for (let i = 0; i < initOrders.length; i++) {
             console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
-            await this.placeOrder({ supplierOrder: initOrders[i] })
+            let successSupplier = await this.placeOrder({ supplierOrder: initOrders[i] , fullOrder: true})
+            if (successSupplier) {
+                ordersPlaced.push(successSupplier);
+            }
             console.log('first place order done')
+
             setTimeout(() => console.log('Running next place order'), 2000)
         }
+
+           bannerString = 'Placed order to '+ordersPlaced.join(', ')+'!',
+           bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
+           this.setState({ //don't show individual order banners when placing full order
+                banner: {
+                    show: true, type: 'success',
+                    message: bannerString,
+                    duration: 2500
+                }
+            })
     }
 
     async componentDidUpdate(prevProps, prevState) {
@@ -268,7 +326,7 @@ export class CartScreen extends React.Component {
                     <>
                         <ScrollView style={[commonStyles.container]} showsVerticalScrollIndicator={false}>
                             {/* <View style={[commonStyles.container, { flex: 1, paddingBottom: 70 }]}> */}
-                            <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+                            <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
                             {/*
                  <Button 
                       title   = "Go Back"
@@ -304,8 +362,7 @@ export class CartScreen extends React.Component {
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
                                     style={[commonStyles.shadow,{marginHorizontal:20}]}
-                                    text="Place Full Order"
-                                    onPress={this.placeFullOrder}
+                                    text={"Checkout All "+this.state.masterOrder.length +" Vendors ($"+this.state.masterOrder.reduce((total, order) => total + order.orderTotal, 0).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+")"}                                    onPress={this.placeFullOrder}
                                 />
                             }
                         </View>

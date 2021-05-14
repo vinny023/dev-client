@@ -178,7 +178,7 @@ export class OrderDetailScreen extends React.Component {
                 <View style={[commonStyles.row, { paddingBottom: 0,paddingTop:0 }]}>
                   <Image source={TruckLogo} style={{ marginRight: 10,height: 20 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
-                  <Text style={{ fontSize: sizes.s20, fontFamily: 'medium', color: colors.black.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date.slice(5, 10)}</Text>
+                  <Text style={{ fontSize: sizes.s20, fontFamily: 'medium', color: colors.black.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date}</Text>
                 </View>
                 <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.grey.primary }}>{order.selectedDeliveryTimeSlot}</Text>
               </View>
@@ -206,8 +206,8 @@ export class OrderDetailScreen extends React.Component {
               textStyle={{ color: colors.blue.primary }} />
           }
           <AppButton
-            text='Contact Woolco'
-            onPress={() => Linking.openURL('mailto:trufflefoodmarket@gmail.com?subject=Contact us')}
+            text={'Contact '+order.supplierDetail.displayName}
+            onPress={() => Linking.openURL('mailto:'+account.supplierContact[order.supplierId].contact)}
             style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
             textStyle={{ color: colors.blue.primary }} />
         </ScrollView>

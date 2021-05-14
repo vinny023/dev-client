@@ -79,14 +79,31 @@ class ProductListItem extends React.Component {
     }
 
     setCounterValue = (val) => {
-        if (val != '') {
+        if (val === '') {
+            this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - 1 })
+            setTimeout(() => this.setState({quantity: ''}), 300)            
+        } else if (!isNaN(val)) {
+            val = parseFloat(val)        
             if (val < this.state.quantity) {
                 this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - val })
             } else {
-                this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity })
+                if (this.state.quantity === '') {
+                    this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity - 1 })
+                } else {
+                    this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity })
+                }
             }
-        } else {
-            this.removeItem();
+        } 
+        // else {
+        //     this.removeItem();
+        // }
+    }
+
+    onTextSubmit = (val) => {
+        console.log('FIRING ON TEXTS BUMIT')
+        if (val === '') {
+            console.log('FOUND EMTPY TEXT INPUT')
+            this.props.subtractItem({ item: { ...this.props.item }, amount: this.props.item.quantity})
         }
     }
 
@@ -176,7 +193,7 @@ class ProductListItem extends React.Component {
                                 <>
                                     {!this.props.reorderOnly &&
                                         <View style={{ paddingTop: 5 }}>
-                                            {this.state.quantity == 0 ?
+                                            {this.state.quantity === 0 ?
                                                 <TouchableOpacity onPress={this.addItem} style={styles.addContainer}>
                                                     <Text style={[styles.boldText]}>+</Text>
                                                 </TouchableOpacity>
@@ -189,7 +206,12 @@ class ProductListItem extends React.Component {
                                                         </TouchableOpacity>
                                                         <View style={styles.signContainer}>
                                                             {/* <Text style={styles.boldText}>{this.state.quantity}</Text> */}
-                                                            <TextInput style={[styles.boldText]}  keyboardType={'number-pad'} onChangeText={this.setCounterValue} value={this.state.quantity.toString()} />
+                                                            <TextInput 
+                                                                style={[styles.boldText]}  
+                                                                keyboardType={'number-pad'} 
+                                                                onEndEditing={event => this.onTextSubmit(event.text)}
+                                                                onChangeText={text => this.setCounterValue(text)} 
+                                                                value={this.state.quantity.toString()} />
                                                         </View>
                                                         {/* ADD BUTTON */}
                                                         <TouchableOpacity style={styles.signContainer} onPress={this.addItem}>

@@ -11,17 +11,17 @@ const OrderTotal = (props) => {
         <View style={[commonStyles.card]}>
             <View style={[styles.row, { justifyContent: 'space-between' }]}>
                 <Text style={styles.lightText}>{deliveryFee > 0 ? "Subtotal" : "Total"}</Text>
-                <Text style={styles.boldText}>${round(orderTotal - deliveryFee,0)}</Text>
+                <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
             </View>
             {deliveryFee > 0 &&
                 <View>
                     <View style={[styles.row]}>
                         <Text style={styles.lightText}>Delivery Fee</Text>
-                        <Text style={styles.boldText}>${round(deliveryFee,0)} </Text>
+                        <Text style={styles.boldText}>${deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} </Text>
                     </View>
                     <View style={[styles.row]}>
                         <Text style={styles.lightText}>Total</Text>
-                        <Text style={styles.boldText}>${round(orderTotal,0)}</Text>
+                        <Text style={styles.boldText}>${orderTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                     </View>
                     {props.showAdd &&
                         <View style={[styles.row]}>

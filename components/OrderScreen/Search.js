@@ -1,7 +1,21 @@
 import React from 'react';
-import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity, AppRegistry } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, commonStyles, sizes } from '../../theme';
+import algoliasearch from 'algoliasearch/lite';
+import {ALGOLIA_APP_NAME, ALGOLIA_API_KEY} from '../../env.js'
+import {setAccount} from '../../apis/apis.js'
+
+
+//INITIALIZE ALGOLIA FOR SEARCH SUGGESTIONS
+const client = algoliasearch(
+    ALGOLIA_APP_NAME,
+    ALGOLIA_API_KEY
+  );
+
+  const index = client.initIndex('dev_Products')
+
+
 
 const SearchSuggestion = ({ suggestion, select }) => {
     return (
@@ -17,36 +31,73 @@ class Search extends React.Component {
         this.state = {
             showSuggestions: false,
             searchTerm: '',
-            suggestions: this.props.account.searchSuggestions
+            suggestions: this.props.account.searchSuggestions,
+            localSuggestions: [],
         }
 
         this.updateSuggestions = this.updateSuggestions.bind(this)
         this.setSearch = this.setSearch.bind(this)
     }
 
-    updateSuggestions(searchTerm) {
+    updateSuggestions = async (searchTerm) => {
         if (searchTerm.length < 3) {
             this.setState({
                 searchTerm: searchTerm,
-                suggestions: this.props.account.searchSuggestions,
+                suggestions: [...this.state.localSuggestions, ...this.props.account.searchSuggestions],
                 showSuggestions: true
             })
            
         }
         else {
+            let suggestions = [...this.state.localSuggestions, ...this.props.account.searchSuggestions].filter(suggestion => suggestion.toString().toLowerCase().includes(searchTerm.toString().toLowerCase())).slice(0,5)
+            
+            try {
+                console.log('TRYING ALGOLIA CALL')
+                const {hits} = await index.search(searchTerm)
+                console.log('HITS')
+                console.log(hits)
+                const algoliaSuggestions = hits.slice(0,4).map(hit => hit.displayName + ' ('+hit.supplierDisplayName+')')   
+                suggestions = [...suggestions.slice(0,2), ...algoliaSuggestions].slice(0,5)
+            }
+
+            catch (error) {
+                console.log('ALGOLIA SUSGGESTION ERROR');
+                console.log(error)
+            }             
+
             this.setState({
                 searchTerm: searchTerm,
-                suggestions: [searchTerm, searchTerm + 'ing', searchTerm + 'inus', searchTerm + ' breast'],
+                suggestions: suggestions,
                 showSuggestions: true
             })
+
         }
     }
-    setSearch(term) {
+    setSearch = async(term) => {
+
+        let newLocSuggestions = [...this.state.localSuggestions]
+        const returnval = this.props.setSearch(term)
+        //save to search suggestions if new suggestion
+        if (this.props.account.searchSuggestions.indexOf(term) === -1 && this.state.localSuggestions.indexOf(term) === -1) {
+            try {
+                console.log('SAVING DOWN ')
+                console.log(this.props.account)
+                newLocSuggestions = [term, ...this.state.localSuggestions]
+                setAccount({id: this.props.account.id, update:{searchSuggestions: [term, ...this.state.localSuggestions, ...this.props.account.searchSuggestions]}})
+                .then(response => console.log('SET ACCOUNT RESPONSe'-response))
+            } catch {
+                console.log('ERROR DID NOT SAVE SUEARCH SUGGESTION')
+            }
+
+        }
+
         this.setState({
             searchTerm: term,
-            showSuggestions: false
+            showSuggestions: false,           
+            localSuggestions: newLocSuggestions             
         })
-        return this.props.setSearch(term)
+
+        return returnval
         
     }
 
@@ -54,17 +105,32 @@ class Search extends React.Component {
         this.setState({
             searchTerm: '',
             showSuggestions: false,
-            suggestions: this.props.account.searchSuggestions
+            suggestions: [...this.state.localSuggestions, ...this.props.account.searchSuggestions]
         })
         return this.props.setSearch('')  
         
             
     }
+
 setSuggestion=()=>{
    
     this.setState({ showSuggestions: true })
     return this.props.setSuggestion(true)
 }
+
+componentDidUpdate(prevProps, prevState) {
+        // //create Filter from Filter Input if it changes
+        // if (!_.isEqual(this.props.filter, prevProps.filter)) {
+        //     console.log('RESET FILTER - FOR SEARCH SUGGESTIONS');
+    
+        // const algoliaFilter = this.props.filter((filter) => algoliaFilterFields.indexOf(filter.field) !== -1)
+        //     .reduce((algoliaFilter, filter) => algoliaFilter + "("+filter.values
+        //         .reduce((filterString, filterValue) => filterString + filter.field+filter.comparison + `"`+filterValue+`"` +" OR ", "").slice(0,-4)+") AND ","").slice(0,-4)
+        // }
+
+}
+
+
     render() {
         return (
             <View>
@@ -88,7 +154,7 @@ setSuggestion=()=>{
                 {this.state.showSuggestions &&
                     <View>
                         <View style={{ padding: 10, borderRadius: 10, backgroundColor: colors.white, marginTop: 30, }}>
-                            {this.state.suggestions.map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
+                            {this.state.suggestions.slice(0,5).map((suggestion, i) => <SearchSuggestion key={i} suggestion={suggestion} select={this.setSearch} />)}
                         </View>
                     </View>
                 }
