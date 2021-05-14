@@ -24,7 +24,7 @@ const sortOptions = [
 ]
 
 //THIS ARAY DETERMINES THE ORDER OF FILTERS ON THE PAGE
-const filterOptions = [
+const filterOptionsInit = [
 
     { 'title': 'Size', 'field': 'qtyString', 'options': [] },
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
@@ -37,6 +37,10 @@ const filterOptions = [
 const getFilters = (productList) => {
     // console.log('IN FUCNTION PLIST')
     // console.log(productList)
+
+    let filterOptions = JSON.parse(JSON.stringify(filterOptionsInit))
+    console.log('FILTER OPTIONS AT INIT')
+    console.log(filterOptions);
 
     productList.forEach(product => {
         const { supplierDisplayName, supplierId, brand, units, price, size, qtyPerItem } = product
@@ -63,14 +67,15 @@ const getFilters = (productList) => {
                 if (newVal > filterOptions[index].max) { filterOptions[index].max = newVal }
                 if (newVal < filterOptions[index].min) { filterOptions[index].min = newVal }
             }
-        })
+       })        
+
         return filterOptions
 
     })
 
     // filterOptions.push({ 'title': 'Active Suppliers', 'field': 'supplierId', 'options': ['Active Suppliers Only', 'All Suppliers'] },)
 
-    console.log('FILTER OPTIONS')
+    console.log('FILTER OPTIONS AFTER RUNNING')
     console.log(filterOptions)
   
     return filterOptions
@@ -165,23 +170,14 @@ export default class FilterModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('FILTER COMPONENT DID UPDATE');
-        // console.log('PRODUCT LIST PASSED TO FILTER');
-        // console.log(this.props.productList)
-        // console.log(prevProps.productList)
-        // console.log(_.isEqual(this.props.productList, prevProps.productList))
-        // console.log(!_.isEqual(this.props.productList, prevProps.productList));
-        // console.log(JSON.stringify(this.props.productList) === JSON.stringify(prevProps.productList))
 
-        if (_.isEqual(this.props.productList, prevProps.productList)) {
-        //     console.log('PROPS WHEN CONDIITON MET');
-        //     console.log(this.props.productList)
-        // console.log(prevProps.productList)
+        if (_.isEqual(this.props.search, prevProps.search)) {
+        
         } else {
-            console.log('PROPS WHEN FUCNTION FIRES');
-            console.log(this.props.productList)
-           console.log(prevProps.productList)
-           console.log('RERENDING FILTER')
+        //     console.log('PROPS WHEN FUCNTION FIRES');
+        //     console.log(this.props.productList)
+        //    console.log(prevProps.productList)
+        //    console.log('RERENDING FILTER')
            this.setState({
                filterOptions: getFilters(this.props.productList)
            })

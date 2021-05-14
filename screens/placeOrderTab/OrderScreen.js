@@ -313,6 +313,7 @@ export class OrderScreen extends React.Component {
                         setSort={this.setSort}
                         clearFilter={this.clearFilter}
                         productList={this.state.productList}
+                        search={this.state.search}
                       />
                     </View>
                   }

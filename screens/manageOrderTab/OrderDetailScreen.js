@@ -139,6 +139,25 @@ export class OrderDetailScreen extends React.Component {
     }
   }
 
+  reorderNotification = (item) => {
+    this.setState({ banner: {  show: true, 
+                              type: 'success', 
+                              message: item.quantity + ' x  '+item.displayName + ' added to cart! Tap here to change quantity in cart' ,
+                              action: 'navigateToCart',                              
+                              actionParam: {} 
+                  }})
+  }
+
+  bannerAction = (action, actionParam) => {
+    console.log('BANNER ACTION RUNNING');
+    switch (action) {
+      case 'navigateToCart':
+        console.log('NAVIGATE TO CART RUNNING');
+        this.props.navigation.navigate('Tabs',{screen:'CartScreen'})
+    }
+    
+  }
+ 
   hideBanner = () => {
     this.setState({ banner: { ...this.state.banner, show: false } })
   }
@@ -162,7 +181,7 @@ export class OrderDetailScreen extends React.Component {
     return (
       <>
         <ScrollView contentContainerStyle={[commonStyles.container, { paddingBottom: 60, }]}>
-          <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+          <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
             :
@@ -192,6 +211,7 @@ export class OrderDetailScreen extends React.Component {
                 <ProductList
                   navigation={this.props.navigation}
                   productList={this.state.order.cart}
+                  reorderNotification={this.reorderNotification}
                   listType="noFlatList"
                   reorderOnly={true}
                 />

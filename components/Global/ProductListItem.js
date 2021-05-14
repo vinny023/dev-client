@@ -58,7 +58,10 @@ class ProductListItem extends React.Component {
         this.props.addItem({ item: { ...this.props.item }, amount: 1 })
     }
 
-    addItemQty = (payload) => {
+    addItemQty = (payload) => { 
+        console.log('FINRING ADD ITEM QTY ON REORDER');
+        console.log(this.props.item);
+        console.log(this.state.quantity)       
         this.props.addItem({ item: { ...this.props.item }, amount: this.state.quantity })
     }
 
@@ -231,7 +234,10 @@ class ProductListItem extends React.Component {
                                             text="Reorder"
                                             style={{ paddingHorizontal: 24, height: 35, marginVertical: 0, marginTop: 5, elevation: 0, marginHorizontal: 0, alignSelf: 'flex-end' }}
                                             textStyle={{ fontSize: sizes.s15, fontFamily: 'medium' }}
-                                            onPress={this.addItemQty}
+                                            onPress={() => {
+                                                this.addItemQty()
+                                                this.props.reorderNotification(item)
+                                            }}
                                         />
                                         // <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
                                         //     <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
