@@ -101,7 +101,7 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
     const modFilter = filter.map(filter => {
         const moddedFilter = {...filter}
         
-        if (['supplierDisplayName', 'units', 'qtyString', 'sku', 'brand'].indexOf(filter.field) !== -1) {
+        if (['supplierDisplayName', 'units', 'qtyString', 'sku', 'brand'].indexOf(filter.field) !== -1 || filter.field.includes('orderGuide')) {
             moddedFilter.values = moddedFilter.values.map(value => `"${value}"`)
         }
         return moddedFilter

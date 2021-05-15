@@ -338,8 +338,8 @@ export class CartScreen extends React.Component {
                                 {
                                     this.state.masterOrder.map((supplierOrder, index) => {
 
-                                        console.log('PASSING IN SUPPLIER DETAIL')
-                                        console.log(this.state.supplierDetail[index])
+                                        // console.log('PASSING IN SUPPLIER DETAIL')
+                                        // console.log(this.state.supplierDetail[index])
                                         return (
                                             <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
                                                 {/* <Text style={styles.text}>Supplier </Text> */}

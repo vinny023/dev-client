@@ -49,7 +49,8 @@ export class OrderScreen extends React.Component {
     //HANDLE STATE INITIALIZATION     
     if (this.props.initialState) {
       if (this.props.initialState === 'orderGuide') {
-        this.state.initialFilter = [{ 'field': 'sku', 'comparison': ':', 'values': this.props.account.orderGuide }]
+        this.state.initialFilter = [{ 'field': this.props.account.id+'-orderGuide', 'comparison': ':', 'values': ['yes'] }]
+        this.state.sort = [{ 'lastOrderDate': -1 }]
         this.state.title = 'Order Guide'
       } else if (this.props.initialState === 'fullCatalog') {
         this.state.title = 'Browse Full Catalog'
@@ -57,7 +58,8 @@ export class OrderScreen extends React.Component {
     }
     //DEFAULT TO CATALOG - ****SWITCH BACK******
     else {
-      this.state.initialFilter = [{ 'field': 'sku', 'comparison': ':', 'values': this.props.account.orderGuide }]
+      // this.state.initialFilter = [{ 'field': 'sku', 'comparison': ':', 'values': this.props.account.orderGuide }]
+      this.state.initialFilter = [{ 'field': this.props.account.id+'-orderGuide', 'comparison': ':', 'values': ['yes'] }]
       this.state.title = 'Order Guide'
       // this.state.title = 'Browse Full Catalog'     
     }
@@ -87,7 +89,7 @@ export class OrderScreen extends React.Component {
   setMode(newMode) {
     if (newMode === 'Order Guide') {
       this.setState({
-        initialFilter: [{ 'field': 'sku', 'comparison': ':', 'values': this.props.account.orderGuide }],
+        initialFilter: [{ 'field': this.props.account.id+'-orderGuide', 'comparison': ':', 'values': ['yes'] }],
         title: 'Order Guide'
       })
     } else if (newMode === 'Catalog') {
@@ -272,16 +274,10 @@ export class OrderScreen extends React.Component {
 
     const { productList, numPages } = this.state
     let numItems = (productList.length * numPages >= 900) ? '1000+' : (productList.length * numPages).toString()
-
-    return (
+    // throw 500
+    return (      
       <View style={{ flex: 1, backgroundColor: colors.background.light, paddingTop: 20 }}>
-        {this.state.isError ?
-          // ----Error Boundary-----
-          <View style={commonStyles.errorBoundary}>
-            <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>Sorry, we’re running into an error. Please tap the button below to restar the app.</Text>
-            <AppButton text={"Restart App"} style={{width:'100%'}} onPress={() => this.setState({ title: 'Browse Full Catalog' })} />
-          </View>
-          :
+ 
           <>
             <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
             <View style={[commonStyles.container, { paddingTop: 0 }]} >
@@ -317,11 +313,7 @@ export class OrderScreen extends React.Component {
                       />
                     </View>
                   }
-                  {/* 
-<Text>SORT</Text>
-<Text>{JSON.stringify(this.state.sort)}</Text>
-<Text>FILTER</Text>
-<Text>{JSON.stringify(this.state.filter)}</Text> */}
+
                   {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
                     this.state.productList.length > 0 ?
                       <ProductList
@@ -342,7 +334,7 @@ export class OrderScreen extends React.Component {
               }
             </View>
           </>
-        }
+        
       </View>
 
     )

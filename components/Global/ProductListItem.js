@@ -127,6 +127,14 @@ class ProductListItem extends React.Component {
             priceString = '$' + item.price.toFixed(2) + ' ($' + item.unitCost.toFixed(2) + ' / ' + item.units + ')'
         }
 
+
+        if (!item.displayName || item.displayName === '') {
+            return (
+                <>
+                </>
+            )
+        }
+
         //  console.log('PRODUCT LIST ITEM RENDERING')
 
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
