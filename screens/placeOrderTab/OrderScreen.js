@@ -115,7 +115,7 @@ export class OrderScreen extends React.Component {
   }
 
   clearFilter() {
-    console.log('RUNNING CLEAR FILTER ORDERSCREEN');
+    // console.log('RUNNING CLEAR FILTER ORDERSCREEN');
     this.setState({
       filter: [],
       sort: [],
@@ -192,7 +192,12 @@ export class OrderScreen extends React.Component {
   setSort(newSort) {
 
     // ONLY ALLOW ONE SORT  - 
-    this.setState({ sort: [newSort] })
+    if (newSort.remove) {
+      this.setState({ sort: [] })
+    } else {
+      this.setState({ sort: [newSort] })
+    }
+    
 
     // let isNew = true;
     // let matchIndex = -1
@@ -223,8 +228,8 @@ export class OrderScreen extends React.Component {
 
   async componentDidMount() {
     //BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    console.log("CURRENT SEARCH------", this.state.search)
-    console.log("CURRENT SEARCH SUGGESTION------", this.state.isSuggestionSet)
+    // console.log("CURRENT SEARCH------", this.state.search)
+    // console.log("CURRENT SEARCH SUGGESTION------", this.state.isSuggestionSet)
 
     await this.getProducts()
   }
@@ -243,14 +248,24 @@ export class OrderScreen extends React.Component {
     }
   }
 
+  bannerAction = (action, actionParam) => {
+    // console.log('RUNNING ACTION PARAM')
+    // console.log(action)
+    switch (action) {
+        case 'clearFilter':    
+            // console.log('RUNNING ACTION CLEAR FILTER')        
+          this.clearFilter()
+    }
+}
+
 
   getProducts = async () => {
 
-    console.log("RUNING GET PRODUCTS")
+    // console.log("RUNING GET PRODUCTS")
 
     this.setState({ loading: true })
     try {
-      console.log('STARTING API')
+      // console.log('STARTING API')
       const productList = await getProducts(this.state)
       this.setState({
         loading: false,
@@ -258,15 +273,19 @@ export class OrderScreen extends React.Component {
         numPages: productList.nbPages,
         currentPage: 0
       })
-      console.log('FINSIHED SETTING STATE')
+      // console.log('FINSIHED SETTING STATE')
     }
     catch (error) {
       this.setState({
         isError: true,
         loading: false,
-        banner: { show: true, type: 'error', message: 'Error Loading Products - please try searching or switching lists' },
+        banner: { show: true, type: 'error', message: 'Error loading products. Tap here to refresh.' , 
+                  action: 'clearFilter',
+                  actionParam: {},
+                  duration: 10000
+                },               
       })
-      console.log(error)
+      // console.log(error)
     }
   }
   //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
@@ -279,12 +298,12 @@ export class OrderScreen extends React.Component {
       <View style={{ flex: 1, backgroundColor: colors.background.light, paddingTop: 20 }}>
  
           <>
-            <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
+            <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
             <View style={[commonStyles.container, { paddingTop: 0 }]} >
               <SwitchMode setMode={this.setMode} mode={this.state.title} />
               {/* <Text>{this.state.title}</Text> */}
          
-              <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} filter={this.state.filter} />
+              <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} filter={[...this.state.initialFilter,...this.state.filter]} />
          
               {/* <View style={this.state.search && {paddingHorizontal:15,paddingVertical:15}}>
             <Text style={commonStyles.lightHeading}>{this.state.search}</Text>
@@ -297,12 +316,12 @@ export class OrderScreen extends React.Component {
                     <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
                       <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
                     </TouchableOpacity>
-                  </View>
-                  {this.state.showFilter &&
+                  </View>                  
                     <View>
                       <FilterModal
                         visible={this.toggleFilterModal}
                         close={this.toggleFilterModal}
+                        showModal={this.state.showFilter}
                         sort={this.state.sort}
                         filter={this.state.filter}
                         setFilter={this.setFilter}
@@ -310,9 +329,10 @@ export class OrderScreen extends React.Component {
                         clearFilter={this.clearFilter}
                         productList={this.state.productList}
                         search={this.state.search}
+                        displaySuppliers={this.props.account.displaySuppliers}
                       />
                     </View>
-                  }
+                  
 
                   {this.state.loading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} /> :
                     this.state.productList.length > 0 ?
@@ -322,11 +342,24 @@ export class OrderScreen extends React.Component {
                       />
                       :
                       <View style={{ paddingTop: 50, alignItems: 'center', justifyContent: 'center',paddingHorizontal:20 }}>
-                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No items for that search. Please try a different search or filter.</Text>
+                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No results for that search. Please try a different search or filter.</Text>
                         {
                           this.state.title == 'Order Guide' &&
                           <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setMode('Catalog')} />
                         }
+
+                        {
+                          this.state.search  !== '' &&
+                          <AppButton text="Clear Search" style={{ width:'100%',marginTop:0}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setSearch('')} />
+                        }
+                        
+                        {
+                          this.state.filter.length > 0 &&
+                          <AppButton text="Clear Filters" style={{ width:'100%',marginTop:0}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setState({filter: []})} />
+                        }
+
+
+                        
                       </View>
                   }
                 </>

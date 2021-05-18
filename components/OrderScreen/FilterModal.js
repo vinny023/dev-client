@@ -34,13 +34,14 @@ const filterOptionsInit = [
     // { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
     // { 'title': 'Qty', 'field': 'qtyPerItem', 'min': 9999, 'max': -9999 }
 ]
-const getFilters = (productList) => {
-    // console.log('IN FUCNTION PLIST')
-    // console.log(productList)
+const getFilters = ({productList, search, displaySuppliers, filter}) => {
+    // console.log('Running get filters');
+    // // consoe.log('IN FUCNTION PLIST')
+    // // consoe.log(productList)
 
     let filterOptions = JSON.parse(JSON.stringify(filterOptionsInit))
-    console.log('FILTER OPTIONS AT INIT')
-    console.log(filterOptions);
+    // consoe.log('FILTER OPTIONS AT INIT')
+    // consoe.log(filterOptions);
 
     productList.forEach(product => {
         const { supplierDisplayName, supplierId, brand, units, price, size, qtyPerItem } = product
@@ -49,9 +50,9 @@ const getFilters = (productList) => {
         const propertyArray = [supplierDisplayName, brand, units, price, size, qtyPerItem]
 
         filterOptions.forEach((filterOption, index) => {
-            // console.log('EXISTS IN FILTER' +filterOption.title);
+            // // consoe.log('EXISTS IN FILTER' +filterOption.title);
             const selectorFilters = ['Supplier', 'Units', 'Brand', 'Size']
-            // console.log(selectorFilters.indexOf(filterOption.title));
+            // // consoe.log(selectorFilters.indexOf(filterOption.title));
             if (selectorFilters.indexOf(filterOption.title) !== -1) {
                 const {options, field} = filterOption
                 // if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
@@ -69,92 +70,33 @@ const getFilters = (productList) => {
             }
        })        
 
+    //IF NO SEARCH SHOW ALL FILTERS
+       if (search === '' && filter.length === 0) {           
+           filterOptions = filterOptions.map(filterOption => {
+               if (filterOption.title === 'Supplier') {
+                   return {...filterOption, options: displaySuppliers}
+               }
+               return filterOption
+           })
+       }
+
+
         return filterOptions
 
     })
 
     // filterOptions.push({ 'title': 'Active Suppliers', 'field': 'supplierId', 'options': ['Active Suppliers Only', 'All Suppliers'] },)
 
-    console.log('FILTER OPTIONS AFTER RUNNING')
-    console.log(filterOptions)
+    // consoe.log('FILTER OPTIONS AFTER RUNNING')
+    // consoe.log(filterOptions)
   
     return filterOptions
 }
 
 export default class FilterModal extends React.Component {
 
-    
-    state = { low: 0, high: 100 }
-
-    renderThumb = () => <View style={styles.thumb} />;
-    renderRail = () => <View style={styles.rail} />
-    renderRailSelected = () => <View style={styles.railSelected} />
-    handleValueChangePrice = (newLow, newHigh, fromUser) => {
-        if (fromUser) {
-            // if (title === 'Price') 
-            let gt = "$gt"
-            let lt = "$lt"
-
-            let field = filterOptions[2].field;
-            if (this.state.lowPrice !== newLow) {
-                this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
-                this.setState({ lowPrice: newLow })
-            } else {
-                this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
-                this.setState({ highPrice: newHigh })
-            }
-            this.setState({ lowPrice: newLow })
-        }
-
-    }
-    handleValueChangeSize = (newLow, newHigh, fromUser) => {
-        if (fromUser) {
-            console.log('I AM SIZE')
-
-            let gt = '>'
-            let lt = '<'
-            //  this.setState({ high: newHigh })
-            let field = filterOptions[3].field;
-            if (this.state.lowSize !== newLow) {
-                this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
-                this.setState({ lowSize: newLow })
-            } else if (this.state.highSize !== newHigh) {
-                this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
-                this.setState({ highSize: newHigh })
-            }
-
-        }
-
-    }
-    handleValueChangeQty = (newLow, newHigh, fromUser) => {
-        if (fromUser) {
-            let gt = '>'
-            let lt = '<'
-
-            let field = filterOptions[4].field;
-            if (this.state.lowQty !== newLow) {
-                this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
-                this.setState({ lowQty: newLow })
-            } else if (this.state.highQty !== newHigh) {
-                this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
-                this.setState({ highQty: newHigh })
-            }
-
-        }
-    }
-    renderLabel = (val) => (
-        <View>
-            <Text>{val}</Text>
-        </View>
-    )
-    sizeHandler = (filterValue) => {
-        this.props.setFilter(filterValue)
-        this.setState({ isUnitSelected: true })
-    }
-
     constructor(props) {
-        super(props)
-        // this.getFilters = this.getFilters.bind(this)
+        super(props)        
         this.state = {
             visible: true,
             isUnitSelected: false,
@@ -165,45 +107,126 @@ export default class FilterModal extends React.Component {
             lowQty: 0,
             highQty: 0,
             field: '',
-            filterOptions: [],            
+            filterOptions: getFilters(this.props)          
         }
     }
 
+    
+    // state = { low: 0, high: 100 }
+
+    // renderThumb = () => <View style={styles.thumb} />;
+    // renderRail = () => <View style={styles.rail} />
+    // renderRailSelected = () => <View style={styles.railSelected} />
+    // handleValueChangePrice = (newLow, newHigh, fromUser) => {
+    //     if (fromUser) {
+    //         // if (title === 'Price') 
+    //         let gt = "$gt"
+    //         let lt = "$lt"
+
+    //         let field = filterOptions[2].field;
+    //         if (this.state.lowPrice !== newLow) {
+    //             this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
+    //             this.setState({ lowPrice: newLow })
+    //         } else {
+    //             this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
+    //             this.setState({ highPrice: newHigh })
+    //         }
+    //         this.setState({ lowPrice: newLow })
+    //     }
+
+    // }
+    // handleValueChangeSize = (newLow, newHigh, fromUser) => {
+    //     if (fromUser) {
+    //         // consoe.log('I AM SIZE')
+
+    //         let gt = '>'
+    //         let lt = '<'
+    //         //  this.setState({ high: newHigh })
+    //         let field = filterOptions[3].field;
+    //         if (this.state.lowSize !== newLow) {
+    //             this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
+    //             this.setState({ lowSize: newLow })
+    //         } else if (this.state.highSize !== newHigh) {
+    //             this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
+    //             this.setState({ highSize: newHigh })
+    //         }
+
+    //     }
+
+    // }
+    // handleValueChangeQty = (newLow, newHigh, fromUser) => {
+    //     if (fromUser) {
+    //         let gt = '>'
+    //         let lt = '<'
+
+    //         let field = filterOptions[4].field;
+    //         if (this.state.lowQty !== newLow) {
+    //             this.props.setFilter({ 'field': field, 'comparison': lt, 'values': [newLow] })
+    //             this.setState({ lowQty: newLow })
+    //         } else if (this.state.highQty !== newHigh) {
+    //             this.props.setFilter({ 'field': field, 'comparison': gt, 'values': [newHigh] })
+    //             this.setState({ highQty: newHigh })
+    //         }
+
+    //     }
+    // }
+    // renderLabel = (val) => (
+    //     <View>
+    //         <Text>{val}</Text>
+    //     </View>
+    // )
+    // sizeHandler = (filterValue) => {
+    //     this.props.setFilter(filterValue)
+    //     this.setState({ isUnitSelected: true })
+    // }
+    
+
     componentDidUpdate(prevProps, prevState) {
 
-        if (_.isEqual(this.props.search, prevProps.search)) {
+        if (!_.isEqual(this.props.search, prevProps.search) || (!_.isEqual(this.props.productList, prevProps.productList) && prevProps.productList.length === 0)) {        
         
-        } else {
-        //     console.log('PROPS WHEN FUCNTION FIRES');
-        //     console.log(this.props.productList)
-        //    console.log(prevProps.productList)
-        //    console.log('RERENDING FILTER')
+        //     // consoe.log('PROPS WHEN FUCNTION FIRES');
+        //     // consoe.log(this.props.productList)
+        //    // consoe.log(prevProps.productList)
+        //    console.log('COMPONENT DID UPDATE RERENDER FIRING')
            this.setState({
-               filterOptions: getFilters(this.props.productList)
+               filterOptions: getFilters(this.props)
            })
           
         }
 
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // console.log('SHOULD COMPONENT UPDATE FIRING')
+        // // console.log(!_.isEqual(this.props.search, nextProps.search) || !_.isEqual(this.props.filter, nextProps.filter));
+        // console.log(!_.isEqual(this.props, nextProps));
+        
+        return !_.isEqual(this.props, nextProps)
+        //  || !_.isEqual(this.props.filter, nextProps.filter) || !_isEqual()
+    }
+
     componentDidMount() {
-        this.setState({
-            filterOptions: getFilters(this.props.productList)
-        })
+        // console.log('COMPONENT DID MOUNT RERENDER FIRING')
+        // this.setState({
+        //     filterOptions: getFilters(this.props)
+        // })
     }
 
     render() {
-        // console.log('PROPS')
-        // console.log(this.props.productList)
+        // // consoe.log('PROPS')
+        // // consoe.log(this.props.productList)
 
         // const filterOptions = getFilters(this.props.productList)       
+
+        console.log('RERENDING FILTER MODAL');
 
         return (
 
             <Modal
                 animationType="slide"
                 transparent={true}
-                isVisible={true}
+                isVisible={this.props.showModal}
                 backdropOpacity={.5}
                 coverScreen={true}
                 style={commonStyles.modalView}
@@ -214,7 +237,7 @@ export default class FilterModal extends React.Component {
                             <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.props.close(false)}>
                                 <Ionicons name='close' size={sizes.s20} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.props.clearFilter()}>
+                            <TouchableOpacity onPress={() => {this.props.clearFilter(); this.props.close(false)}}>
                             <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
                             </TouchableOpacity>
                         </View>
@@ -302,7 +325,7 @@ export default class FilterModal extends React.Component {
                                                                 </View> */}
 
                                                                 <AppButton
-                                                                    onPress={() => this.sizeHandler(filterValue)}
+                                                                    onPress={() => this.props.setFilter(filterValue)}
                                                                     text={option}
                                                                     style={{ backgroundColor: selected ? colors.blue.primary : colors.background.dark, elevation: 0, paddingHorizontal: 15,marginTop:7,marginHorizontal:0,height:32,marginBottom:12 }}
                                                                     textStyle={selected ? styles.selectedText : styles.unselectedText} />
@@ -325,8 +348,8 @@ export default class FilterModal extends React.Component {
                                         <View style={[commonStyles.card,{padding:5,marginTop:7}]}>
                                             {
                                                 options.map((option, k) => {
-                                                    // console.log('FILTER');
-                                                    // console.log(this.props.filter)
+                                                    // // consoe.log('FILTER');
+                                                    // // consoe.log(this.props.filter)
                                                     let selected = (this.props.filter
                                                         .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
 
@@ -342,7 +365,7 @@ export default class FilterModal extends React.Component {
                                                         return 
                                                     } else {
                                                     return (
-                                                        <View key={k} style={[commonStyles.row,{paddingVertical:3}]}>
+                                                        <TouchableOpacity key={k} onPress = {() => this.props.setFilter(filterValue)}style={[commonStyles.row,{paddingVertical:3}]}>
                                                          
                                                             <RadioButton   
                                                                 value={label}
@@ -355,7 +378,7 @@ export default class FilterModal extends React.Component {
                                                             <View>
                                                                 <Text style={commonStyles.text}>{option}</Text>
                                                             </View>
-                                                        </View>
+                                                        </TouchableOpacity>
 
                                                     )
                                                     }
@@ -507,7 +530,7 @@ export default class FilterModal extends React.Component {
 
                     </ScrollView>
 
-                    <AppButton text={"APPLY"} style={[commonStyles.shadow,{ marginHorizontal: 20 }]} onPress={() => this.props.close(false)} />
+                    <AppButton text={"Apply"} style={[commonStyles.shadow,{ marginHorizontal: 20 }]} onPress={() => this.props.close(false)} />
 
                 </View>
             </Modal>

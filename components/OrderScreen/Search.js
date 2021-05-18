@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity, AppRegistry } from 'react-native';
+import { StyleSheet, View, Button, Text, TextInput, TouchableOpacity, AppRegistry, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, commonStyles, sizes } from '../../theme';
 import algoliasearch from 'algoliasearch/lite';
-import {ALGOLIA_APP_NAME, ALGOLIA_API_KEY} from '../../env.js'
+import {ALGOLIA_APP_NAME, ALGOLIA_API_KEY, ALGOLIA_INDEX} from '../../env.js'
 import {setAccount} from '../../apis/apis.js'
+import _ from 'lodash'
 
 
 //INITIALIZE ALGOLIA FOR SEARCH SUGGESTIONS
@@ -15,9 +16,27 @@ const client = algoliasearch(
 
   const index = client.initIndex('dev_Products')
 
+const updateFilterQuery = ({filter: filterInput}) => {
+    // console.log('RUNNING UPDATE FILTLER QUERY');
+    // console.log(filterInput);
+    let algoliaFilter = '';
+    const algoliaFilterFields = ['supplierId', 'supplierDisplayName', 'brand', 'qtyString','qtyPerItem', 'size', 'units', 'displayName', 'sku']
+    
+    algoliaFilter = filterInput.filter((filter) => algoliaFilterFields.indexOf(filter.field) !== -1 || filter.field.includes('orderGuide')) //ADD orderguide here to handle algolia specific entries
+    .reduce((algoliaFilter, filter) => algoliaFilter + "("+filter.values
+        .reduce((filterString, filterValue) => filterString + filter.field+filter.comparison + `"`+ filterValue  + `"` +" OR ", "").slice(0,-4)+") AND ","").slice(0,-4)
+
+    // console.log('UPDATED FILTER');
+    // console.log(algoliaFilter);
+
+    return algoliaFilter
+}
 
 
 const SearchSuggestion = ({ suggestion, select }) => {
+    if (suggestion.length > 40)  {
+        suggestion = suggestion.slice(0,37)+'...'
+    }
     return (
         <TouchableOpacity style={[styles.container]} onPress={() => select(suggestion)}>
             <Text style={commonStyles.text}>{suggestion}</Text>
@@ -33,6 +52,7 @@ class Search extends React.Component {
             searchTerm: '',
             suggestions: this.props.account.searchSuggestions,
             localSuggestions: [],
+            algoliaFilterString: updateFilterQuery({filter: this.props.filter})
         }
 
         this.updateSuggestions = this.updateSuggestions.bind(this)
@@ -40,6 +60,11 @@ class Search extends React.Component {
     }
 
     updateSuggestions = async (searchTerm) => {
+
+        this.setState({
+            searchTerm: searchTerm,
+        })
+
         if (searchTerm.length < 3) {
             this.setState({
                 searchTerm: searchTerm,
@@ -52,21 +77,20 @@ class Search extends React.Component {
             let suggestions = [...this.state.localSuggestions, ...this.props.account.searchSuggestions].filter(suggestion => suggestion.toString().toLowerCase().includes(searchTerm.toString().toLowerCase())).slice(0,5)
             
             try {
-                console.log('TRYING ALGOLIA CALL')
-                const {hits} = await index.search(searchTerm)
-                console.log('HITS')
-                console.log(hits)
+                // console.log('TRYING ALGOLIA CALL')
+                const {hits} = await index.search(searchTerm, {filters:this.state.algoliaFilterString})
+                // console.log('HITS')
+                // console.log(hits)
                 const algoliaSuggestions = hits.slice(0,4).map(hit => hit.displayName + ' ('+hit.supplierDisplayName+')')   
                 suggestions = [...suggestions.slice(0,2), ...algoliaSuggestions].slice(0,5)
             }
 
             catch (error) {
-                console.log('ALGOLIA SUSGGESTION ERROR');
-                console.log(error)
+                // console.log('ALGOLIA SUSGGESTION ERROR');
+                // console.log(error)
             }             
 
-            this.setState({
-                searchTerm: searchTerm,
+            this.setState({                
                 suggestions: suggestions,
                 showSuggestions: true
             })
@@ -77,25 +101,28 @@ class Search extends React.Component {
 
         let newLocSuggestions = [...this.state.localSuggestions]
         const returnval = this.props.setSearch(term)
+        
         //save to search suggestions if new suggestion
-        if (this.props.account.searchSuggestions.indexOf(term) === -1 && this.state.localSuggestions.indexOf(term) === -1) {
+        if (this.props.account.searchSuggestions.indexOf(term) === -1 && this.state.localSuggestions.indexOf(term) === -1 && term !== '') {
             try {
-                console.log('SAVING DOWN ')
-                console.log(this.props.account)
+                // console.log('SAVING DOWN ')
+                // console.log(this.props.account)
                 newLocSuggestions = [term, ...this.state.localSuggestions]
-                setAccount({id: this.props.account.id, update:{searchSuggestions: [term, ...this.state.localSuggestions, ...this.props.account.searchSuggestions]}})
+                setAccount({id: this.props.account.id, update:{searchSuggestions: [term, ...this.state.localSuggestions, ...this.props.account.searchSuggestions].slice(0,100)}})
                 .then(response => console.log('SET ACCOUNT RESPONSe'-response))
             } catch {
-                console.log('ERROR DID NOT SAVE SUEARCH SUGGESTION')
+                // console.log('ERROR DID NOT SAVE SUEARCH SUGGESTION')
             }
 
         }
 
         this.setState({
             searchTerm: term,
-            showSuggestions: false,           
+            showSuggestions: false,            
             localSuggestions: newLocSuggestions             
         })
+
+        Keyboard.dismiss()
 
         return returnval
         
@@ -118,16 +145,16 @@ setSuggestion=()=>{
     return this.props.setSuggestion(true)
 }
 
-componentDidUpdate(prevProps, prevState) {
-        // //create Filter from Filter Input if it changes
-        // if (!_.isEqual(this.props.filter, prevProps.filter)) {
-        //     console.log('RESET FILTER - FOR SEARCH SUGGESTIONS');
-    
-        // const algoliaFilter = this.props.filter((filter) => algoliaFilterFields.indexOf(filter.field) !== -1)
-        //     .reduce((algoliaFilter, filter) => algoliaFilter + "("+filter.values
-        //         .reduce((filterString, filterValue) => filterString + filter.field+filter.comparison + `"`+filterValue+`"` +" OR ", "").slice(0,-4)+") AND ","").slice(0,-4)
-        // }
 
+
+componentDidUpdate(prevProps, prevState) {
+
+    // create Filter from Filter Input if it changes
+    if (!_.isEqual(this.props.filter, prevProps.filter)) {
+        this.setState({
+            algoliaFilterString: updateFilterQuery({filter: this.props.filter}) 
+        })
+    }        
 }
 
 

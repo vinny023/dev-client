@@ -1,11 +1,14 @@
 import { round } from 'lodash';
+import { Item } from 'native-base';
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { colors, commonStyles, sizes } from '../../theme';
 
 const OrderTotal = (props) => {
     const { order } = props
-    const { deliveryFee, orderTotal } = order
+    const { deliveryFee} = order
+
+    const orderTotal = order.cart.reduce((total, item) => total + item.price*item.quantity, 0)  + order.deliveryFee
 
     return (
         <View style={[commonStyles.card]}>

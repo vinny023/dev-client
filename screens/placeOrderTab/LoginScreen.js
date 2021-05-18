@@ -27,23 +27,26 @@ const syncStore = ({ accountId }) => {
     //     shouldWrite = true;
     // }
 
-    console.log('FIREBASE SYNC STORE');
-    console.log(shouldWrite);
+    // console.log('FIREBASE SYNC STORE');
+    // console.log(shouldWrite);
 
     //WRITE CHANGES TO FIREBASE
     try {
     store.subscribe(() => {
         if (shouldWrite) {
-        console.log('writing to firebase')
-        console.log(store.getState())
+        // console.log('writing to firebase')
+        // console.log(store.getState())
+        // console.log(JSON.parse(JSON.stringify(store.getState())))
+        
+
             firebaseApp.database().ref('customers/' + accountId).set({
-                state: store.getState()
+                state: JSON.parse(JSON.stringify(store.getState()))
             })
         }
     })
     }
     catch (error) {
-        console.log('non-critical firebase error')
+        // console.log('non-critical firebase error')
     }
 
     //LISTEN TO FIREBASE FOR STATE CHAGNES
@@ -66,7 +69,7 @@ const syncStore = ({ accountId }) => {
     })
 } catch(error) {
     //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
-    console.log(error)
+    // console.log(error)
 }
 
 }
@@ -76,7 +79,7 @@ const storeData = async (key, value) => {
         await AsyncStorage.setItem(key, value)
         return { success: 'success' }
     } catch (e) {
-        console.log('store data error')
+        // console.log('store data error')
         return { error: e }
     }
 }
@@ -121,10 +124,10 @@ export class LoginScreen extends React.Component {
                 banner: { show: true, type: 'message', message: "Verifying your passcode... " }
             })
             const account = await getAccount({ query: { code: this.state.code } })  //query for id by code
-            console.log("CDD")
-            console.log(this.state.code)
-            console.log("ACCOUNT")
-            console.log(account)
+            // console.log("CDD")
+            // console.log(this.state.code)
+            // console.log("ACCOUNT")
+            // console.log(account)
 
             if (account !== 'account not found') { //if code query returns an undefined
                 
@@ -135,8 +138,8 @@ export class LoginScreen extends React.Component {
                 this.props.setAccount(account)
                 //store data to asyncstorage
                 const storeResponse = await storeData('accountId', account.id)
-                console.log('STore Data repsose')
-                console.log(storeResponse)
+                // console.log('STore Data repsose')
+                // console.log(storeResponse)
                 if (storeResponse.error) {
                     this.setState({
                         getAccountLoading: false,
@@ -148,7 +151,7 @@ export class LoginScreen extends React.Component {
                 //success message
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'message', message: "Hello " + account.displayName + "!" }
+                    banner: { show: true, type: 'success', message: "Welcome " + account.displayName + "!" }
                 })
 
                 this.login(account.id)
@@ -163,7 +166,7 @@ export class LoginScreen extends React.Component {
                
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             this.setState({
                 getAccountLoading: false,
                 banner: { show: true, type: 'error', message: "Sorry! we're having trouble with this request Please try again." }
@@ -251,18 +254,14 @@ export class LoginScreen extends React.Component {
                 </View>
 
                 <View style={{ marginTop: 60,}}>
-                {this.state.accountId !== '' ?
-                <><Text style={commonStyles.text}>Account found on device</Text></>
-                :
-                     <>
+                
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
                     style={{ backgroundColor: colors.white, paddingHorizontal: 11, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s14,height:36 }}
                    // secureTextEntry 
-                    />
-                    </>
-                }
+                    />                
+        
                 </View>
                 <AppButton
                 style={commonStyles.shadow}

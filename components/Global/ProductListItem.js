@@ -59,9 +59,9 @@ class ProductListItem extends React.Component {
     }
 
     addItemQty = (payload) => { 
-        console.log('FINRING ADD ITEM QTY ON REORDER');
-        console.log(this.props.item);
-        console.log(this.state.quantity)       
+        // console.log('FINRING ADD ITEM QTY ON REORDER');
+        // console.log(this.props.item);
+        // console.log(this.state.quantity)       
         this.props.addItem({ item: { ...this.props.item }, amount: this.state.quantity })
     }
 
@@ -103,9 +103,9 @@ class ProductListItem extends React.Component {
     }
 
     onTextSubmit = (val) => {
-        console.log('FIRING ON TEXTS BUMIT')
+        // console.log('FIRING ON TEXTS BUMIT')
         if (val === '') {
-            console.log('FOUND EMTPY TEXT INPUT')
+            // console.log('FOUND EMTPY TEXT INPUT')
             this.props.subtractItem({ item: { ...this.props.item }, amount: this.props.item.quantity})
         }
     }
@@ -188,7 +188,7 @@ class ProductListItem extends React.Component {
                         <View>
                             {this.state.quantity >= 1 &&
                                 <View style={{ marginTop: 0, flex: 1 }} >
-                                    {item.price &&
+                                    {!!item.price &&
                                         <View >
                                             <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${(item.price * this.state.quantity).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                         </View>

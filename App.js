@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View ,Image, Text} from 'react-native';
+import { StyleSheet, View ,Image, Text, TouchableWithoutFeedback } from 'react-native';
 import store from './redux/store'
 import {useFonts} from 'expo-font'
 // import * as eva from '@eva-design/eva';
@@ -39,6 +39,14 @@ const errorHandler = (error, stackTrace) => {
 }
 
 
+//KEYBOARD DISMISS
+
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
+
 
 export default function App() {
   //Custom fonts
@@ -54,10 +62,12 @@ export default function App() {
     try {
     return (
       <ErrorBoundary FallbackComponent = {CustomFallback}>
+      <DismissKeyboard>
       <Provider store={store}>
         <Navigation />
         <FlashMessage position="top" />
       </Provider>
+      </DismissKeyboard>
       </ErrorBoundary>
     );
     } catch(err) {

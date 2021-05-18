@@ -65,15 +65,15 @@ class SpecialNotesBox extends React.Component {
 
 const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
-    //     console.log('SHIPPING Cuttoff')
-    //     console.log(shippingCutoff)
+    //     //console.log('SHIPPING Cuttoff')
+    //     //console.log(shippingCutoff)
 
-    //    console.log('SHIPPING DAYS')
-    //    console.log(shippingDays)
+    //    //console.log('SHIPPING DAYS')
+    //    //console.log(shippingDays)
 
 
-    //    console.log('DOW')
-    //    console.log(DoW)
+    //    //console.log('DOW')
+    //    //console.log(DoW)
 
     const millisecondsInDays = 86400000
 
@@ -91,8 +91,8 @@ const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-    console.log('NEXT 7')
-    console.log(next7)
+    //console.log('NEXT 7')
+    //console.log(next7)
 
     //if it fits the category - in DoW and within 7 days
     const returnVal = next7.filter((val, i) => DoW.indexOf(val.getDay()) !== -1 && val.getTime() - now.getTime() < 7 * millisecondsInDays)
@@ -100,8 +100,8 @@ const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
             return { day: daysOfWeek[val.getDay()], date: (val.getMonth() + 1).toString() + '/' + val.getDate() }
         })
 
-    console.log('RETURN VAL')
-    console.log(returnVal)
+    //console.log('RETURN VAL')
+    //console.log(returnVal)
 
     return returnVal
 }
@@ -120,15 +120,15 @@ export class SupplierCart extends React.Component {
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
 
-        console.log('OCNSTRUCTIONS UPPLIER CART')
-        console.log(this.props.supplierDeliverySettings)
+        //console.log('OCNSTRUCTIONS UPPLIER CART')
+        //console.log(this.props.supplierDeliverySettings)
 
     }
 
     //WRITE ORDER UPDATE TO STORE
     updateOrderDetails = ({ update }) => {
-        console.log('Running update order details')
-        console.log(update)
+        //console.log('Running update order details')
+        //console.log(update)
         this.props.updateOrderDetails({ supplierId: this.props.supplierDetail.id, update: update })
     }
 
@@ -141,12 +141,15 @@ export class SupplierCart extends React.Component {
     }
 
     setDefaultDelivery = () => {
+
+        //console.log('RUNNING DEFAULT DELIVERY');
+        //console.log(this.props.supplierOrder)
         if (this.props.supplierDetail) {
             const { selectedDeliveryDate, selectedDeliveryTimeSlot } = this.props.supplierOrder
 
             const deliveryDays = createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail })
-            console.log('DELIVERY DAYS')
-            console.log(deliveryDays)
+            //console.log('DELIVERY DAYS')
+            //console.log(deliveryDays)
 
             let update = {}
 
@@ -188,40 +191,46 @@ export class SupplierCart extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('COMPONTENT DID UPDATE')
-        console.log(this.props)
+        //console.log('COMPONTENT DID UPDATE')
+        //console.log(this.props)
         if (!_.isEqual(prevProps.supplierDetail, this.props.supplierDetail)) {
             this.setDefaultDelivery()
         }
 
     }
     componentDidMount() {
-        console.log('COMPONTENT DID MOUNT')
-        console.log(this.props)
+        //console.log('COMPONTENT DID MOUNT')
+        //console.log(this.props)
         this.setDefaultDelivery()
 
     }
 
     render() {
-        console.log('RENDER')
+        //console.log('RENDER SupplierCART')
+        //console.log(this.props)
         const { navigation, index } = this.props
         let checkoutString = 'Checkout'
 
         let { shippingTimeSlots } = {}
-        let deliveryFee, orderTotal;
-        if (this.props.supplierOrder) {
-            ({ deliveryFee, orderTotal } = this.props.supplierOrder)
-            if (this.props.supplierOrder.supplierDetail) {
-                checkoutString = 'Checkout '+this.props.supplierOrder.supplierDetail.displayName
-            }
+
+        let deliveryFee, orderTotal
+        if (this.props.supplierDetail) {
+            ({deliveryFee} = this.props.supplierDetail)            
+            checkoutString = 'Checkout '+this.props.supplierDetail.displayName
         }
         
+        if (this.props.supplierOrder) {            
+            ({ orderTotal } = this.props.supplierOrder)            
+        }
+        
+        //console.log('DELIVERY FEE');
+        //console.log(deliveryFee);
 
         // }    
         const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
         const date = new Date()
-        console.log(this.props.supplierOrder.cart, "this is the cart we are getting")
+        //console.log(this.props.supplierOrder.cart, "this is the cart we are getting")
         return (
             <View>
 
@@ -271,7 +280,7 @@ export class SupplierCart extends React.Component {
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
                         </TouchableOpacity>
-                        {(this.props.supplierDetail && this.props.supplierOrder) ?
+                        {(!!this.props.supplierDetail && !!this.props.supplierOrder && !!deliveryFee && !!orderTotal) ?
                             <View style={[commonStyles.card]} >
                                 {/* <View style={styles.row}>
                                     <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
@@ -345,7 +354,7 @@ export class SupplierCart extends React.Component {
                                             {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail }).map(val => {
                                                 const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate, val) ? '(Selected)' : '')
                                                 return (
-                                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
+                                                    <TouchableOpacity onPress= {() => this.updateOrderDetails({ update: { selectedDeliveryDate: val } })} style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
                                                             value={label}
                                                             label={label}
@@ -357,7 +366,7 @@ export class SupplierCart extends React.Component {
                                                         <View >
                                                             <Text style={commonStyles.text}>{val.day} - {val.date}</Text>
                                                         </View>
-                                                    </View>
+                                                    </TouchableOpacity>
                                                 )
                                             })
                                             }

@@ -14,60 +14,20 @@ import AppButton from '../../components/Global/AppButton';
 import { Ionicons } from '@expo/vector-icons';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const setOrderDetails = ({ masterCart, account }) => {
 
-    const { id, displayName, confirmationEmail, supplierContact,deliveryLocations } = account
-    //APPEND ACCOUNT DETAILS TO ORDER
-    return masterCart
-        .map(supplierOrder => {
-            console.log(supplierOrder.supplierId)
-            return (
-                {
-                    accountId: id,
-                    accountDisplayName: displayName,
-                    accountConfirmationEmail: confirmationEmail,
-                    //ONLY HANDLE SINGLE DELIVERY LOCATION FOR NOW
-                    deliveryLocation: deliveryLocations[0],
-                    supplierContact: {
-                        contact: supplierContact[supplierOrder.supplierId].contact,
-                        contactType: supplierContact[supplierOrder.supplierId].supplierContactType
-                    },
-                    ...supplierOrder
-                })
-        })
-}
-
-const calcTotalsAddSupplier = ({ masterOrder, supplierDetail }) => {
-    //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
-    return masterOrder.map((supplierOrder, index) => {        
-        let total = 0;
-        supplierOrder.cart.forEach(item => item.price ? total = total + item.price*item.quantity : total = total)
-
-        console.log('CaLCED ORDER TOTAL')
-        console.log(total)
-
-        return (
-            {
-                ...supplierOrder, supplierDetail: supplierDetail[index],
-                orderTotal: total + supplierDetail[index].deliveryFee,
-                deliveryFee: supplierDetail[index].deliveryFee
-            }
-        )
-    })
-}
 
 export class CartScreen extends React.Component {
 
     constructor(props) {
         super(props)
 
-        console.log('PROPS')
-        console.log(this.props)
+        //console.log('PROPS')
+        //console.log(this.props)
 
         this.state = {
             getSuppliersLoading: true,
             supplierDetail: [],
-            masterOrder: setOrderDetails(this.props),
+            masterOrder: this.props.masterCart,            
             getSuppliersError: false,
             placeOrderLoading: Array(100).fill(false),
             placeOrderError: Array(100).fill(false),
@@ -75,18 +35,98 @@ export class CartScreen extends React.Component {
 
         }
 
-        this.updateOrderDetails = this.updateOrderDetails.bind(this)
+        // this.updateOrderDetails = this.updateOrderDetails.bind(this)
         this.hideBanner = this.hideBanner.bind(this)
         this.placeOrder = this.placeOrder.bind(this)
         this.pullSuppliersAndSetOrders = this.pullSuppliersAndSetOrders.bind(this)
     }
 
-    updateOrderDetails = ({ index, update }) => {
-        console.log('Running order detail updates')
-        //HANDLE PASSING UP OF ORDER DETAILS FROM CHILD SUPPLIER CARTS (SHIPPING DAY & SHIPPING TIME)
-        const newMasterOrder = [...this.state.masterOrder]
-        newMasterOrder[index] = { ...this.state.masterOrder[index], ...update }
-        this.setState({ masterOrder: newMasterOrder })
+    // updateOrderDetails = ({ index, update }) => {
+    //     //console.log('Running order detail updates')
+    //     //HANDLE PASSING UP OF ORDER DETAILS FROM CHILD SUPPLIER CARTS (SHIPPING DAY & SHIPPING TIME)
+    //     const newMasterOrder = [...this.state.masterOrder]
+    //     newMasterOrder[index] = { ...this.state.masterOrder[index], ...update }
+    //     this.setState({ masterOrder: newMasterOrder })
+    // }
+
+    setOrderDetails = ({ masterCart, account }) => {
+
+        const { id, displayName, confirmationEmail, supplierContact,deliveryLocations } = account
+        //APPEND ACCOUNT DETAILS TO ORDER
+        return masterCart
+            .map(supplierOrder => {
+                //console.log("SET ORDER DETIALS")
+                //console.log(supplierOrder);
+                //console.log(supplierOrder.supplierId)
+
+                if (!supplierOrder.accountId) {
+
+
+                this.props.updateOrderDetails({ supplierId: supplierOrder.supplierId, update: {
+                    accountId: id,
+                    accountDisplayName: displayName,
+                    accountConfirmationEmail: confirmationEmail,
+                    //ONLY HANDLE SINGLE DELIVERY LOCATION FOR NOW
+                    ...supplierOrder,
+                    deliveryLocation: deliveryLocations[0],
+                    supplierContact: {
+                        contact: supplierContact[supplierOrder.supplierId].contact,
+                        contactType: supplierContact[supplierOrder.supplierId].supplierContactType,
+                        
+                    }}})           
+
+                }
+
+                return (
+                    {
+                        accountId: id,
+                        accountDisplayName: displayName,
+                        accountConfirmationEmail: confirmationEmail,
+                        //ONLY HANDLE SINGLE DELIVERY LOCATION FOR NOW
+                        deliveryLocation: deliveryLocations[0],
+                        supplierContact: {
+                            contact: supplierContact[supplierOrder.supplierId].contact,
+                            contactType: supplierContact[supplierOrder.supplierId].supplierContactType
+                        },
+                        ...supplierOrder
+                    })
+            })
+    }
+    
+    calcTotalsAddSupplier = ({ masterOrder, supplierDetail }) => {
+        //CALCULATE TOTALS AND DELIVERY FEES FOR ORDER BASED ON ITEMS AND ORDER MINIMUMS             
+        return masterOrder.map((supplierOrder, index) => {        
+            let total = 0;
+            supplierOrder.cart.forEach(item => item.price ? total = total + item.price*item.quantity : total = total)
+    
+            //console.log('CaLCED ORDER TOTAL')
+            //console.log(total)
+    
+            //also write update to redux / firebase cart - do I need to set state?
+
+            //console.log('SUPPLIER DETIAL ERROR');
+            //console.log(supplierDetail);
+            //console.log(index);
+
+            if (supplierDetail.length !== 0) {
+                // this.props.updateOrderDetails({ supplierId: supplierOrder.supplierId, update: { supplierDetail: supplierDetail[index],
+                //     orderTotal: total + supplierDetail[index].deliveryFee,
+                //     deliveryFee: supplierDetail[index].deliveryFee   } })            
+
+                    return (
+                        {
+                            ...supplierOrder, supplierDetail: supplierDetail[index],
+                            orderTotal: total + supplierDetail[index].deliveryFee,
+                            deliveryFee: supplierDetail[index].deliveryFee
+                        }
+                    )
+            } else {
+                return supplierOrder
+            }
+            
+    
+    
+        })
     }
 
     pullSuppliersAndSetOrders = async () => {
@@ -95,18 +135,24 @@ export class CartScreen extends React.Component {
         })
         try {
             const supplierDetail = await getCartSuppliers({ suppliers: suppliers })
-            console.log(supplierDetail)
+            //console.log(supplierDetail)
             this.setState({
                 supplierDetail: supplierDetail,
-                getSuppliersLoading: false,
-                masterOrder: setOrderDetails({
-                    masterCart: calcTotalsAddSupplier({ masterOrder: this.props.masterCart, supplierDetail: supplierDetail }),
+                getSuppliersLoading: false,    
+                masterOrder: this.setOrderDetails({
+                    masterCart: this.calcTotalsAddSupplier({ masterOrder: this.props.masterCart, supplierDetail: supplierDetail }),
                     account: this.props.account
-                })
+                })        
+           
+               
             })
+
+
+
+            
         }
         catch (error) {
-            console.log(error)
+            //console.log(error)
             this.setState({
                 banner: {show:true,type:'error', message: 'Issue loading suppliers. Please exit cart and come back.' },
                 getSuppliersLoading: false,
@@ -134,27 +180,27 @@ export class CartScreen extends React.Component {
     placeOrder = async ({ index, supplierOrder, fullOrder }) => {
 
          
-        console.log('RUNNING PLACE ORDER')
-        console.log(index)
-        console.log((index))
-        console.log((supplierOrder))
+        //console.log('RUNNING PLACE ORDER')
+        //console.log(index)
+        //console.log((index))
+        //console.log((supplierOrder))
 
         let order = {}
         if (supplierOrder) {
             order = { ...supplierOrder }
         } else {
-            console.log('Place Order' + index)
+            //console.log('Place Order' + index)
             order = { ...this.state.masterOrder[index] }
         }
 
-        console.log('SELECTED ORDER')
-        console.log(order)
+        //console.log('SELECTED ORDER')
+        //console.log(order)
 
         //set current order baed on index
-        console.log("PLACING ORDER")
-        console.log(order)
-        console.log(!order.selectedDeliveryDate)
-        console.log(!order.selectedDeliveryTimeSlot)
+        //console.log("PLACING ORDER")
+        //console.log(order)
+        //console.log(!order.selectedDeliveryDate)
+        //console.log(!order.selectedDeliveryTimeSlot)
         //check that shipping is selected => if not - show banner error message   
 
         if (!order.selectedDeliveryDate || !order.selectedDeliveryTimeSlot) {
@@ -168,10 +214,10 @@ export class CartScreen extends React.Component {
 
         //check if order total is less than minimum
 
-        console.log('ORDER TOTALS');
-        console.log(order.orderTotal);
-        console.log(order.supplierDetail.orderMinimum);
-        console.log((order.orderTotal < order.supplierDetail.orderMinimum));
+        //console.log('ORDER TOTALS');
+        //console.log(order.orderTotal);
+        //console.log(order.supplierDetail.orderMinimum);
+        //console.log((order.orderTotal < order.supplierDetail.orderMinimum));
 
         if (order.orderTotal < order.supplierDetail.orderMinimum && !order.confirmBelowMinimum) {
             this.setState({
@@ -188,7 +234,7 @@ export class CartScreen extends React.Component {
            return null
         }
 
-        console.log('Running rest of place order')
+        //console.log('Running rest of place order')
         //set state to loading (pass state down?)
         order = { ...order, placingOrder: true }
         let newMasterOrder = [...this.state.masterOrder] //NEED TO DO THESE 2 LINES THIS EVERYTIME TO TRIGGER RERENDER       
@@ -208,11 +254,11 @@ export class CartScreen extends React.Component {
             })
         }
             const response = await placeOrder({ supplierOrder: order })
-            console.log(response)
+            //console.log(response)
             const body = response.data
-            console.log('Success')
+            //console.log('Success')
            
-            // this.props.removeOrderedCart(order.supplierId)
+            this.props.removeOrderedCart(order.supplierId)
 
             if (!fullOrder) {
             this.setState({ //don't show individual order banners when placing full order
@@ -226,7 +272,7 @@ export class CartScreen extends React.Component {
         return order.supplierDetail.displayName
 
         } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.
-            console.log(err)
+            //console.log(err)
             this.setState({
                 banner: {
                     show: true, type: 'error',
@@ -244,7 +290,7 @@ export class CartScreen extends React.Component {
     placeFullOrder = async () => {
         const initOrders = [...this.state.masterOrder]
         let ordersPlaced = [];
-        console.log('Starting place full order');
+        //console.log('Starting place full order');
 
         let bannerString = 'Placing order to '+initOrders.map(order => order.supplierDetail.displayName).join(', ')
         bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
@@ -257,16 +303,25 @@ export class CartScreen extends React.Component {
             }
         })
         for (let i = 0; i < initOrders.length; i++) {
-            console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
+            //console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
             let successSupplier = await this.placeOrder({ supplierOrder: initOrders[i] , fullOrder: true})
             if (successSupplier) {
                 ordersPlaced.push(successSupplier);
             }
-            console.log('first place order done')
+            //console.log('first place order done')
 
-            setTimeout(() => console.log('Running next place order'), 2000)
+            // setTimeout(() => //console.log('Running next place order'), 2000)
         }
-
+           if (ordersPlaced.length === 0) {
+            // this.setState({ //don't show individual order banners when placing full order
+            //     banner: {
+            //         show: true, type: 'error',
+            //         message: 'Orders not placed. Please try again or place orders individually.',
+            //         duration: 2500
+            //     }
+            // })
+            
+           } else {
            bannerString = 'Placed order to '+ordersPlaced.join(', ')+'!',
            bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
            this.setState({ //don't show individual order banners when placing full order
@@ -276,30 +331,31 @@ export class CartScreen extends React.Component {
                     duration: 2500
                 }
             })
+        }
     }
 
-    async componentDidUpdate(prevProps, prevState) {
-        console.log("Firing Componetn did update")
+    async componentDidUpdate(prevProps, prevState) {        
 
-        if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
+        if (!_.isEqual(prevProps.masterCart, this.props.masterCart) && !_.isEqual(this.props.masterCart, this.state.masterOrder)) {
             const firstCartPull = (prevProps.masterCart.length === 0 && this.props.masterCart.length !== 0)
             const supplierListChanged = (prevProps.masterCart.length !== this.props.masterCart.length)
-            console.log("Seeing Change")
+            //console.log("Seeing Change")
             if (firstCartPull || supplierListChanged) {
-                console.log("UPDATING WITH SUPPLIER CHANGED")
+                //console.log("UPDATING WITH SUPPLIER CHANGED")
                 return await this.pullSuppliersAndSetOrders()
             } else {
-                console.log(this.props.masterCart)
-                this.setState({
-                    masterOrder: setOrderDetails(
-                        {
-                            masterCart: calcTotalsAddSupplier(
-                                { masterOrder: this.props.masterCart, supplierDetail: this.state.supplierDetail }),
-                            account: this.props.account
-                        })
-                })
-                console.log('only cart item change')
-                console.log(this.props.masterCart)
+                //console.log(this.props.masterCart)
+             this.setState({
+               masterOrder: this.setOrderDetails(
+                    {
+                        masterCart: this.calcTotalsAddSupplier(
+                            { masterOrder: this.props.masterCart, supplierDetail: this.state.supplierDetail }),
+                        account: this.props.account
+                    })
+
+             })
+                //console.log('only cart item change')
+                //console.log(this.props.masterCart)
             }
 
         }
@@ -313,7 +369,7 @@ export class CartScreen extends React.Component {
             //HANLDE NO CART?
             return
         } else {
-            console.log("RUNNIGN MOUNT")
+            //console.log("RUNNIGN MOUNT")
             return await this.pullSuppliersAndSetOrders()
         }
     }
@@ -338,8 +394,8 @@ export class CartScreen extends React.Component {
                                 {
                                     this.state.masterOrder.map((supplierOrder, index) => {
 
-                                        // console.log('PASSING IN SUPPLIER DETAIL')
-                                        // console.log(this.state.supplierDetail[index])
+                                        // //console.log('PASSING IN SUPPLIER DETAIL')
+                                        // //console.log(this.state.supplierDetail[index])
                                         return (
                                             <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
                                                 {/* <Text style={styles.text}>Supplier </Text> */}
@@ -350,7 +406,7 @@ export class CartScreen extends React.Component {
                                                     supplierDetail={this.state.supplierDetail[index]}
                                                     index={index}
                                                     placeOrder={this.placeOrder}
-                                                    updateOrderDetails={this.updateOrderDetails}
+                                                    
                                                     supplierDeliverySettings={this.props.account.supplierDeliverySettings[supplierOrder.supplierId]}
                                                 />
                                             </View>
@@ -362,7 +418,7 @@ export class CartScreen extends React.Component {
                             {this.state.masterOrder.length > 1 &&
                                 <AppButton
                                     style={[commonStyles.shadow,{marginHorizontal:20}]}
-                                    text={"Checkout All "+this.state.masterOrder.length +" Vendors ($"+this.state.masterOrder.reduce((total, order) => total + order.orderTotal, 0).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+")"}                                    onPress={this.placeFullOrder}
+                                    text={"Checkout All "+this.state.masterOrder.length +" Vendors ($"+this.state.masterOrder.reduce((total, order) => total + order.orderTotal, 0).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+")"} onPress={this.placeFullOrder}
                                 />
                             }
                         </View>
@@ -389,7 +445,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return { removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)) }
+    return { removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)),
+              updateOrderDetails: params => dispatch(actions.updateOrderDetails(params)) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartScreen)

@@ -21,7 +21,6 @@
     ]
   },
   "dependencies": {
-    "@eva-design/eva": "^2.0.0",
     "@expo/metro-config": "^0.1.64",
     "@expo/vector-icons": "^12.0.4",
     "@react-native-async-storage/async-storage": "^1.15.2",
@@ -31,7 +30,6 @@
     "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
-    "@ui-kitten/components": "^5.0.0",
     "@ui-kitten/eva-icons": "^5.0.0",
     "algoliasearch": "^4.9.1",
     "axios": "^0.21.1",
@@ -55,6 +53,7 @@
     "react-native-fast-image": "^8.3.4",
     "react-native-flash-message": "^0.1.23",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-modal": "^11.10.0",
     "react-native-paper": "^4.8.1",
     "react-native-reanimated": "^2.1.0",

@@ -9,9 +9,9 @@ import RNRestart from 'react-native-restart';
 
 export default class Banner extends React.Component {
 
-    // constructor(props) {
-    //     super(props)
-    // }
+    constructor(props) {
+        super(props)
+    }
 
     // buttonAction = () => {
     //     const {buttonAction} = this.props.banner
@@ -28,7 +28,15 @@ export default class Banner extends React.Component {
     //         onPress={() => this.buttonAction()}
     //         />
     // }
+    runBannerAction = () => {
+        let { show, type, message, action, actionParam, duration } = this.props.banner
+        if (this.props.bannerAction) {
+            this.props.bannerAction(action, actionParam)
+        } else {
+            this.props.hideBanner()
+        }
 
+    }
   
 
     render() {
@@ -50,7 +58,7 @@ export default class Banner extends React.Component {
                 //default duration:1850a
                 duration: duration,
                 color: type === 'message' ? colors.blue.primary : colors.white,
-                onPress: () => this.props.bannerAction(action, actionParam)
+                onPress: () => this.runBannerAction()
             })
         }
 

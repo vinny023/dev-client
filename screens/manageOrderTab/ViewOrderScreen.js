@@ -15,13 +15,14 @@ import { RadioButton } from 'react-native-paper'
 const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
+    const orderTotal = order.cart.reduce((total, item) => total + item.price*item.quantity, 0) + order.deliveryFee
     return (
         <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 7, }]} >
             {/* <AppButton
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={require('../../assets/woolco.png')} style={{ width: 42, height: 42, marginRight: 10 }} />
+            <Image source={{ uri: order.supplierDetail.logo }} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
 
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
@@ -32,7 +33,7 @@ const OrderButton = ({ order }) => {
                 
                 {order.orderTotal &&
                     <View>
-                    <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${order.orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                    <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                     </View>
                 }
             </View>
@@ -54,16 +55,17 @@ class ViewOrderScreen extends React.Component {
             showFilterModal: false,
             openOrders: [],
             deliveredOrders: []
+            
         }
     }
 
     getOrders = async () => {  
             try {
-                console.log('RUNNING GET ORDERS');
+                // console.log('RUNNING GET ORDERS');
                 this.setState({ getOrdersLoading: true })
 
                 const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
-                console.log(orders);
+                // console.log(orders);
                 const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders.slice(0,10), supplierFilter: this.state.supplierFilter})           
                 this.setState({
                     orderList: orders.slice(0,20),
@@ -73,7 +75,7 @@ class ViewOrderScreen extends React.Component {
                 })
             }
             catch (error) {
-                console.log(error)               
+                // console.log(error)               
                     //show errors if item is not loading, & try again
                     this.setState({
                         banner: {
@@ -94,7 +96,7 @@ class ViewOrderScreen extends React.Component {
     }
 
     handleFilterUpdate = (newSupplier) => {
-        console.log('running filter update')
+        // console.log('running filter update')
         const index = this.state.supplierFilter.indexOf(newSupplier)
         let newSupplierFilter = []
         if (index === -1) {
@@ -112,7 +114,7 @@ class ViewOrderScreen extends React.Component {
             openOrders: openOrders,
             deliveredOrders: deliveredOrders
         })
-        console.log(this.state.supplierFilter)
+        // console.log(this.state.supplierFilter)
     }  
 
 
@@ -128,28 +130,44 @@ class ViewOrderScreen extends React.Component {
             if (order.status === 'Delivered') {
                 deliveredOrders.push(order)
             } else {
-                openOrders.push(order)
-               
+                openOrders.push(order)               
             }
         }
         })
 
-        console.log('SUPPLIER FILTER');
-        console.log(supplierFilter);
+        // console.log('SUPPLIER FILTER');
+        // console.log(supplierFilter);
 
-        console.log('OPEN ORDERS')
-        console.log(openOrders)
+        // console.log('OPEN ORDERS')
+        // // console.log(openOrders)
 
-        console.log('DELIVERED ORDERS')
-        console.log(deliveredOrders)
+        // console.log('DELIVERED ORDERS')
+        // console.log(deliveredOrders)
 
         return {openOrders: openOrders, deliveredOrders: deliveredOrders}
     }
 
+    async componentdidUpdate(prevProps, prevState) {
 
+        console.log('ORDER SCREEN COMP DID UPDATE');
+
+        if (prevProps.masterCart.length !== this.props.masterCart.length ) {
+            await this.getOrders()
+        }
+
+    }
 
     async componentDidMount() {
+        console.log('ORDER comp did mount');
         await this.getOrders()
+
+        this.props.navigation.addListener(
+            'didFocus',
+            () => {
+            console.log('ORDER running focus action');
+              this.getOrders()
+            }
+          );
 
     }
 
@@ -220,7 +238,7 @@ class ViewOrderScreen extends React.Component {
                                     selected = true;
                                 }
                                 return (
-                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
+                                    <TouchableOpacity onPress={() => this.handleFilterUpdate(supplier)} style={[commonStyles.row, { paddingVertical: 3 }]}>
 
                                         <RadioButton
                                             //value={label}
@@ -233,7 +251,7 @@ class ViewOrderScreen extends React.Component {
                                         <View>
                                             <Text style={commonStyles.text}>{supplier}</Text>
                                         </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 )
                             })
                             }

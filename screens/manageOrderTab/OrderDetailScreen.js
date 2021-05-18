@@ -51,8 +51,8 @@ export class OrderDetailScreen extends React.Component {
 
     //pull orderID from route params
 
-    console.log('ROUTE PARAMS')
-    console.log(props.route.params)
+    // console.log('ROUTE PARAMS')
+    // console.log(props.route.params)
     const { navigation } = this.props
     // const orderId = navigation.getParams('orderId'),
     // const orderId = 'arvindsdeli-sysco-2021.3.17.20.33-[["sysco-61208",3],["sysco-741520",2]]'
@@ -78,16 +78,17 @@ export class OrderDetailScreen extends React.Component {
     try {
       this.setState({ setOrderLoading: true })
       const response = await setOrder({ update: update, id: this.state.orderId })
-      console.log(response)
+      // console.log(response)
       const newOrder = { ...this.state.order, ...update }
       this.setState({
         setOrderLoading: false,
         order: newOrder,
         banner: { show: true, type: 'success', message: 'Order ' + Object.keys(update)[0] + ' updated!' }
       })
+
     }
     catch (error) {
-      console.log(error)
+      // console.log(error)
       this.setState({
         banner: { show: true, type: 'error', message: 'Issue updating order. Please reach out to support if error persists.' },
         setOrderLoading: false,
@@ -101,14 +102,14 @@ export class OrderDetailScreen extends React.Component {
     try {
       this.setState({ getOrderLoading: true })
       const orders = await getOrders({ query: { id: this.state.orderId } })
-      console.log(orders)
+      // console.log(orders)
       this.setState({
         order: orders[0],
         getOrderLoading: false,
       })
     }
     catch (error) {
-      console.log(error)
+      // console.log(error)
       this.setState({
         getOrderLoading: false,
         getOrderError: true
@@ -121,7 +122,7 @@ export class OrderDetailScreen extends React.Component {
   }
 
   reorderAllItems = () => {
-    console.log('running reorder all items')
+    // console.log('running reorder all items')
     let i = 0;
     try {
       this.state.order.cart.forEach((item) => {
@@ -132,7 +133,7 @@ export class OrderDetailScreen extends React.Component {
         banner: { show: true, type: 'success', message: 'All ' + i + ' item(s) added to cart!' }
       })
     } catch (err) {
-      console.log(err)
+      // console.log(err)
       this.setState({
         banner: { show: true, type: 'error', message: 'Error adding all items to cart. Only added ' + i + ' items to cart' }
       })
@@ -149,10 +150,11 @@ export class OrderDetailScreen extends React.Component {
   }
 
   bannerAction = (action, actionParam) => {
-    console.log('BANNER ACTION RUNNING');
+    // console.log('BANNER ACTION RUNNING');
     switch (action) {
       case 'navigateToCart':
-        console.log('NAVIGATE TO CART RUNNING');
+   
+      // console.log('NAVIGATE TO CART RUNNING');
         this.props.navigation.navigate('Tabs',{screen:'CartScreen'})
     }
     
@@ -178,6 +180,9 @@ export class OrderDetailScreen extends React.Component {
     // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
     // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
     //console.log(order.selectedDeliveryDate,"date test")
+
+   let orderNumber = order.createdDate.toString()
+    orderNumber = orderNumber.slice(2, orderNumber.length-4)
     return (
       <>
         <ScrollView contentContainerStyle={[commonStyles.container, { paddingBottom: 60, }]}>
@@ -189,7 +194,7 @@ export class OrderDetailScreen extends React.Component {
               <View style={{ paddingHorizontal: 5 }}>
                 <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0, }]}>
                   <View style={{ width: '80%' }}>
-                    <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>Order #425</Text>
+                    <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>{'Order #'+orderNumber}</Text>
                     <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplierDetail.displayName}</Text>
                   </View>
                   <Image source={{ uri: order.supplierDetail.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
@@ -227,7 +232,7 @@ export class OrderDetailScreen extends React.Component {
           }
           <AppButton
             text={'Contact '+order.supplierDetail.displayName}
-            onPress={() => Linking.openURL('mailto:'+account.supplierContact[order.supplierId].contact)}
+            onPress={() => Linking.openURL('mailto:'+this.props.account.supplierContact[order.supplierId].contact)}
             style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
             textStyle={{ color: colors.blue.primary }} />
         </ScrollView>

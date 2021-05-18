@@ -66,10 +66,10 @@ export const getOrders = async({query, sort}) => {
 
 
 export const placeOrder = async({supplierOrder})  => {
-    console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder).replace(/#/g,"HTAG")))
+    console.log(NETLIFY+'placeOrder?supplierId='+supplierOrder.supplierId+'&accountId='+supplierOrder.accountId)
   
     for (let i = 0; i< apiTries; i++) {
-    const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder).replaceAll(/#/g,"HTAG")))
+    const returnval = await axios.get(NETLIFY+'placeOrder?supplierId='+supplierOrder.supplierId+'&accountId='+supplierOrder.accountId)
     
     if (returnval.status === 200 && returnval.data.orderSent) {       
         return returnval.data.orderSent   

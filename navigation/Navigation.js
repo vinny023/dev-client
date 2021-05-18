@@ -32,6 +32,7 @@ const Stack = createStackNavigator();
 
 const myScreenOptions = {
   headerRight: () => <CartButton />,
+  headerBackTitleVisible: false
 }
 const headerStyling = { backgroundColor:colors.background.light, elevation: 0, shadowOpacity: 0 }
 const titleStyle = { fontSize: sizes.s20 + 1, fontFamily: 'bold', color: colors.text, }
@@ -41,10 +42,10 @@ const PlaceOrderTab = () => {
     <OrderTabStack.Navigator
       screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle, }}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
-      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{ headerTitle: 'Browse Items', headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left' }} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center', }} />
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerRight: () => <CartButton /> }} />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null }} />
+      <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{ headerTitle: 'Browse Items', headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center',  headerBackTitleVisible: false}} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null,  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
     </OrderTabStack.Navigator>
@@ -54,9 +55,9 @@ const PlaceOrderTab = () => {
 const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle}}>
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton /> }} />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> }} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center' }} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false}} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center' ,  headerBackTitleVisible: false}} />
     </OrderTabStack.Navigator>
   )
 }
@@ -66,6 +67,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const Tabs = () => (
   <Tab.Navigator
+
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused }) => {
         let imageName;
@@ -80,7 +82,7 @@ const Tabs = () => (
         return <Image source={imageName} style={{ marginTop: 7, width: imageType === 'bag' ? 19 : 30, height: imageType === 'bag' ? 22 : 31 }} resizeMode={'contain'} />;
       },
     })}
-
+    animiationEnabled={true}
     tabBarPosition={'bottom'}
     tabBarOptions={{
       activeTintColor: colors.text,
