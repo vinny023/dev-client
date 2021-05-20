@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aanandacoumar.expo-v2"
     },
     "android": {
       "adaptiveIcon": {
@@ -46,7 +47,5 @@
         }
       ]
     }
-    
   }
-  
 }

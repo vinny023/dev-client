@@ -83,6 +83,7 @@ const Tabs = () => (
       },
     })}
     animiationEnabled={true}
+    screenOptions={{lazy: false}}
     tabBarPosition={'bottom'}
     tabBarOptions={{
       activeTintColor: colors.text,

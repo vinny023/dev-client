@@ -162,7 +162,7 @@ class ViewOrderScreen extends React.Component {
         await this.getOrders()
 
         this.props.navigation.addListener(
-            'didFocus',
+            'focus',
             () => {
             console.log('ORDER running focus action');
               this.getOrders()
