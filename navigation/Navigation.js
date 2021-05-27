@@ -74,16 +74,16 @@ const Tabs = () => (
         let imageType;
         if (route.name === 'Shop & Order') {
           imageType = 'bag'
-          imageName = focused ? require('../assets/shopping-bag-black.png') : require('../assets/shopping-bag.png');
+          imageName = focused ? "https://i.imgur.com/S2RIneB.png" : "https://i.imgur.com/5AHKW5g.png";
         } else if (route.name === 'Track & Manage') {
           imageType = 'truck'
-          imageName = focused ? require('../assets/truck-black.png') : require('../assets/truck-grey.png');
+          imageName = focused ? "https://i.imgur.com/6eYuijX.png" : "https://i.imgur.com/fjNoVGZ.png";
         }
-        return <Image source={imageName} style={{ marginTop: 7, width: imageType === 'bag' ? 19 : 30, height: imageType === 'bag' ? 22 : 31 }} resizeMode={'contain'} />;
+        return <Image source={{uri:imageName}} style={{ marginTop: 7, width: imageType === 'bag' ? 19 : 30, height: imageType === 'bag' ? 22 : 31 }} resizeMode={'contain'} />;
       },
     })}
     animiationEnabled={true}
-    screenOptions={{lazy: false}}
+    // screenOptions={{lazy: false}}
     tabBarPosition={'bottom'}
     tabBarOptions={{
       activeTintColor: colors.text,
@@ -95,7 +95,8 @@ const Tabs = () => (
       allowFontScaling: true,
       keyboardHidesTabBar: true,
       renderIndicator: () => null
-    }}>
+    }}
+    >
     <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
     <Tab.Screen name="Track & Manage" component={ManageOrderTab} />
   </Tab.Navigator>

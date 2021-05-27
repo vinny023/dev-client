@@ -16,9 +16,10 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
+	"ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aanandacoumar.expo-v2"
+      "bundleIdentifier": "com.getweys.truffle",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
