@@ -64,7 +64,7 @@ class ViewOrderScreen extends React.Component {
                 // console.log('RUNNING GET ORDERS');
                 this.setState({ getOrdersLoading: true })
 
-                const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
+                const orders = await getOrders({ query: { accountId: this.props.account.id }, sort: { createdDate: -1 } })
                 // console.log(orders);
                 const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders.slice(0,10), supplierFilter: this.state.supplierFilter})           
                 this.setState({
