@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-v2",
-    "slug": "expo-v2",
+    "name": "SupplyHero",
+    "slug": "SupplyHero",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -42,7 +42,7 @@
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
             "organization": "SupplyHero",
-            "project": "SupplyHero Client",
+            "project": "Mobile Ordering App",
             "authToken": "e3a3d149339743e2ae905c6dfc53c993adaad8d0754e4a8683dab6a2a97b2fdf"
           }
         }
