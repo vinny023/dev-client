@@ -91,7 +91,7 @@ const Tabs = () => (
       labelStyle: { fontSize: sizes.s13, fontFamily: 'medium', textTransform: 'none' },
       showLabel: true,
       showIcon: true,
-      tabStyle: { height: 60, paddingBottom: 10 },
+      tabStyle: { height: 80, paddingBottom: 30 },
       allowFontScaling: true,
       keyboardHidesTabBar: true,
       renderIndicator: () => null
