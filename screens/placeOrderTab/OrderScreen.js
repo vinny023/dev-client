@@ -54,6 +54,8 @@ export class OrderScreen extends React.Component {
         this.state.title = 'Order Guide'
       } else if (this.props.initialState === 'fullCatalog') {
         this.state.title = 'Browse Full Catalog'
+        this.state.initialFilter = [{ 'field': 'supplierDisplayName', 'comparison': ':', 'values': this.props.account.displaySuppliers.map(supplier => '"'+supplier+'"') }]
+        this.state.title = 'Full Catalog'
       }
     }
     //DEFAULT TO CATALOG - ****SWITCH BACK******
@@ -83,9 +85,7 @@ export class OrderScreen extends React.Component {
     // this.setProductList = this.setProductList.bind(this)
   }
 
-
   //HELPER METHODS
-
   setMode(newMode) {
     if (newMode === 'Order Guide') {
       this.setState({
@@ -94,7 +94,7 @@ export class OrderScreen extends React.Component {
       })
     } else if (newMode === 'Catalog') {
       this.setState({
-        initialFilter: [],
+        initialFilter: [{ 'field': 'supplierDisplayName', 'comparison': ':', 'values': this.props.account.displaySuppliers.map(supplier => '"'+supplier+'"') }],
         title: 'Browse Full Catalog'
       })
     }
@@ -196,8 +196,7 @@ export class OrderScreen extends React.Component {
       this.setState({ sort: [] })
     } else {
       this.setState({ sort: [newSort] })
-    }
-    
+    }    
 
     // let isNew = true;
     // let matchIndex = -1
@@ -348,10 +347,10 @@ export class OrderScreen extends React.Component {
                           <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setMode('Catalog')} />
                         }
 
-                        {
+                        {/*{
                           this.state.search  !== '' &&
                           <AppButton text="Clear Search" style={{ width:'100%',marginTop:0}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setSearch('')} />
-                        }
+                        }*/}
                         
                         {
                           this.state.filter.length > 0 &&

@@ -127,8 +127,8 @@ class ProductListItem extends React.Component {
             priceString = '$' + item.price.toFixed(2) + ' ($' + item.unitCost.toFixed(2) + ' / ' + item.units + ')'
         }
 
-        console.log(item);
-        console.log(priceString);
+        // console.log(item);
+        // console.log(priceString);
 
         if (!item.displayName || item.displayName === '') {
             return (
