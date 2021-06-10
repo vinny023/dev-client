@@ -35,15 +35,15 @@ const myScreenOptions = {
   headerBackTitleVisible: false
 }
 const headerStyling = { backgroundColor:colors.background.light, elevation: 0, shadowOpacity: 0 }
-const titleStyle = { fontSize: sizes.s20 + 1, fontFamily: 'bold', color: colors.text, }
+const titleStyle = { fontSize: sizes.s25 + 1, fontFamily: 'bold', color: colors.text,paddingLeft:10 }
 
 const PlaceOrderTab = () => {
   return (
     <OrderTabStack.Navigator
-      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle, }}>
+      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60}}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{ headerTitle: 'Browse Items', headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center',  headerBackTitleVisible: false}} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false}} />
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null,  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
@@ -57,7 +57,7 @@ const ManageOrderTab = () => {
     <OrderTabStack.Navigator screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle}}>
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false}} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'center' ,  headerBackTitleVisible: false}} />
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false}} />
     </OrderTabStack.Navigator>
   )
 }
@@ -91,7 +91,7 @@ const Tabs = () => (
       labelStyle: { fontSize: sizes.s13, fontFamily: 'medium', textTransform: 'none' },
       showLabel: true,
       showIcon: true,
-      tabStyle: { height: 80, paddingBottom: 30 },
+      tabStyle: { height: 80, paddingBottom: 40 },
       allowFontScaling: true,
       keyboardHidesTabBar: true,
       renderIndicator: () => null

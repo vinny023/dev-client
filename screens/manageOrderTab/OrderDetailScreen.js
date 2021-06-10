@@ -185,21 +185,23 @@ export class OrderDetailScreen extends React.Component {
     orderNumber = orderNumber.slice(2, orderNumber.length-4)
     return (
       <>
-        <ScrollView contentContainerStyle={[commonStyles.container, { paddingBottom: 60, }]}>
+      <View>
+      <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text,paddingLeft:20 }}>{'Order #'+orderNumber}</Text>
+      </View>
+        <ScrollView contentContainerStyle={[commonStyles.container, { paddingBottom: 80, }]}>
           <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
           {_.isEqual(this.state.order, {}) ?
             <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />
             :
             <View>
               <View style={{ paddingHorizontal: 5 }}>
-                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0, }]}>
+                <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 0,paddingVertical:0 }]}>
                   <View style={{ width: '80%' }}>
-                    <Text style={{ fontFamily: 'bold', fontSize: sizes.s25, color: colors.text }}>{'Order #'+orderNumber}</Text>
-                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular' }}>{supplierDetail.displayName}</Text>
+                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular', marginTop:-20}}>{supplierDetail.displayName}</Text>
                   </View>
                   <Image source={{ uri: order.supplierDetail.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
                 </View>
-                <View style={[commonStyles.row, { paddingBottom: 0,paddingTop:0 }]}>
+                <View style={[commonStyles.row, {paddingBottom: 0,marginTop:-40 }]}>
                   <Image source={TruckLogo} style={{ marginRight: 10,height: 20 }} />
                   {/* <Text style={{ fontSize: sizes.s19, fontFamily: 'medium', color: colors.text }}>{weekDays[orderDay-1]} - {orderDate}</Text> */}
                   <Text style={{ fontSize: sizes.s20, fontFamily: 'medium', color: colors.black.primary }}>{order.selectedDeliveryDate.day} - {order.selectedDeliveryDate.date}</Text>
