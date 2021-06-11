@@ -1,6 +1,7 @@
 import { colors, sizes } from ".";
 
 const commonStyles = {
+  headerTitle:{ fontSize: sizes.s25 + 1, fontFamily: 'bold', color: colors.text,paddingLeft:10 },
   container: {
     paddingTop: 10,
     paddingHorizontal: 20,
