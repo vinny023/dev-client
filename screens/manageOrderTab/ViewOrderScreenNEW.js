@@ -10,19 +10,16 @@ import AppButton from '../../components/Global/AppButton'
 import Modal from 'react-native-modal'
 import { Ionicons } from '@expo/vector-icons'
 import { RadioButton } from 'react-native-paper'
-
-
 const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
-    const orderTotal = order.cart.reduce((total, item) => total + item.price*item.quantity, 0) + order.deliveryFee
     return (
         <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 7, }]} >
             {/* <AppButton
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={{ uri: order.supplierDetail.logo }} style={{ width: 42, height: 42, marginRight: 10 }} />
+            <Image source={require('../../assets/woolco.png')} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
 
                 <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
@@ -32,9 +29,9 @@ const OrderButton = ({ order }) => {
             <View style={[commonStyles.row, styles.priceContainer]}>
                 
                 {order.orderTotal &&
-                    <View>
-                    <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-                    </View>
+                    <>
+                    <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${order.orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                    </>
                 }
             </View>
         </TouchableOpacity>
@@ -52,30 +49,21 @@ class ViewOrderScreen extends React.Component {
             getOrdersLoading: false,
             getOrdersError: false,
             banner: { show: false, type: '', message: '', buttonAction: {} },
-            showFilterModal: false,
-            openOrders: [],
-            deliveredOrders: []
-            
+            showFilterModal: false
         }
     }
 
     getOrders = async () => {  
             try {
-                // console.log('RUNNING GET ORDERS');
                 this.setState({ getOrdersLoading: true })
-
-                const orders = await getOrders({ query: { accountId: this.props.account.id }, sort: { createdDate: -1 } })
-                // console.log(orders);
-                const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders.slice(0,10), supplierFilter: this.state.supplierFilter})           
+                const orders = await getOrders({ query: { accountId: this.props.account.accountId }, sort: { createdDate: -1 } })
                 this.setState({
-                    orderList: orders.slice(0,20),
+                    orderList: orders,
                     getOrderLoading: false,
-                    openOrders: openOrders,
-                    deliveredOrders: deliveredOrders
                 })
             }
             catch (error) {
-                // console.log(error)               
+                console.log(error)               
                     //show errors if item is not loading, & try again
                     this.setState({
                         banner: {
@@ -96,86 +84,36 @@ class ViewOrderScreen extends React.Component {
     }
 
     handleFilterUpdate = (newSupplier) => {
-        // console.log('running filter update')
+        console.log('running filter update')
         const index = this.state.supplierFilter.indexOf(newSupplier)
-        let newSupplierFilter = []
         if (index === -1) {
-            newSupplierFilter = [...this.state.supplierFilter, newSupplier]            
+            this.setState({
+                supplierFilter: [...this.state.supplierFilter, newSupplier]
+            })
         } else {
-            newSupplierFilter = [...this.state.supplierFilter]
+            let newSupplierFilter = [...this.state.supplierFilter]
             newSupplierFilter.splice(index, 1)
             this.setState({
                 supplierFilter: newSupplierFilter
             })
         }
-        const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: this.state.orderList, supplierFilter: newSupplierFilter})           
-        this.setState({
-            supplierFilter: newSupplierFilter,
-            openOrders: openOrders,
-            deliveredOrders: deliveredOrders
-        })
-        // console.log(this.state.supplierFilter)
-    }  
-
-
-    setFilteredOrders = ({orderList, supplierFilter}) => {
-         
-
-        let openOrders = []
-        let deliveredOrders = []
-        
-        //group orders between open & completed, which sits on top of sorting 
-        orderList.forEach(order => {
-            if (supplierFilter.indexOf(order.supplierId) !== -1 || supplierFilter.length === 0) {
-            if (order.status === 'Delivered') {
-                deliveredOrders.push(order)
-            } else {
-                openOrders.push(order)               
-            }
-        }
-        })
-
-        // console.log('SUPPLIER FILTER');
-        // console.log(supplierFilter);
-
-        // console.log('OPEN ORDERS')
-        // // console.log(openOrders)
-
-        // console.log('DELIVERED ORDERS')
-        // console.log(deliveredOrders)
-
-        return {openOrders: openOrders, deliveredOrders: deliveredOrders}
+        console.log(this.state.supplierFilter)
     }
 
-    async componentdidUpdate(prevProps, prevState) {
+    //filters - status, supplier  
 
-        console.log('ORDER SCREEN COMP DID UPDATE');
 
-        if (prevProps.masterCart.length !== this.props.masterCart.length ) {
-            await this.getOrders()
-        }
-
-    }
 
     async componentDidMount() {
-        console.log('ORDER comp did mount');
+        //console.log("COMPONENT DID MOUNT")
         await this.getOrders()
-
-        this.props.navigation.addListener(
-            'focus',
-            () => {
-            console.log('ORDER running focus action');
-              this.getOrders()
-            }
-          );
-
     }
 
 
     render() {
 
-        const { supplierFilter, deliveredOrders, openOrders, orderList, showFilterModal } = this.state
-
+        const { supplierFilter, orderList, showFilterModal } = this.state
+         console.log('VIEW OREDER SCREEN RENDERED')
         //filter by supplierFilter.
         // let renderOrderList = [...orderList]
         // if (supplierFilter.length > 0) {
@@ -184,8 +122,12 @@ class ViewOrderScreen extends React.Component {
 
         // console.log('FILTERED LIST')
         // console.log(renderOrderList)
+
         //group orders between open & completed, which sits on top of sorting 
- 
+        let renderOrderList=[]   
+        let deliveredOrders = []
+        let openOrders = []
+
         // renderOrderList.forEach(order => {
         //     if (order.status === 'Delivered') {
         //         deliveredOrders.push(order)
@@ -231,14 +173,14 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <View style={[commonStyles.card, { padding: 5,marginTop:7 }]}>
                             {!!this.props.account.activeSuppliers && this.props.account.activeSuppliers.map(supplier => {
-                                // console.log(supplier)
+                                console.log(supplier)
                                 //CHECK IF SELECTED
                                 let selected = false;
                                 if (supplierFilter.indexOf(supplier) !== -1) {
                                     selected = true;
                                 }
                                 return (
-                                    <TouchableOpacity onPress={() => this.handleFilterUpdate(supplier)} style={[commonStyles.row, { paddingVertical: 3 }]}>
+                                    <View style={[commonStyles.row, { paddingVertical: 3 }]}>
 
                                         <RadioButton
                                             //value={label}
@@ -251,14 +193,14 @@ class ViewOrderScreen extends React.Component {
                                         <View>
                                             <Text style={commonStyles.text}>{supplier}</Text>
                                         </View>
-                                    </TouchableOpacity>
+                                    </View>
                                 )
                             })
                             }
                         </View>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
-                            <AppButton text="Apply" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
+                            <AppButton text="APPLY" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
                         </View>
                     </View>
                 </Modal>
