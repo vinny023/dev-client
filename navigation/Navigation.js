@@ -26,28 +26,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { syncCartStateToDB } from '../redux/firebaseActions'
 import { useDispatch } from 'react-redux';
 import { db } from '../firebaseConfig';
+import CBack from '../components/Global/CBack';
 
 const OrderTabStack = createStackNavigator();
 const Stack = createStackNavigator();
 
 const myScreenOptions = {
   headerRight: () => <CartButton />,
-  headerLeft:()=> (<Image source={require('../assets/truck.png')} style={{width:30,height:20}} />),
+  headerLeft:()=> (<CBack />),
   headerBackTitleVisible: false
 }
 const headerStyling = { backgroundColor:colors.background.light, elevation: 0, shadowOpacity: 0,}
 const titleStyle = { fontSize: sizes.s25 + 1, fontFamily: 'bold', color: colors.text,paddingLeft:10, }
-const arrowStyles={position:'absolute',top:-5,bottom:60,left:18,}
+const arrowStyles={position:'absolute',top:-5,bottom:60,left:18}
 const PlaceOrderTab = () => {
   return (
     <OrderTabStack.Navigator
       screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerTitle:"Browse Items", headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<Image source={require('../assets/back.png')} style={{width:20,height:18}} resizeMode="contain" />),
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<CBack/>),
 }} />
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerTitleAlign: 'left',  headerRight: () => <CartButton />,  headerBackTitleVisible: false,headerLeft:()=> (<Image source={require('../assets/back.png')} style={{width:20,height:18}} resizeMode="contain" />) }}  />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null,  headerBackTitleVisible: false,headerLeft:()=> (<Image source={require('../assets/back.png')} style={{width:20,height:18}} resizeMode="contain" />) }} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerTitleAlign: 'left',  headerRight: () => <CartButton />,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }}  />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
     </OrderTabStack.Navigator>
@@ -59,8 +60,8 @@ const ManageOrderTab = () => {
     <OrderTabStack.Navigator 
     screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<Image source={require('../assets/back.png')} style={{width:20,height:18}} resizeMode="contain" />)}} /> 
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false,headerLeft:()=> (<Image source={require('../assets/back.png')} style={{width:20,height:18}} resizeMode="contain" />)}} />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} /> 
+      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} />
     </OrderTabStack.Navigator>
   )
 }
