@@ -42,7 +42,7 @@ const arrowStyles={position:'absolute',top:-5,bottom:60,left:18}
 const PlaceOrderTab = () => {
   return (
     <OrderTabStack.Navigator
-      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
+      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:70,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerTitle:"Browse Items", headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<CBack/>),
