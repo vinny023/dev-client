@@ -280,7 +280,7 @@ export class SupplierCart extends React.Component {
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
                         </TouchableOpacity>
-                        {(!!this.props.supplierDetail && !!this.props.supplierOrder && !!deliveryFee && !!orderTotal) ?
+                        {(!!this.props.supplierDetail && !!this.props.supplierOrder && (!!deliveryFee || deliveryFee === 0) && !!orderTotal) ?
                             <View style={[commonStyles.card]} >
                                 {/* <View style={styles.row}>
                                     <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
