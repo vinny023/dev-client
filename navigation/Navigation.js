@@ -42,13 +42,13 @@ const arrowStyles={position:'absolute',top:-5,bottom:60,left:18}
 const PlaceOrderTab = () => {
   return (
     <OrderTabStack.Navigator
-      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:70,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
+      screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:90,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerTitle:"Browse Items", headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<CBack/>),
 }} />
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerTitleAlign: 'left',  headerRight: () => <CartButton />,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }}  />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }} />
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: 'Order Details',  headerTitleAlign: 'left',  headerRight: () => <CartButton /> , headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
     </OrderTabStack.Navigator>
@@ -58,9 +58,9 @@ const PlaceOrderTab = () => {
 const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator 
-    screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
+    screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:90,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerTitleAlign: 'left', headerBackTitleVisible: false }} />
-      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} /> 
+      <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: 'Order Details',  headerTitleAlign: 'left', headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} /> 
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} />
     </OrderTabStack.Navigator>
   )
