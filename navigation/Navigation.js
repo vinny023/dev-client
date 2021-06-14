@@ -59,7 +59,7 @@ const ManageOrderTab = () => {
   return (
     <OrderTabStack.Navigator 
     screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:60,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
-      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerBackTitleVisible: false }} />
+      <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerTitleAlign: 'left', headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: null, headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} /> 
       <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} />
     </OrderTabStack.Navigator>

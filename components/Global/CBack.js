@@ -7,7 +7,7 @@ export default function CBack() {
 
     return (
         <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <Image source={require('../../assets/back.png')} style={{ width: 30, height: 20,marginBottom:10}} resizeMode="contain" />
+            <Image source={require('../../assets/back.png')} style={{ width: 30, height: 20,marginVertical:-10}} resizeMode="contain" />
         </TouchableOpacity>
     )
 }
