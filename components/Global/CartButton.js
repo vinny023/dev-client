@@ -10,7 +10,7 @@ export function CartButton({ masterCart }) {
     return (
         <TouchableOpacity
             style={styles.cartButtonContainer}
-            onPress={() => navigation.navigate('CartScreen')}
+            onPress={() => navigation.navigate('Checkout', { screen: 'CartScreen' })}
             
         >
             <Image

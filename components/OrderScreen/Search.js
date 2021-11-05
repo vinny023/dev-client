@@ -14,7 +14,7 @@ const client = algoliasearch(
     ALGOLIA_API_KEY
   );
 
-  const index = client.initIndex('prod_Products')
+  const index = client.initIndex(ALGOLIA_INDEX)
 
 const updateFilterQuery = ({filter: filterInput}) => {
     // console.log('RUNNING UPDATE FILTLER QUERY');

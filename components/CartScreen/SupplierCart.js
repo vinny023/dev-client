@@ -6,12 +6,11 @@ import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from '../Global/AppButton';
 // import {placeOrder} from '../../apis/apis'
 import ProductList from '../Global/ProductList'
-import OrderTotal from '../Global/OrderTotal'
+import OrderTotal from './OrderTotal.js'
 import { RadioButton } from 'react-native-paper';
 import Modal from 'react-native-modal'
 import { createIconSetFromFontello, Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
-
 
 class SpecialNotesBox extends React.Component {
     constructor(props) {
@@ -110,12 +109,14 @@ export class SupplierCart extends React.Component {
 
     constructor(props) {
         super(props)
+
         this.state = {
             placingOrder: false,
             orderPlaced: false,
             placeOrderError: false,
             toggleDateFilter: false,
             toggleNotesFilter: false,
+            supplierChanging: false,
         }
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
@@ -129,7 +130,8 @@ export class SupplierCart extends React.Component {
     updateOrderDetails = ({ update }) => {
         //console.log('Running update order details')
         //console.log(update)
-        this.props.updateOrderDetails({ supplierId: this.props.supplierDetail.id, update: update })
+        this.props.updateOrderDetails({ supplierId: this.props.masterCart[this.props.index].id, update: update })
+
     }
 
     hideNotesModal = () => {
@@ -142,17 +144,12 @@ export class SupplierCart extends React.Component {
 
     setDefaultDelivery = () => {
 
-        //console.log('RUNNING DEFAULT DELIVERY');
-        //console.log(this.props.supplierOrder)
         if (this.props.supplierDetail) {
             const { selectedDeliveryDate, selectedDeliveryTimeSlot } = this.props.supplierOrder
 
             const deliveryDays = createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail })
-            //console.log('DELIVERY DAYS')
-            //console.log(deliveryDays)
 
             let update = {}
-
 
             if (!selectedDeliveryDate && !selectedDeliveryTimeSlot) {
                 update = {
@@ -191,37 +188,107 @@ export class SupplierCart extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        //console.log('COMPONTENT DID UPDATE')
-        //console.log(this.props)
-        if (!_.isEqual(prevProps.supplierDetail, this.props.supplierDetail)) {
-            this.setDefaultDelivery()
-        }
 
-    }
+
+        // if there was a checkout:
+
+        // console.log('COMPONENT DID UPDATE');
+        // console.log(this.props.masterCart[this.props.index].cart[0].supplierId);
+
+        // console.log(prevProps)
+        // console.log(prevProps.mastercart[prevProps.index].cart[0].supplierId);
+
+        // if (!!prevProps.masterCart) {
+        //     if (!!prevProps.masterCart[prevProps.index].cart) {
+
+
+        //update Flastlist with new supplier change OR if list of products has changed
+            if (this.props.masterCart[this.props.index].cart[0].supplierId !== prevProps.masterCart[prevProps.index].cart[0].supplierId ||
+                this.props.masterCart[this.props.index].cart.length !== prevProps.masterCart[prevProps.index].cart.length
+                ) {
+                this.setState({
+                    supplierChanging: true
+                })
+                setTimeout(() => {
+                    this.setState({supplierChanging: false})
+                }, 1)
+                    
+            } 
+        }
+        
+
+        shouldComponentUpdate(prevProps, prevState) {
+
+            // console.log('Supplier Cart CARTS -  '+this.props.masterCart[this.props.index].cart[0].supplierId);
+            // console.log(this.props.masterCart[this.props.index]);
+            // console.log(prevProps.masterCart[prevProps.index]);
+
+            // console.log(!_.isEqual(this.props.masterCart[this.props.index],prevProps.masterCart[prevProps.index]));
+            
+            // return true
+
+            return((this.props.masterCart[this.props.index].cart.length !== prevProps.masterCart[prevProps.index].cart.length ) ||
+            !_.isEqual(this.state, prevState))
+
+            // return (!_.isEqual(this.props.masterCart[this.props.index],prevProps.masterCart[prevProps.index]) || 
+            //!_.isEqual(this.state, prevState)) 
+        
+        }
+    
+        // console.log('Supplier Cart comp. did update');
+        // console.log(prevProps.masterCart);
+        // console.log(this.props.masterCart);
+        // console.log(_.isEqual(prevProps.supplierOrder, this.props.supplierOrder));
+        // //console.log('COMPONTENT DID UPDATE')
+        // //console.log(this.props)
+  
+        // const prevOrder = prevProps.masterCart[prevProps.index]
+        // const thisOrder = this.props.masterCart[this.props.index]
+
+        // if (!_.isEqual(prevOrder, thisOrder)) {
+
+        //     // this.setState({})
+        
+        // }
+
     componentDidMount() {
         //console.log('COMPONTENT DID MOUNT')
         //console.log(this.props)
-        this.setDefaultDelivery()
+        // this.setDefaultDelivery()
 
     }
 
     render() {
-        //console.log('RENDER SupplierCART')
-        //console.log(this.props)
+
+        console.log('RENDER SupplierCART')
+        console.log(this.props.masterCart);
+        console.log(this.props.index);
+
+        const supplierOrder = this.props.masterCart[this.props.index]
+
+        let orderTotal = 0
+        supplierOrder.cart.forEach(item => item.price ? orderTotal = orderTotal + item.price*item.quantity : orderTotal = orderTotal)
+        console.log('ORDER TOTAL');
+        console.log(orderTotal);
+
+        // console.log(supplierOrder);
+
+        // console.log(supplierOrder.cart);
+
         const { navigation, index } = this.props
         let checkoutString = 'Checkout'
 
         let { shippingTimeSlots } = {}
 
-        let deliveryFee, orderTotal
-        if (this.props.supplierDetail) {
-            ({deliveryFee} = this.props.supplierDetail)            
-            checkoutString = 'Checkout '+this.props.supplierDetail.displayName
-        }
+        // let deliveryFee, orderTotal
+        // if (this.props.supplierDetail) {
+        //     ({deliveryFee} = this.props.supplierDetail)            
+        //     checkoutString = 'Checkout '+this.props.supplierDetail.displayName
+        // }
         
-        if (this.props.supplierOrder) {            
-            ({ orderTotal } = this.props.supplierOrder)            
-        }
+        // if (this.props.supplierOrder) {            
+        //     ({ orderTotal } = this.props.supplierOrder)            
+        // }
         
         //console.log('DELIVERY FEE');
         //console.log(deliveryFee);
@@ -234,31 +301,34 @@ export class SupplierCart extends React.Component {
         return (
             <View>
 
-                {this.props.supplierOrder.placed ?
+                {!supplierOrder ?
                     <></>
                     : <View style={{ paddingBottom: 20, borderRadius: 10 }}>
-                        {!this.props.supplierDetail ?
+                        {!supplierOrder ?
                             <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, }} /> :
-                            this.props.supplierDetail.logo ?
+                            supplierOrder.logo ?
                                 <View style={{ padding: 10 }}>
                                     {/* <Image
                                         source={{ uri: this.props.supplierDetail.logo }}
                                         style={{ width: 100, height: 100 }}
                                     />
                                     <Text >{this.props.supplierOrder.supplierId}</Text> */}
-                                    <Text style={styles.text}>{this.props.supplierDetail.displayName}</Text>
+                                    <Text style={styles.text}>{supplierOrder.displayName}</Text>
                                 </View> : <></>
                         }
-                        <View style={commonStyles.card}>
-                            <ProductList productList={this.props.supplierOrder.cart} navigation={navigation} listType="noFlatList" />
+
+                        {this.state.supplierChanging ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, }} />:
+                        <View style={commonStyles.cartCard}>
+                            <ProductList productList={supplierOrder.cart} navigation={navigation}/>
                         </View>
+                        }
                         {/* ----------- Set Delivery Card ---------*/}
                         <TouchableOpacity onPress={() => this.setState({ toggleDateFilter: true })} style={[commonStyles.card]}>
                             <View style={[styles.row, { paddingBottom: 3 }]}>
                                 <Text style={[styles.heading]}>Delivery</Text>
-                                {this.props.supplierOrder.selectedDeliveryDate &&
+                                {supplierOrder.selectedDeliveryDate &&
                                     <>
-                                        <Text style={styles.boldText}>{this.props.supplierOrder.selectedDeliveryDate.day} - {this.props.supplierOrder.selectedDeliveryDate.date}</Text>
+                                        <Text style={styles.boldText}>{supplierOrder.selectedDeliveryDate.day} - {supplierOrder.selectedDeliveryDate.date}</Text>
                                     </>
                                 }
                             </View>
@@ -266,9 +336,9 @@ export class SupplierCart extends React.Component {
                                 <TouchableOpacity >
                                     <Text style={{ color: colors.blue.primary, fontSize: sizes.s14, fontFamily: 'regular' }}>Tap to Edit</Text>
                                 </TouchableOpacity>
-                                {this.props.supplierOrder.selectedDeliveryTimeSlot &&
+                                {supplierOrder.selectedDeliveryTimeSlot &&
                                     <>
-                                        <Text style={commonStyles.lightText}>{this.props.supplierOrder.selectedDeliveryTimeSlot}</Text>
+                                        <Text style={commonStyles.lightText}>{supplierOrder.selectedDeliveryTimeSlot}</Text>
                                     </>
                                 }
                             </View>
@@ -280,52 +350,40 @@ export class SupplierCart extends React.Component {
                                 <Ionicons name="chevron-forward" color="#191C1F" />
                             </View>
                         </TouchableOpacity>
-                        {(!!this.props.supplierDetail && !!this.props.supplierOrder && (!!deliveryFee || deliveryFee === 0) && !!orderTotal) ?
-                            <View style={[commonStyles.card]} >
-                                {/* <View style={styles.row}>
-                                    <Text >{deliveryFee > 0 ? "Subtotal" : "Total"} : </Text>
-                                    <Text>{orderTotal - deliveryFee}</Text>
-                                </View> */}
-                                {/*   {deliveryFee > 0 ?
-                                    <View>
-                                         <View style={styles.row}>
-                                            <Text style={styles.lightText}>Delivery Fee: </Text>
-                                            <Text style={styles.boldText}>{this.props.supplier.deliveryFee} </Text>
-                                        </View>
-                                        <View style={styles.row}>
-                                            <Text style={styles.lightText}>Total: </Text>
-                                            <Text style={styles.boldText}>{this.props.supplier.orderTotal} </Text>
-                                        </View>
-                                        <View style={styles.row}>
-                                            <Text style={styles.lightText}>Add </Text>
-                                            <Text style={styles.boldText}>{this.props.supplierDetail.orderMinimum - tiorderTotal - deliveryFee}</Text>
-                                        </View> 
-                                       
-                                    </View> : <></>
-                                }*/}
+            
+                   
+                              
 
-                                <View>
+
+                            {orderTotal > 0 && supplierOrder.displayName ?
+                                <View style={[commonStyles.card]} >
+                              <View>
                                     <View style={[styles.row]}>
                                         <Text style={styles.heading}>Minimum </Text>
-                                        <Text style={styles.boldText}>${this.props.supplierDetail.orderMinimum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.boldText}>${supplierOrder.orderMinimum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Subtotal</Text>
-                                        <Text style={styles.boldText}>${(orderTotal - deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.boldText}>${(orderTotal - supplierOrder.deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Delivery fee</Text>
-                                        <Text style={styles.boldText}>${deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                        <Text style={styles.boldText}>${supplierOrder.deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.heading}>Total</Text>
                                         <Text style={styles.boldText}>${orderTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                     </View>
                                 </View>
-                            </View> : <></>
-                        }
+                                </View>
+                             : <></>
+                            
+                            }
+                         
+                            
+            
                         {/*-------- Select Delivery Modal --------- */}
-                        {!this.props.supplierDetail ?
+                        {!supplierOrder  ? //if account details & supplierdetails have been attached to order
                             <></>
                             :
                             // <ActivityIndicator size="small" color={colors.blue.primary} style={{ flex: 1, alignSelf: 'center' }} /> :
@@ -351,8 +409,8 @@ export class SupplierCart extends React.Component {
                                         </View>
                                         <Text style={styles.heading}>Select Day</Text>
                                         <View style={[commonStyles.card, { padding: 5, marginTop: 7, }]}>
-                                            {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...this.props.supplierDetail }).map(val => {
-                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryDate && _.isEqual(this.props.supplierOrder.selectedDeliveryDate, val) ? '(Selected)' : '')
+                                            {createDaySelection({ DoW: this.props.supplierDeliverySettings.DoW, ...supplierOrder }).map(val => {
+                                                const label = 'O' + (supplierOrder.selectedDeliveryDate && _.isEqual(supplierOrder.selectedDeliveryDate, val) ? '(Selected)' : '')
                                                 return (
                                                     <TouchableOpacity onPress= {() => this.updateOrderDetails({ update: { selectedDeliveryDate: val } })} style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
@@ -375,7 +433,7 @@ export class SupplierCart extends React.Component {
                                         <Text style={styles.heading}>Select Time</Text>
                                         <View style={[commonStyles.card, { padding: 5, marginTop: 7 }]}>
                                             {this.props.supplierDeliverySettings.windows.map(val => {
-                                                const label = 'O' + (this.props.supplierOrder.selectedDeliveryTimeSlot && this.props.supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
+                                                const label = 'O' + (supplierOrder.selectedDeliveryTimeSlot && supplierOrder.selectedDeliveryTimeSlot === val ? '(Selected)' : '')
                                                 return (
                                                     <View style={[commonStyles.row, { paddingVertical: 3 }]}>
                                                         <RadioButton
@@ -406,7 +464,7 @@ export class SupplierCart extends React.Component {
                             isVisible={this.state.toggleNotesFilter}
 
                         >
-                            <SpecialNotesBox hideNotesModal={this.hideNotesModal} updateOrderDetails={this.updateOrderDetails} specialNotes={this.props.supplierOrder.specialNotes} />
+                            <SpecialNotesBox hideNotesModal={this.hideNotesModal} updateOrderDetails={this.updateOrderDetails} specialNotes={supplierOrder.specialNotes} />
                         </Modal>
                     </View>
                 }
@@ -442,6 +500,14 @@ export class SupplierCart extends React.Component {
     }
 }
 
+const mapStateToProps = state => {
+    return (
+        {
+            masterCart: state.cartState.masterCart,
+        }
+    )
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         removeOrderedCart: supplierId => dispatch(actions.removeOrderedCart(supplierId)),
@@ -449,7 +515,7 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SupplierCart)
+export default connect(mapStateToProps, mapDispatchToProps)(SupplierCart)
 const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',

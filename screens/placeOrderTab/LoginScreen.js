@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text, Button, TextInput } from 'react-native';
+import { View, Text, Button, TextInput,} from 'react-native';
 import Banner from '../../components/Global/Banner'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
+import {getLastAction} from '../../redux/store'
 import firebaseApp from '../../firebaseConfig'
 import * as actions from '../../redux/actions.js'
 import * as data from '../../databaseMock'
@@ -12,8 +13,13 @@ import _ from 'lodash'
 import AppButton from '../../components/Global/AppButton';
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { compress, decompress } from 'compress-json'
 
 let shouldWrite = false;
+
+let justWrote = false;
+
+let lastWriteTime = 0;
 
 
 const syncStore = ({ accountId }) => {
@@ -33,17 +39,54 @@ const syncStore = ({ accountId }) => {
     //WRITE CHANGES TO FIREBASE
     try {
     store.subscribe(() => {
-        if (shouldWrite) {
+
+        
+        console.log('JUST WROTE BEFORE CART WRITE');
+        console.log(justWrote);
+
+
+        let currentWriteTime = new Date()
+        currentWriteTime = currentWriteTime.getTime()
+        // console.log('CURRENT WRITE TIME');
+        // console.log(currentWriteTime);
+        // console.log(lastWriteTime);
+        // console.log(currentWriteTime - lastWriteTime);
+
+        let lastAction = getLastAction()
+        console.log('LAST ACTION');
+        console.log(lastAction);
+
+        const storeHold = store.getState()
+
+        if ((lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
+            || shouldWrite && currentWriteTime - lastWriteTime > 5000) && storeHold.cartState.masterCart.length > 0) {
         // console.log('writing to firebase')
         // console.log(store.getState())
         // console.log(JSON.parse(JSON.stringify(store.getState())))
         
+        // console.log('PRE COMPRESSED STATE IN');
+          // console.log(store.getState());
+        // console.log('COMPRESSED STATE IN');
+        // console.log(JSON.stringify(compress(store.getState())));
+            
+            console.log('WRITING TO FIREABSE');
 
             firebaseApp.database().ref('customers/' + accountId).set({
-                state: JSON.parse(JSON.stringify(store.getState()))
+                // state: JSON.parse(JSON.stringify(store.getState()))
+                state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold)))) //remove undefines and compress
             })
+
+            justWrote = true;
+
+            // console.log('JUST WROTE AFTER CART WRITE');
+            // console.log(justWrote);
+
+            lastWriteTime = currentWriteTime
+
         }
     })
+
+   
     }
     catch (error) {
         // console.log('non-critical firebase error')
@@ -56,16 +99,37 @@ const syncStore = ({ accountId }) => {
 
         //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
         //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) { 
+
+        console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
+        console.log(justWrote);
+
+        if(!justWrote) {
+
+            console.log('running update script');
+
         if (!data.val() || !data.val().state) {
             return { error: 500 };
         }
 
+        // console.log('COMPRESSED STATE OUT');
+        // console.log(data.val().state);
+        let decompressedState = decompress(JSON.parse(data.val().state))
+        // console.log('DECOMPRESSED STATE');
+        // console.log(decompressedState);
+
         shouldWrite = false;
         store.dispatch({
             type: 'SYNC_CART',
-            payload: data.val()
+            payload: decompressedState
         })
         shouldWrite = true;
+
+    } else {
+        justWrote = false;
+    }
+
+    console.log('JUST WROTe AFTER CART CHANGE LSITEN');
+    console.log(justWrote);
     })
 } catch(error) {
     //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
@@ -73,6 +137,8 @@ const syncStore = ({ accountId }) => {
 }
 
 }
+
+let updateCounter = 0;
 
 const storeData = async (key, value) => {
     try {
@@ -179,7 +245,9 @@ export class LoginScreen extends React.Component {
         //SYNC ACCOUNT ID WITH FIREBASE         
         try {
            // this.setState({ banner: { show: true, type: 'error', message: 'Syncing Store' } })
-            syncStore({ accountId: accountId })
+            
+           
+           syncStore({ accountId: accountId })
         } catch {
             this.setState({
                 banner: {
@@ -230,7 +298,7 @@ export class LoginScreen extends React.Component {
     }
     async componentDidMount() {
         
-        this.autoLogin()
+         this.autoLogin()
     }
 
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Banner from '../../components/Global/Banner'
 import ProductList from '../../components/Global/ProductList'
 import OrderTotal from '../../components/Global/OrderTotal'
-import { View, Text, Button, ScrollView, Image, ActivityIndicator, Linking } from 'react-native';
+import { StyleSheet, View, Text, Button, ScrollView, Image, ActivityIndicator, Linking } from 'react-native';
 import { getOrders, setOrder } from '../../apis/apis'
 import * as actions from '../../redux/actions'
 import _ from 'lodash'
@@ -171,11 +171,18 @@ export class OrderDetailScreen extends React.Component {
   }
 
   render() {
-    // console.log('rendering item')
+    console.log('rendering orderdertailscreen')
     // console.log(this.state.order.cart)
     // console.log(this.state.order)
     const { order } = this.state
     const {supplierDetail} = order
+    // console.log('ORDER');
+    // console.log(order);
+
+    let total = 0;
+    order.cart.forEach(item => item.price ? total = total + item.price*item.quantity : total = total)
+    order.orderTotal = total+order.deliveryFee
+
     // let orderDay=await order.selectedDeliveryDate.date;
     // let orderDate=order.selectedDeliveryDate.date.slice(0,9)
     // let weekDays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
@@ -198,9 +205,9 @@ export class OrderDetailScreen extends React.Component {
                   <View style={{ width: '80%' }}>
       <Text style={{ fontFamily: 'bold', fontSize: sizes.s20, color: colors.text}}>{'Order #'+orderNumber}</Text>
 
-                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular'}}>{supplierDetail.displayName}</Text>
+                    <Text style={{ fontSize: sizes.s18, color: colors.blue.primary, fontFamily: 'regular'}}>{order.displayName}</Text>
                   </View>
-                  <Image source={{ uri: order.supplierDetail.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
+                  <Image source={{ uri: order.logo }} resizeMode='contain' style={{ width: 60, height: 60 }} />
                 </View>
                 <View style={[commonStyles.row, {paddingBottom: 0,paddingVertical:0 }]}>
                   <Image source={TruckLogo} style={{ marginRight: 10,height: 20 }} />
@@ -215,16 +222,49 @@ export class OrderDetailScreen extends React.Component {
                 </View>
                 <Status status={order.status} />
               </View>
-              <View style={commonStyles.card}>
+              <View style={commonStyles.cartCard}>
                 <ProductList
                   navigation={this.props.navigation}
                   productList={this.state.order.cart}
                   reorderNotification={this.reorderNotification}
-                  listType="noFlatList"
+                
                   reorderOnly={true}
                 />
               </View>
-              <OrderTotal order={order} />
+
+                            {order.orderTotal > 0 ?
+                              <View style={[commonStyles.card]} >
+                              <View>
+                                    <View style={[styles.row]}>
+                                        <Text style={styles.heading}>Minimum </Text>
+                                        <Text style={styles.boldText}>${order.orderMinimum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.heading}>Subtotal</Text>
+                                        <Text style={styles.boldText}>${(order.orderTotal - order.deliveryFee).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.heading}>Delivery fee</Text>
+                                        <Text style={styles.boldText}>${order.deliveryFee.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.heading}>Total</Text>
+                                        <Text style={styles.boldText}>${order.orderTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                    </View>
+                                </View>
+                                </View>
+                             : <></>
+                      
+                            }
+                            
+
+
+
+
+
+
+
+              
             </View>
           }
           {//this.state.order.cart.length >1 &&
@@ -234,7 +274,7 @@ export class OrderDetailScreen extends React.Component {
               textStyle={{ color: colors.blue.primary }} />
           }
           <AppButton
-            text={'Contact '+order.supplierDetail.displayName}
+            text={'Contact '+order.displayName}
             onPress={() => Linking.openURL('mailto:'+this.props.account.supplierContact[order.supplierId].contact)}
             style={{ marginTop: 5, backgroundColor: colors.blue.light, elevation: 0 }}
             textStyle={{ color: colors.blue.primary }} />
@@ -271,3 +311,55 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailScreen)
+
+
+const styles = StyleSheet.create({
+  row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingBottom: 10
+      //paddingVertical: 10
+  },
+  // lightText: {
+  //     //fontSize: sizes.s17,
+  //     fontSize: sizes.s16,
+  //     fontFamily: 'medium',
+  //     color: colors.grey.primary
+  // },
+  boldText: {
+      fontFamily: 'medium',
+      fontSize: sizes.s17,
+      // fontSize: sizes.s19,
+      color: colors.text
+  },
+  heading: {
+      //paddingTop: 10,
+      //fontSize: sizes.s17,
+      fontSize: sizes.s15,
+      fontFamily: 'regular',
+      color: colors.grey.primary
+  },
+  container: {
+      backgroundColor: colors.white,
+      paddingVertical: 8,
+      paddingHorizontal: 15,
+      borderRadius: 10,
+      marginVertical: 5
+  },
+  text: {
+      fontFamily: 'medium',
+      // fontSize: sizes.s17,
+      fontSize: sizes.s15,
+      color: colors.grey.primary
+  },
+  input: {
+      padding: 10,
+      lineHeight: 23,
+      flex: 2,
+      textAlignVertical: 'top',
+      // backgroundColor: 'white',
+      // borderRadius: 10
+  },
+ 
+})

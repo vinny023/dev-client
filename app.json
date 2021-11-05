@@ -2,7 +2,7 @@
   "expo": {
     "name": "SupplyHero",
     "slug": "SupplyHero",
-    "version": "1.0.0",
+    "version": "2.05",
     "orientation": "portrait",
     "icon": "./assets/SupplyHeroLogo.png",
     "splash": {
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.getweys.truffle",
-      "buildNumber": "3"
+      "buildNumber": "127"
     },
     "android": {
       "adaptiveIcon": {

@@ -5,6 +5,7 @@ import { colors, commonStyles, sizes } from '../../theme';
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import RNRestart from 'react-native-restart';
+import _ from 'lodash'
 
 
 export default class Banner extends React.Component {
@@ -38,9 +39,18 @@ export default class Banner extends React.Component {
 
     }
   
+    shouldComponentUpdate(nextProps) {
+        return (!_.isEqual(nextProps, this.props))
+    }
 
     render() {
+
+        console.log('BANNER MESSAGE');
+
+
         let { show, type, message, action, actionParam, duration } = this.props.banner
+        // console.log(message);
+        
         if (!duration) {
             duration = 2000
         }

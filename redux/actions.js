@@ -40,6 +40,14 @@ export const updateOrderDetails = props => {
     })
 }
 
+export const bulkUpdateOrderDetails = props => {
+    console.log('ACTION BULK UPDATE SUPPLIE RUNNNING')
+    return ({
+        type: 'BULK_UPDATE_ORDER_DETAILS',
+        payload: props
+    })
+}
+
 export const removeOrderedCart = supplierId => {
     return ({
         type: 'REMOVE_ORDERED_CART',

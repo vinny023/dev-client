@@ -14,12 +14,85 @@ import _ from 'lodash'
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AppButton from '../../components/Global/AppButton';
+import { compress, decompress } from 'compress-json'
+import firebaseApp from '../../firebaseConfig'
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback 
   onPress={() => Keyboard.dismiss()}> {children}
   </TouchableWithoutFeedback>
 );
+
+
+let counter = 0;
+
+const fakeCart = ({account}) => {
+
+  if (counter === 0) {
+
+  console.log('BUILDLING FAKE STATE');
+
+  let masterCart = []
+  for (let i = 1; i < 21; i++) { 
+    masterCart.push({supplierId:'supplier'+i, cart:[]})
+  }
+
+  for (let i = 1; i < 5000; i++) {
+
+    masterCart[i%20].cart.push({
+    "aisle": 1,
+    "arvindsdeli-orderGuide": "yes",
+    "brand": "Test Brand",
+    "category": "Test Category",
+   "displayName": "Test "+i,
+    "objectID": "Test "+i,
+    "qtyPerItem": 10,
+    "qtyString": "12 per case  ·  16 fl oz",
+    "quantity": 31,
+    "size": 10,
+    "sku": "Test "+i,
+    "supplierDisplayName": 'Supplier '+(i%20+1),
+    "supplierId": 'supplier'+(i%20+1),
+    "supplierItemId": i,
+    "units": "fl oz",
+    "upc": i,
+    "price": 44.43
+    })
+  }
+  console.log('FiNISHED CART')
+  console.log(masterCart)
+
+  console.log('ACOUNT');
+
+
+  let state = {
+    "accountState":{"account":account},
+    "cartState":{
+          "masterCart":masterCart
+    }
+      }
+    
+  
+  console.log('FiNISHED STATE')
+  console.log(state);
+
+  console.log('Compressed State')
+  let compressedState = JSON.stringify(compress(JSON.parse(JSON.stringify(state))))
+  console.log(compressedState)
+
+firebaseApp.database().ref('customers/urbangreensdemo').set({
+    // state: JSON.parse(JSON.stringify(store.getState()))
+    state: compressedState
+})
+
+
+  console.log('PARSED COMPRESSED STATE');
+  console.log(JSON.parse(compressedState));
+
+  counter = 1;
+}
+
+}
 
 export class OrderScreen extends React.Component {
 
@@ -287,8 +360,10 @@ export class OrderScreen extends React.Component {
       // console.log(error)
     }
   }
-  //   <SearchableList list={this.state.itemList} listType={"PlusMinusList"} navigation={this.props.navigation}/>
+  //   <SearchableList list={this.state.itemList} liFstType={"PlusMinusList"} navigation={this.props.navigation}/>
   render() {
+
+    // fakeCart({account:this.props.account});
 
     const { productList, numPages } = this.state
     let numItems = (productList.length * numPages >= 900) ? '1000+' : (productList.length * numPages).toString()
@@ -299,7 +374,7 @@ export class OrderScreen extends React.Component {
           <>
             <Banner banner={this.state.banner} hideBanner={this.hideBanner} bannerAction={this.bannerAction} />
             <View style={[commonStyles.container, { paddingTop: 0 }]} >
-              <SwitchMode setMode={this.setMode} mode={this.state.title} />
+              {/* <SwitchMode setMode={this.setMode} mode={this.state.title} /> */}
               {/* <Text>{this.state.title}</Text> */}
          
               <Search setSearch={this.setSearch} setSuggestion={this.setSuggestion} account={this.props.account} filter={[...this.state.initialFilter,...this.state.filter]} />
@@ -312,9 +387,11 @@ export class OrderScreen extends React.Component {
                 <>
                   <View style={[commonStyles.row, { justifyContent: 'space-between', paddingBottom: 10, paddingHorizontal: 5 }]}>
                     <Text style={commonStyles.lightText}>{numItems} Items</Text>
+                   {/*
                     <TouchableOpacity onPress={() => this.toggleFilterModal(true)}>
                       <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter & Sort</Text>
                     </TouchableOpacity>
+                   */}
                   </View>                  
                     <View>
                       <FilterModal
@@ -338,12 +415,14 @@ export class OrderScreen extends React.Component {
                       <ProductList
                         navigation={this.props.navigation}
                         productList={this.state.productList}
+                        paddingBottom={100}
                       />
                       :
                       <View style={{ paddingTop: 50, alignItems: 'center', justifyContent: 'center',paddingHorizontal:20 }}>
                         <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No results for that search. Please try a different search or filter.</Text>
                         {
-                          this.state.title == 'Order Guide' &&
+                          false &&
+                         
                           <AppButton text="Shop Full Catalog" style={{ width:'100%',}} textStyle={{ fontSize: sizes.s13 }} onPress={() => this.setMode('Catalog')} />
                         }
 

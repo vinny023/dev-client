@@ -15,8 +15,6 @@ import Modal from 'react-native-modal'
 const dimensions = Dimensions.get('window')
 const sortOptions = [
     { 'title': 'Recently Ordered', 'value': { 'lastOrderDate': -1 } },
-    { 'title': 'Price Low To High', 'value': { 'price': 1 } },
-    { 'title': 'Price High To Low', 'value': { 'price': -1 } },    
     { 'title': 'Size Low To High', 'value': { 'size': 1 } },
     { 'title': 'Size High To Low', 'value': { 'size': -1 } },
     { 'title': 'Qty Low To High', 'value': { 'qtyPerItem': 1 } },
@@ -25,10 +23,10 @@ const sortOptions = [
 
 //THIS ARAY DETERMINES THE ORDER OF FILTERS ON THE PAGE
 const filterOptionsInit = [
-
-    { 'title': 'Size', 'field': 'qtyString', 'options': [] },
+    { 'title': 'Aisle', 'field': 'aisle', 'options': [] },
+    { 'title': 'Category', 'field': 'category', 'options': [] },
     { 'title': 'Supplier', 'field': 'supplierDisplayName', 'options': [] },
-    { 'title': 'Brand', 'field': 'brand', 'options': [] },
+    
     // { 'title': 'Units', 'field': 'units', 'options': [] },    
     // { 'title': 'Price', 'field': 'price', 'min': 9999, 'max': -9999 },
     // { 'title': 'Size', 'field': 'size', 'min': 9999, 'max': -9999 },
@@ -44,16 +42,17 @@ const getFilters = ({productList, search, displaySuppliers, filter}) => {
     // consoe.log(filterOptions);
 
     productList.forEach(product => {
-        const { supplierDisplayName, supplierId, brand, units, price, size, qtyPerItem } = product
+        const { supplierDisplayName, supplierId, brand, units, price, size, qtyPerItem, aisle, category } = product
 
         //THIS ARRAY NEEDS TO MATCH THE ARRAY ABOVE
-        const propertyArray = [supplierDisplayName, brand, units, price, size, qtyPerItem]
+        const propertyArray = [supplierDisplayName, brand, units, price, size, qtyPerItem, aisle, category]
 
         filterOptions.forEach((filterOption, index) => {
             // // consoe.log('EXISTS IN FILTER' +filterOption.title);
-            const selectorFilters = ['Supplier', 'Units', 'Brand', 'Size']
+            const selectorFilters = ['Supplier', 'Units', 'Brand', 'Size',  'Aisle', 'Category']
             // // consoe.log(selectorFilters.indexOf(filterOption.title));
             if (selectorFilters.indexOf(filterOption.title) !== -1) {
+                // console.log(filterOption.title)
                 const {options, field} = filterOption
                 // if (filterOptions[index].options.filter(option => propertyArray[index] === option).length === 0) {
                 //     filterOptions[index].options.push(propertyArray[index])
@@ -298,6 +297,9 @@ export default class FilterModal extends React.Component {
                                             <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                                                 {
                                                     options.map((option, k) => {
+                                                        
+                                                        console.log('THIS PROPS FILTTER')
+                                                        console.log(this.props.filter)
                                                         let selected = (this.props.filter
                                                             .filter(currOptionVal => currOptionVal.field === field && currOptionVal.values.indexOf(option) !== -1).length > 0)
 
@@ -339,7 +341,7 @@ export default class FilterModal extends React.Component {
                                     </View>
                                 )
                             }
-                            if (title === 'Supplier' || title === 'Brand') {
+                            if (title === 'Supplier' || title === 'Brand' || title === 'Aisle' || title === 'Category') {
                                 
                                 //SELECTION FILTER
                                 return (

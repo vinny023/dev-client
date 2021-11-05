@@ -1,18 +1,26 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import * as actions from '../../redux/actions'
 import { connect } from 'react-redux'
 //import _ from 'lodash';
 import _, { floor, round } from 'lodash';
+import {store, getLastAction} from '../../redux/store'
 
 import { colors, commonStyles, sizes } from '../../theme';
 import AppButton from './AppButton'
+
 // export class ProductListItem extends React.Component {
 //     constructor(props) {
 //         super(props)
 //    }
 
+let justUpdated = false;
+
 const updateQuantity = (masterCart, product, reorderOnly) => {
+
+    // console.log('RUNNING UPDATE QUANTITY');
+    // console.log(product.sku);
+    // console.log(masterCart);
     // console.log(reorderOnly)
     if (reorderOnly) {
         return product.quantity
@@ -20,10 +28,12 @@ const updateQuantity = (masterCart, product, reorderOnly) => {
     for (const supplierCart of masterCart) {
         for (const cartItem of supplierCart.cart) {
             if (cartItem.sku === product.sku) {
+                // console.log(cartItem.quantity);
                 return cartItem.quantity
             }
         }
     }
+   
     return 0
 }
 
@@ -31,7 +41,7 @@ class ProductListItem extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = { quantity: 0 }
+        this.state = { quantity: 0, localEdit: false }
 
         // this.addItem = this.addItem.bind(this)
         // this.subtractItem = this.subtractItem.bind(this)
@@ -44,18 +54,78 @@ class ProductListItem extends React.Component {
         })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // console.log('SHOULD COMPONENT UPDATE');
+        // console.log(this.props.item.sku);
+        // console.log(this.state.quantity);
+        // console.log(prevState.quantity);
+
+        if (this.props.reorderOnly) {
+            return false
+        }
+
+        if (this.props.masterCart.length === 0) {
+            return true
+        }
+
+        // if (this.state.quantity === '') {
+        //     return false
+        // }
+        //if size of cart changed, don't update
+
+        //if quantity of item has changed, 
+        // console.log('SHOULD COMPONENT UPDATE');
+        // console.log(getLastAction());
+
+        let lastAction = getLastAction()
+        // console.log(lastAction);
+        // console.log(this.state.quantity !== nextState.quantity);
+        // console.log((lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku));
+        // console.log((lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART"));
+
+        if (this.state.quantity !== nextState.quantity) {
+            justUpdated = true
+        }
+
+        return (this.state.quantity !== nextState.quantity || (!justUpdated && lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku) || lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART")
+    }
+
     componentDidUpdate(prevProps, prevState) {
 
-        // if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
-        if (!_.isEqual(prevProps, this.props)) {
+        // console.log('RUNNING COMPONENT DID UPDATE');
+        //ONLY DO THIS IF THE CHANGE DOESNT COME FROM THIS COMPONENT
+
+        // console.log('RUNNING ITEM COMP UPDATE');
+        // console.log(prevProps.item);
+        // console.log(this.props.item);
+
+        // if (!_.isEqual(prevProps.item, this.props.item)) {
+        //     console.log('SENSED ITEM CHANGE');    
+        //     this.setState({
+        //         quantity: updateQuantity(this.props.masterCart, this.props.item, this.props.reorderOnly)
+        //     })
+        // }
+        if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
+            // console.log('executing first cart change');
+
+            if (this.state.quantity !== '') {
             this.setState({
                 quantity: updateQuantity(this.props.masterCart, this.props.item, this.props.reorderOnly)
             })
+            }
         }
-    }
+    
+}
 
     addItem = (payload) => {
-        this.props.addItem({ item: { ...this.props.item }, amount: 1 })
+        this.setState({
+            quantity:this.state.quantity+1 //fires rerender 1
+        })
+
+        setTimeout(() => {
+            this.props.addItem({ item: { ...this.props.item }, amount: 1 })
+       },1)
+        
     }
 
     addItemQty = (payload) => { 
@@ -66,36 +136,123 @@ class ProductListItem extends React.Component {
     }
 
     setItemQty = (payload, quantity) => {
+        this.setState({
+            quantity:quantity
+        })
+        setTimeout(() => {
         if (quantity < this.state.quantity) {
-            this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - quantity })
-        } else {
-            this.props.addItem({ item: { ...this.props.item }, amount: quantity - this.state.quantity })
-        }
+                this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - quantity })
+            } else {
+                this.props.addItem({ item: { ...this.props.item }, amount: quantity - this.state.quantity })
+            }
+                
+           },1)   
+   
     }
 
     subtractItem = (payload) => {
-        this.props.subtractItem({ item: { ...this.props.item }, amount: 1 })
+        this.setState({
+            quantity:this.state.quantity-1
+        })
+        setTimeout(() => {
+             this.props.subtractItem({ item: { ...this.props.item }, amount: 1 })
+        },1)
+        // this.props.subtractItem({ item: { ...this.props.item }, amount: 1 })
+
     }
 
     removeItem = () => {
-        this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity })
+
+        const oldQuantity = this.state.quantity
+        this.setState({
+            quantity:0
+        })
+
+        setTimeout(() => {
+            this.props.subtractItem({ item: { ...this.props.item }, amount: oldQuantity })
+        },1)
+        
     }
 
     setCounterValue = (val) => {
+
+        console.log('FIRING ON TEXT CHANGE')
+        console.log(val);
+
+
+        //IF BLANK WAS ENTERED
         if (val === '') {
-            this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - 1 })
-            setTimeout(() => this.setState({quantity: ''}), 300)            
+
+            const oldQuantity = this.state.quantity
+            this.setState({quantity: ''})
+            setTimeout(() => {
+                    this.props.subtractItem({ item: { ...this.props.item }, amount: oldQuantity, dontRemove: true  })
+
+                    setTimeout(() => {
+                    if (this.state.quantity === '') {
+                        this.setState({quantity: 0})
+                    }
+
+                    this.props.subtractItem({ item: { ...this.props.item }, amount: 0 })
+                }, 10000)
+               
+            }, 1)   
+       
+        
         } else if (!isNaN(val)) {
-            val = parseFloat(val)        
+            val = parseFloat(val)   
+            
+        //CASE IF EXISTING TEXT INPUT WAS BLANK
+        if (this.state.quantity === '') {   
+                   
+        this.setState({ quantity:val})
+        setTimeout(() => {
+
+            this.props.addItem({ item: { ...this.props.item }, amount: val})
+        },1)
+    
+        } else {
+
+
+        //IF ENTERED VALUE IS LESS THAN ORIGINAL QUANTITY
             if (val < this.state.quantity) {
-                this.props.subtractItem({ item: { ...this.props.item }, amount: this.state.quantity - val })
-            } else {
-                if (this.state.quantity === '') {
-                    this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity - 1 })
-                } else {
-                    this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity })
-                }
+
+                const oldQuantity = this.state.quantity
+                this.setState({
+                    quantity:val
+                })
+                setTimeout(() => {
+
+                    this.props.subtractItem({ item: { ...this.props.item }, amount: oldQuantity - val })
+                },1)
+
+                
+            } else {  //IF ENTERED VALUE IS GREATER THAN ORIGINAL QUANTITY
+                
+                // ADD ITEM
+                const oldQuantity = this.state.quantity
+                this.setState({
+                    quantity:val
+                })
+                setTimeout(() => {
+
+                    this.props.addItem({ item: { ...this.props.item }, amount: val - oldQuantity})
+                },1)
+                
+                // else {
+                //     this.setState({
+                //         quantity:this.state.quantity - 1
+                //     })
+                //     setTimeout(() => {
+    
+                //         this.props.addItem({ item: { ...this.props.item }, amount: val - this.state.quantity })
+                //     },1)
+                       
+                    
+                // }
             }
+
+        }
         } 
         // else {
         //     this.removeItem();
@@ -103,16 +260,18 @@ class ProductListItem extends React.Component {
     }
 
     onTextSubmit = (val) => {
-        // console.log('FIRING ON TEXTS BUMIT')
-        if (val === '') {
-            // console.log('FOUND EMTPY TEXT INPUT')
-            this.props.subtractItem({ item: { ...this.props.item }, amount: this.props.item.quantity})
-        }
+        console.log('FIRING ON TEXTS BUMIT')
+        // console.log('VAL');
+        // if (val === '') {
+        //     // console.log('FOUND EMTPY TEXT INPUT')
+        //     this.props.subtractItem({ item: { ...this.props.item }, amount: this.props.item.quantity})
+        // }
     }
 
     render() {
 
-
+        console.log('PROD LIST ITEM RENDERING');
+        console.log(this.props.item.sku);
 
         const { item } = this.props
         const today = new Date()
@@ -124,7 +283,12 @@ class ProductListItem extends React.Component {
 
         let priceString = 'Pricing unavailable'
         if (item.price) {
-            priceString = '$' + item.price.toFixed(2) + ' ($' + item.unitCost.toFixed(2) + ' / ' + item.units + ')'
+            priceString = '$' + item.price.toFixed(2) // + ' ($' + item.unitCost.toFixed(2) + ' / ' + item.units + ')'
+        }
+
+        let offerString = ''
+        if (item.offer) {
+            offerString = item.offer+"  ·  "
         }
 
         // console.log(item);
@@ -145,58 +309,86 @@ class ProductListItem extends React.Component {
                 (!this.props.hideZero || this.state.quantity !== 0) &&
                 <View key={item.sku}>
                     <View style={styles.row}>
-                        <View style={{ flex: 0.7, alignSelf: 'flex-start', paddingRight: 3 }}>
-                            {!this.props.reorderOnly &&
+                    {!!item.image  &&    
+                        
+                                            <View style={{ flex: 0.2, alignSelf: 'flex-start'}}>
+                    
+                        <Image style={styles.productImage} source={{uri:item.image}}/>                    
+                    
+                    </View>
+                            }
+                        <View style={{ flex: 0.6, alignSelf: 'flex-start', paddingRight: 3 }}>
+                             {!this.props.reorderOnly &&
 
                                 //--------- Tags------------
-                                <View style={[styles.row, { justifyContent: 'flex-start' }]}>
+                               <View style={[styles.row, { justifyContent: 'flex-start' }]}>
                                     <View style={styles.tagContainer}>
                                         <Text style={[commonStyles.btnText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.supplierDisplayName}</Text>
                                     </View>
 
-                                    {item.brand ?
-                                        <View style={[styles.tagContainer, { marginLeft: 4, backgroundColor: colors.blue.light }]}>
-                                            <Text style={[styles.boldText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.brand}</Text>
+                                    {item.supplierItemId ?
+                                        <View style={[styles.tagContainer, { marginLeft: 4, backgroundColor: 'white'  }]}>
+                                            <Text style={[styles.boldText, { fontSize: sizes.s12, fontFamily: 'medium' }]}>{item.supplierItemId}</Text>
                                         </View>
                                         : <></>
                                     }
                                 </View>
-                            }
-                            {/* -------Item name Price and Units------- */}
-                            <View >
-                                <Text style={[styles.text, { fontSize: sizes.s15 }]}>{item.displayName}</Text>
+                             
+                            } 
+                            {/* -------Item name Image Price and Units------- */}
+                           
+                   
+                            <View>
+                                <Text style={[styles.text]}>{item.displayName}</Text> 
+                                                          
                                 {this.props.reorderOnly ?
+                                    <>
+                                    <View style={{ paddingTop: 2 }}>
+                                            
+                                    <View style={{ paddingTop: 4, paddingBottom: 4 }}>
+                                        <Text style={[commonStyles.lightText, { fontSize: sizes.s12}]}><Text style={{color: '#06d6a0', fontWeight: '800'}}>{offerString}</Text>{item.qtyString}</Text>                                            
+                                    </View>                                        
+                                </View>
                                     <View style={[styles.row, { marginTop: 5, justifyContent: 'flex-start' }]}>
-                                        <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5, height: 35 }]}>
-                                            <Text style={{ fontSize: sizes.s16, fontFamily: 'regular', color: colors.blue.primary }}>{this.state.quantity}</Text>
+                                        <View style={[styles.addContainer, { borderRadius: 10, marginRight: 5, height: 35, padding: 9 }]}>
+                                            <Text style={{ fontSize: sizes.s14, fontFamily: 'regular', color: colors.blue.primary }}>{item.quantity}{item.price && ' x $'+item.price.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                                         </View>
-                                        <View style={{ paddingTop: 2 }}>
-                                            <Text style={[commonStyles.lightText, { fontSize: sizes.s14 }]}>{item.qtyString}</Text>
-                                            <View style={{ paddingTop: 2 }}>
-                                                <Text style={[styles.text, { fontFamily: 'regular', }]}>{priceString}</Text>
-                                            </View>
-                                        </View>
+                                    
                                     </View>
+                                    </>
                                     :
                                     <View style={{ paddingTop: 2 }}>
-                                        <Text style={[commonStyles.lightText, { fontSize: sizes.s14 }]}>{item.qtyString}</Text>
-                                        <View style={{ paddingTop: 2 }}>
-                                            <Text style={[styles.text, { fontFamily: 'regular', }]}>{priceString}</Text>
-                                        </View>
+
+                                    <View style={{ paddingTop: 2 }}>
+                                    <Text style={[commonStyles.lightText, { fontSize: sizes.s12}]}><Text style={{color: '#06d6a0', fontWeight: '800'}}>{offerString}</Text>{item.qtyString}</Text>                                            
+                                </View>         
+                                    
+                                    {!!item.price &&
+                                    <View style={{ paddingTop: 4, paddingBottom: 4 }}>
+                                        <Text style={[styles.text, { fontSize: sizes.s14}]}>${item.price.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>                                        
+                                    </View>  
+                                     }
+        
+                                                         
                                     </View>
                                 }
                             </View>
+                        
                         </View>
                         <View>
                             {this.state.quantity >= 1 &&
                                 <View style={{ marginTop: 0, flex: 1 }} >
                                     {!!item.price &&
                                         <View >
-                                            <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${(item.price * this.state.quantity).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                                            <Text style={styles.text, { textAlign: "right", fontFamily: "medium" }}>${(item.price * (this.props.reorderOnly ? item.quantity : this.state.quantity)).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text> 
+                                    
                                         </View>
                                     }
-                                    <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.size * item.qtyPerItem * this.state.quantity}{item.units}</Text>
-                                </View>
+
+                                    {!!item.qtyPerItem && 
+                                    <Text style={styles.text, { textAlign: "right", color: colors.grey.primary, fontFamily: 'regular' }}>{item.qtyPerItem * (this.props.reorderOnly ? item.quantity : this.state.quantity)} {item.package}s</Text>
+                                    }
+                                    </View>
                             }
                             {!activeSupplier ?
                                 <View style={[styles.tagContainer,{backgroundColor:colors.background.bg}]}>
@@ -251,7 +443,7 @@ class ProductListItem extends React.Component {
                                         />
                                         // <TouchableOpacity style={[styles.counterContainer, { paddingHorizontal: 20, marginTop: 15 }]}>
                                         //     <Text style={[styles.boldText, { fontSize: sizes.s15, fontFamily: 'medium' }]}>Reorder</Text>
-                                        // </TouchableOpacity>
+                                        // </TouchableOpacity
 
                                     }
                                 </>
@@ -291,6 +483,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         // paddingHorizontal: 8,
         paddingBottom: 15,
+        minHeight: 60
     },
     row: {
         flexDirection: 'row',
@@ -317,6 +510,11 @@ const styles = StyleSheet.create({
         // alignItems:'center',
         //backgroundColor:'red'
     },
+    offerText: {
+        fontFamily: 'bold',
+        color: '#90EE91',
+        textAlign: 'center'
+    },
     boldText: {
         fontSize: sizes.s20,
         fontFamily: 'bold',
@@ -326,8 +524,8 @@ const styles = StyleSheet.create({
     addContainer: {
         backgroundColor: colors.blue.light,
         height: 40,
+        minWidth: 40,
         borderRadius: 40,
-        width: 40,
         alignItems: 'center', justifyContent: 'center'
     },
     tagContainer: {
@@ -337,13 +535,21 @@ const styles = StyleSheet.create({
          borderRadius: 10,
         marginBottom: 7
     },
-    supplierConatiner:{
+    supplierContainer:{
         height:34,
         borderRadius:10,backgroundColor:colors.background.bg,
         alignItems:'center',
         justifyContent:'center',
        // paddingHorizontal:10
        width:115
-    }
+    },
+    productImage: {
+        height: 80,
+        width: 80,
+        resizeMode: 'contain',
+        margin: 2,
+        marginLeft: -7
+        
+      },
 
 })

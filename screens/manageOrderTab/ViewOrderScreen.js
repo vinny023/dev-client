@@ -16,26 +16,40 @@ const OrderButton = ({ order }) => {
 
     const navigation = useNavigation()
     const orderTotal = order.cart.reduce((total, item) => total + item.price*item.quantity, 0) + order.deliveryFee
+    const numItems = order.cart.reduce((cartTotal, item) => cartTotal + item.quantity, 0)    
+    let itemString = numItems+ " items"
+    if (numItems === 1) {
+        itemString = numItems + " item"
+    } 
+
     return (
         <TouchableOpacity onPress={() => navigation.navigate('OrderDetailScreen', { order: order })} style={[commonStyles.row, { width: '100%', paddingRight: 7, }]} >
             {/* <AppButton
             text={order.supplierDetail.displayName}
             onPress={() => navigation.navigate('OrderDetailScreen', { order: order })}
         /> */}
-            <Image source={{ uri: order.supplierDetail.logo }} style={{ width: 42, height: 42, marginRight: 10 }} />
+            <Image source={{ uri: order.logo }} style={{ width: 42, height: 42, marginRight: 10 }} />
             <View style={{ flex: 2, }}>
 
-                <Text style={commonStyles.text}>{order.supplierDetail.displayName}</Text>
+                <Text style={commonStyles.text}>{order.displayName}</Text>
                 <View style={{ marginBottom: 2 }} />
                 <Text style={commonStyles.lightText}>{order.selectedDeliveryDate.day}: {order.selectedDeliveryTimeSlot}</Text>
             </View>
             <View style={[commonStyles.row, styles.priceContainer]}>
-                
-                {order.orderTotal &&
+            
+            <View>
+                <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>{itemString}</Text>
+            </View>
+            
+            {/*  
+                {order.orderTotal && 
+                    {                    
                     <View>
                     <Text style={[commonStyles.text, { fontSize: sizes.s16, textAlign: 'right' }]}>${orderTotal.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
                     </View>
+                
                 }
+            */}
             </View>
         </TouchableOpacity>
     )
@@ -54,8 +68,7 @@ class ViewOrderScreen extends React.Component {
             banner: { show: false, type: '', message: '', buttonAction: {} },
             showFilterModal: false,
             openOrders: [],
-            deliveredOrders: []
-            
+            deliveredOrders: []     
         }
     }
 
@@ -65,11 +78,15 @@ class ViewOrderScreen extends React.Component {
                 this.setState({ getOrdersLoading: true })
 
                 const orders = await getOrders({ query: { accountId: this.props.account.id }, sort: { createdDate: -1 } })
+
+                console.log('ORDERS');
+                console.log(orders.length);
+                console.log(orders);
                 // console.log(orders);
-                const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders.slice(0,10), supplierFilter: this.state.supplierFilter})           
+                const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders, supplierFilter: this.state.supplierFilter})           
                 this.setState({
-                    orderList: orders.slice(0,20),
-                    getOrderLoading: false,
+                    orderList: orders,
+                    getOrdersLoading: false,
                     openOrders: openOrders,
                     deliveredOrders: deliveredOrders
                 })
@@ -96,10 +113,16 @@ class ViewOrderScreen extends React.Component {
     }
 
     handleFilterUpdate = (newSupplier) => {
-        // console.log('running filter update')
+        console.log('running filter update')
+        console.log(newSupplier);
+
+
         const index = this.state.supplierFilter.indexOf(newSupplier)
         let newSupplierFilter = []
-        if (index === -1) {
+
+        if(newSupplier.length === 0) {
+            newSupplierFilter = []
+        } else if (index === -1) {
             newSupplierFilter = [...this.state.supplierFilter, newSupplier]            
         } else {
             newSupplierFilter = [...this.state.supplierFilter]
@@ -108,13 +131,18 @@ class ViewOrderScreen extends React.Component {
                 supplierFilter: newSupplierFilter
             })
         }
+
+
         const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: this.state.orderList, supplierFilter: newSupplierFilter})           
         this.setState({
             supplierFilter: newSupplierFilter,
             openOrders: openOrders,
-            deliveredOrders: deliveredOrders
+            deliveredOrders: deliveredOrders,
+            showFilterModal: (newSupplier.length !== 0) //if supplierfilter is empty
         })
-        // console.log(this.state.supplierFilter)
+
+        console.log(newSupplierFilter);
+        console.log(this.state);
     }  
 
 
@@ -125,15 +153,22 @@ class ViewOrderScreen extends React.Component {
         let deliveredOrders = []
         
         //group orders between open & completed, which sits on top of sorting 
-        orderList.forEach(order => {
-            if (supplierFilter.indexOf(order.supplierId) !== -1 || supplierFilter.length === 0) {
-            if (order.status === 'Delivered') {
-                deliveredOrders.push(order)
-            } else {
-                openOrders.push(order)               
+
+        for (let i = 0; i < orderList.length; i++) {
+            const order = orderList[i]
+            
+            if (supplierFilter.indexOf(order.displayName) !== -1 || supplierFilter.length === 0) {
+                if (order.status === 'Delivered') {
+                    deliveredOrders.push(order)
+                } else {
+                    openOrders.push(order)               
+                }
+            }
+
+            if (deliveredOrders.length + openOrders.length >= 30)  {
+                break
             }
         }
-        })
 
         // console.log('SUPPLIER FILTER');
         // console.log(supplierFilter);
@@ -220,17 +255,19 @@ class ViewOrderScreen extends React.Component {
                             <TouchableOpacity style={{ alignSelf: 'flex-start', paddingBottom: 15 }} onPress={() => this.setState({ showFilterModal: false })} >
                                 <Ionicons name='close' size={sizes.s20} />
                             </TouchableOpacity>
-                            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Reset</Text>
+                            <TouchableOpacity onPress={() => this.handleFilterUpdate([])}>
+                            <Text style={[commonStyles.lightText, { color: colors.blue.primary }]}>Clear Filter</Text>
+                            </TouchableOpacity>
                         </View>
                         <View>
                             <Text style={{ fontSize: sizes.s20 + 2, fontFamily: 'bold', color: colors.text, }}>Filter Orders</Text>
                         </View>
 
-                        <View style={{ paddingTop: 20 }}>
-                            <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by supplier</Text>
+                        <View style={{ paddingTop: 20, marginBottom: 5 }}>
+                            <Text style={[commonStyles.lightHeading, { fontSize: sizes.s15 }]}>Filter by Supplier</Text>
                         </View>
-                        <View style={[commonStyles.card, { padding: 5,marginTop:7 }]}>
-                            {!!this.props.account.activeSuppliers && this.props.account.activeSuppliers.map(supplier => {
+                        <ScrollView style={[commonStyles.card, { padding: 5,marginTop:7, paddingBottom: 40 }]}>
+                            {!!this.props.account.displaySuppliers && this.props.account.displaySuppliers.map(supplier => {
                                 // console.log(supplier)
                                 //CHECK IF SELECTED
                                 let selected = false;
@@ -255,22 +292,28 @@ class ViewOrderScreen extends React.Component {
                                 )
                             })
                             }
-                        </View>
+                        </ScrollView>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
                             <AppButton text="Apply" onPress={() => this.setState({ showFilterModal: false })} style={[commonStyles.shadow,{ marginVertical: 0, }]} />
                         </View>
                     </View>
                 </Modal>
+
+                <View style={[commonStyles.row, { paddingLeft: 10, justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 3 }]}>
+                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Open Orders</Text>
+                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
+                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter By Supplier</Text>
+                </TouchableOpacity>
+            </View>
+
+            { this.state.getOrdersLoading ? 
+                <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />    
+                    :
                 <View style={{ paddingBottom: 40, paddingTop: 5 }}>
                     {openOrders.length > 0 ?
                         <View>
-                            <View style={[commonStyles.row, { paddingLeft: 10, justifyContent: 'space-between', paddingVertical: 0, paddingBottom: 3 }]}>
-                                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Open Orders</Text>
-                                <TouchableOpacity onPress={() => this.setState({ showFilterModal: true })} style={{ paddingRight: 10 }}>
-                                    <Text style={{ color: colors.blue.primary, fontSize: sizes.s15, fontFamily: 'regular', alignSelf: 'flex-end' }}>Filter Orders</Text>
-                                </TouchableOpacity>
-                            </View>
+                      
                             { //!this.state.getOrdersLoading ? <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 70 }} />:
                             }
                             <ScrollView style={[commonStyles.card, { marginBottom: 20,paddingTop:4,marginTop:7 }]}>
@@ -281,14 +324,19 @@ class ViewOrderScreen extends React.Component {
 
                             </ScrollView>
                         </View>
-                        : <ActivityIndicator size="small" color={colors.blue.primary} style={{ alignSelf: 'center', marginTop: 100 }} />
+                        :                
+                        
+                        <View style={{flex:1,alignItems:'center',justifyContent:'center',paddingHorizontal:30, marginTop: 40, marginBottom: 40}}>
+                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No open orders.</Text>         
+                    </View>
 
                     }
+                    <View style={{ paddingLeft: 10, marginTop: 20 }}>
+                    <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Delivered Orders</Text>
+                </View>
                     {deliveredOrders.length > 0 ?
                         <View>
-                            <View style={{ paddingLeft: 10 }}>
-                                <Text style={[commonStyles.lightHeading,{fontSize:sizes.s15}]}>Delivered Orders</Text>
-                            </View>
+                          
                             <ScrollView style={[commonStyles.card,{marginTop:7,paddingTop:7}]}>
                                 {
                                      deliveredOrders.map((order, i) => <OrderButton key={i} order={order} />)
@@ -299,9 +347,14 @@ class ViewOrderScreen extends React.Component {
                                 </View> */}
                             </ScrollView>
                         </View>
-                        : <></>
+                        : <View style={{flex:1,alignItems:'center',justifyContent:'center',paddingHorizontal:30,  marginTop: 40, marginBottom: 40}}>
+                        <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>No delivered orders</Text>         
+                    </View>
                     }
                 </View>
+            
+            
+            }
             </ScrollView>
         )
 

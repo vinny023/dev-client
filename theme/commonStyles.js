@@ -75,7 +75,16 @@ const commonStyles = {
     //paddingVertical:10,
     borderRadius: 10,
     padding: 17,
-    marginBottom: 13
+    marginBottom: 13,
+  },
+  cartCard: {
+    backgroundColor: colors.white,
+    //paddingHorizontal: 10,
+    //paddingVertical:10,
+    borderRadius: 10,
+    padding: 17,
+    marginBottom: 13,
+    maxHeight: 400
   },
   bannerText: {
     //fontSize:sizes.s16,

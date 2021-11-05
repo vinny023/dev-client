@@ -5,6 +5,8 @@ import {FlatList, View, ScrollView} from 'react-native';
 import ProductListItem from './ProductListItem'
 import { commonStyles } from '../../theme';
 
+
+
 const NUM_SHOW_ITEMS = 10
 
 export default class ProductList extends React.Component {
@@ -19,20 +21,37 @@ constructor(props) {
 }
 
 loadNext = () => {
+    console.log('FIRING LOAD NEXT');
     this.setState({
         index: this.state.index + NUM_SHOW_ITEMS,
-        shownList: this.state.productList.slice(0, this.state.index + 2*NUM_SHOW_ITEMS-1)
+        shownList: this.state.productList.slice(0, Math.min(this.state.productList.length-1,this.state.index + 2*NUM_SHOW_ITEMS-1))
     })
+
+    console.log();
 }
 
 loadPrev = () => {
 
 }
 
+componentDidUpdate(prevProps) {
+
+
+}
+
+shouldComponentUpdate(prevProps, prevState) {
+
+    return (!_.isEqual(prevProps.productList,this.props.productList) || !_.isEqual(prevState.shownList, this.state.shownList))
+
+}
+
 render() {
 
-    // console.log('PRODUCT LIST RENDERING')
-    // console.log(this.props.productList)
+//     console.log('PRODUCT LSIT RENDER');
+//     console.log(this.props.productList);
+//    console.log( this.state.productList);
+//    console.log(this.state.shownList);
+
 
     if (this.props.listType && this.props.listType === 'noFlatList') {
         
@@ -52,6 +71,11 @@ render() {
         
     } else {
 
+        let paddingBottom = 0
+        if (this.props.paddingBottom) {
+            paddingBottom = this.props.paddingBottom
+        }
+
         return (
         
             <FlatList
@@ -61,7 +85,9 @@ render() {
                 onEndReached={this.loadNext}
                 onEndReachedThreshold={0.5}  
                 style={commonStyles.card}         
-                renderItem={({item}) => <ProductListItem item={item}/>}
+                renderItem={({item}) => <ProductListItem item={item} reorderOnly={this.props.reorderOnly}  reorderNotification={this.props.reorderNotification}/>}
+                extraData={this.state}
+                contentContainerStyle={{ paddingBottom: paddingBottom }}
             />              
         )
 

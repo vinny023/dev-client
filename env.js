@@ -1,9 +1,20 @@
-exports.NETLIFY = "https://upbeat-raman-bafd57.netlify.app/.netlify/functions/"
-// exports.NETLIFY = "https://tender-roentgen-7b8b7f.netlify.app/.netlify/functions/"
+
 //exports.NETLIFY = "https://elastic-beaver-a020d9.netlify.app/.netlify/functions/"
 // exports.NETLIFY = 'http://localhost:8888/.netlify/functions/'
+
+//PROD SETTINGS
+exports.NETLIFY = "https://upbeat-raman-bafd57.netlify.app/.netlify/functions/"
+exports.ALGOLIA_INDEX = 'prod_Products'
+
+//DEV SETTNIGS
+// exports.NETLIFY = "https://tender-roentgen-7b8b7f.netlify.app/.netlify/functions/"
+// exports.ALGOLIA_INDEX = 'dev_Products'
+
 exports.ALGOLIA_APP_NAME = '33BEDS6295'
 exports.ALGOLIA_API_KEY = '1fff7f94e6d0d8f4e40e466920e98488'
+
+
+
 
 exports.HITS_PER_PAGE = 20
 

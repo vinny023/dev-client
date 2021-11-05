@@ -19,7 +19,15 @@ const initialState = {
 
 }
 
-const store = createStore(rootReducer, initialState, applyMiddleware(thunk, logger))
+let lastAction = null;
+export const getLastAction = () => lastAction;
+
+export const lastActionMiddleware = store => next => action => {
+ lastAction = action;
+ return next(action);
+}
+
+const store = createStore(rootReducer, initialState, applyMiddleware(thunk, logger, lastActionMiddleware))
 
 
 //THIS INITIALIZATION SHOULD HAPPEN ON LOGIN...

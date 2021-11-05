@@ -1,5 +1,4 @@
 import { round } from 'lodash';
-import { Item } from 'native-base';
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { colors, commonStyles, sizes } from '../../theme';
@@ -31,7 +30,7 @@ const OrderTotal = (props) => {
 
                             {/* <Text>Add {order.supplierDetail.orderMinimum - orderTotal - deliveryFee} to hit minimum.</Text> */}
                             <Text style={styles.lightText}>Add</Text>
-                            <Text style={styles.boldText}>${round(order.supplierDetail.orderMinimum - orderTotal - deliveryFee,0)}</Text>
+                            <Text style={styles.boldText}>${round(order.orderMinimum - orderTotal - deliveryFee,0)}</Text>
                         </View>
                     }
                 </View>

@@ -44,13 +44,23 @@ const PlaceOrderTab = () => {
     <OrderTabStack.Navigator
       screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:90,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       {/* <OrderTabStack.Screen name="LoginScreen" component={LoginScreen} options={{ header: () => null, }} /> */}
+
       <OrderTabStack.Screen name="OrderScreen" component={OrderScreen} options={{headerTitle:"Browse Items", headerLeft: () => null, headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false }} />
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<CBack/>),
-}} />
+
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders', headerTitleAlign: 'left',  headerRight: () => <CartButton />,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }}  />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: 'Order Details',  headerTitleAlign: 'left',  headerRight: () => <CartButton /> , headerBackTitleVisible: false,headerLeft:()=> (<CBack/>) }} />
       <OrderTabStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} options={myScreenOptions} />
       <OrderTabStack.Screen name="TestPropsScreen" component={TestPropsScreen} options={myScreenOptions} />
+    </OrderTabStack.Navigator>
+  )
+}
+
+const CartTab = () => {
+  return (
+    <OrderTabStack.Navigator 
+    screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:90,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
+    <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left',  headerBackTitleVisible: false,  headerLeft:()=> (<CBack/>),
+  }} />   
     </OrderTabStack.Navigator>
   )
 }
@@ -61,7 +71,6 @@ const ManageOrderTab = () => {
     screenOptions={{ headerShown: true, headerStyle: headerStyling, headerTitleStyle: titleStyle,headerStatusBarHeight:90,headerLeftContainerStyle:arrowStyles,headerTitleContainerStyle:{left:10}}}>
       <OrderTabStack.Screen name="ViewOrderScreen" component={ViewOrderScreen} options={{ headerTitle: 'Manage Orders',headerLeft: () => null, headerRight: () => <CartButton />,  headerTitleAlign: 'left', headerBackTitleVisible: false }} />
       <OrderTabStack.Screen name="OrderDetailScreen" component={OrderDetailScreen} options={{ headerTitle: 'Order Details',  headerTitleAlign: 'left', headerRight: () => <CartButton /> ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} /> 
-      <OrderTabStack.Screen name="CartScreen" component={CartScreen} options={{ headerTitle: 'Place Order', headerRight: () => <CartButton />, headerTitleAlign: 'left' ,  headerBackTitleVisible: false,headerLeft:()=> (<CBack/>)}} />
     </OrderTabStack.Navigator>
   )
 }
@@ -76,14 +85,32 @@ const Tabs = () => (
       tabBarIcon: ({ focused }) => {
         let imageName;
         let imageType;
-        if (route.name === 'Shop & Order') {
-          imageType = 'bag'
-          imageName = focused ? "https://i.imgur.com/S2RIneB.png" : "https://i.imgur.com/5AHKW5g.png";
-        } else if (route.name === 'Track & Manage') {
+        let width;
+        let height;
+
+        if (route.name === 'Order') {
+          imageType = 'order'
+          imageName = focused ? "https://i.ibb.co/wRKmqZ2/Untitled-presentation-9.png" : "https://i.ibb.co/3WjxcQ9/Untitled-presentation-7.png";
+          width = 25
+          height = 25
+
+        } else if (route.name === 'Manage') {
           imageType = 'truck'
-          imageName = focused ? "https://i.imgur.com/6eYuijX.png" : "https://i.imgur.com/fjNoVGZ.png";
+          imageName = focused ? "https://i.ibb.co/Pr3zDxG/Untitled-presentation-11.png" : "https://i.ibb.co/xGBNKPj/Untitled-presentation-6.png";
+          width = 30
+          height = 30
+
+        } else if (route.name === "Checkout") {
+          imageType = 'bag'
+          imageName = focused ? "https://i.ibb.co/QYRTMMC/Untitled-presentation-10.png" : "https://i.ibb.co/C1tQcH1/Untitled-presentation-8.png";
+          width = 25 
+          height = 25
+
         }
-        return <Image source={{uri:imageName}} style={{ marginTop: 7, width: imageType === 'bag' ? 19 : 30, height: imageType === 'bag' ? 22 : 31 }} resizeMode={'contain'} />;
+
+
+
+        return <Image source={{uri:imageName}} style={{ marginTop: 7, width: width, height: height, marginBottom: 5 }} resizeMode={'contain'} />;
       },
     })}
     animiationEnabled={true}
@@ -101,8 +128,9 @@ const Tabs = () => (
       renderIndicator: () => null
     }}
     >
-    <Tab.Screen name="Shop & Order" component={PlaceOrderTab} />
-    <Tab.Screen name="Track & Manage" component={ManageOrderTab} />
+    <Tab.Screen name="Order" component={PlaceOrderTab} />
+    <Tab.Screen name="Checkout" component={CartTab} />
+    <Tab.Screen name="Manage" component={ManageOrderTab} />
   </Tab.Navigator>
 )
 export default function Navigation() {
