@@ -21,7 +21,7 @@ constructor(props) {
 }
 
 loadNext = () => {
-    console.log('FIRING LOAD NEXT');
+    // console.log('FIRING LOAD NEXT');
     this.setState({
         index: this.state.index + NUM_SHOW_ITEMS,
         shownList: this.state.productList.slice(0, Math.min(this.state.productList.length-1,this.state.index + 2*NUM_SHOW_ITEMS-1))
@@ -47,8 +47,8 @@ shouldComponentUpdate(prevProps, prevState) {
 
 render() {
 
-//     console.log('PRODUCT LSIT RENDER');
-//     console.log(this.props.productList);
+    // console.log('PRODUCT LSIT RENDER');
+    // console.log(this.props.productList);
 //    console.log( this.state.productList);
 //    console.log(this.state.shownList);
 

@@ -260,16 +260,16 @@ export class SupplierCart extends React.Component {
 
     render() {
 
-        console.log('RENDER SupplierCART')
-        console.log(this.props.masterCart);
-        console.log(this.props.index);
+        // console.log('RENDER SupplierCART')
+        // console.log(this.props.masterCart);
+        // console.log(this.props.index);
 
         const supplierOrder = this.props.masterCart[this.props.index]
 
         let orderTotal = 0
         supplierOrder.cart.forEach(item => item.price ? orderTotal = orderTotal + item.price*item.quantity : orderTotal = orderTotal)
-        console.log('ORDER TOTAL');
-        console.log(orderTotal);
+        // console.log('ORDER TOTAL');
+        // console.log(orderTotal);
 
         // console.log(supplierOrder);
 

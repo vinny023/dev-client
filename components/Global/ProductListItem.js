@@ -14,7 +14,7 @@ import AppButton from './AppButton'
 //         super(props)
 //    }
 
-let justUpdated = false;
+// let justUpdated = false;
 
 const updateQuantity = (masterCart, product, reorderOnly) => {
 
@@ -83,11 +83,11 @@ class ProductListItem extends React.Component {
         // console.log((lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku));
         // console.log((lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART"));
 
-        if (this.state.quantity !== nextState.quantity) {
-            justUpdated = true
-        }
+        // if (this.state.quantity !== nextState.quantity) {
+        //     justUpdated = true
+        // }
 
-        return (this.state.quantity !== nextState.quantity || (!justUpdated && lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku) || lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART")
+        return (this.state.quantity !== nextState.quantity || (lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku) || lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART")
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -270,8 +270,8 @@ class ProductListItem extends React.Component {
 
     render() {
 
-        console.log('PROD LIST ITEM RENDERING');
-        console.log(this.props.item.sku);
+        // console.log('PROD LIST ITEM RENDERING');
+        // console.log(this.props.item.sku);
 
         const { item } = this.props
         const today = new Date()

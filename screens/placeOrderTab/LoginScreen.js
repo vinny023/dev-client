@@ -19,7 +19,68 @@ let shouldWrite = false;
 
 let justWrote = false;
 
-let lastWriteTime = 0;
+let justReceived = true;
+
+// let lastWriteTime = 0;
+
+
+
+const pullCart = async ({ accountId }) => {
+
+
+    console.log('PULLING CART');
+
+   firebaseApp.database().ref('customers/' + accountId).once('value', data => {
+    console.log('PULLING CART OUTPUT');
+    console.log(data);
+    console.log(data.val());
+        
+
+        if (!data.val() || !data.val().state) {
+                    return { error: 500 };
+        }
+        
+        // console.log('COMPRESSED STATE OUT');
+        // console.log(data.val().state);
+        let decompressedState = decompress(JSON.parse(data.val().state))
+        // console.log('DECOMPRESSED STATE');
+        // console.log(decompressedState);
+
+     
+        store.dispatch({
+            type: 'SYNC_CART',
+            // payload: data.val().state
+            payload: decompressedState
+        })
+
+    }  )
+}
+
+
+
+//UPDATE CART EVERY 30 seconds?
+
+let cartSync = true
+
+const runCartSync = ({accountId }) => {
+    console.log('RUNNING CART SYNC');
+    setInterval(() => {
+        console.log('WRITING TO CART TO FIREBASE');
+        const storeHold = store.getState()
+       
+        firebaseApp.database().ref('customers/' + accountId).set({
+             state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold))))
+
+        })
+
+    }, 2000)
+
+    // cartSync = false
+return true
+
+}
+
+
 
 
 const syncStore = ({ accountId }) => {
@@ -41,25 +102,27 @@ const syncStore = ({ accountId }) => {
     store.subscribe(() => {
 
         
-        console.log('JUST WROTE BEFORE CART WRITE');
-        console.log(justWrote);
+        // console.log('JUST WROTE BEFORE CART WRITE');
+        // console.log(justWrote);
 
 
-        let currentWriteTime = new Date()
-        currentWriteTime = currentWriteTime.getTime()
+        // let currentWriteTime = new Date()
+        // currentWriteTime = currentWriteTime.getTime()
         // console.log('CURRENT WRITE TIME');
         // console.log(currentWriteTime);
         // console.log(lastWriteTime);
         // console.log(currentWriteTime - lastWriteTime);
 
         let lastAction = getLastAction()
-        console.log('LAST ACTION');
-        console.log(lastAction);
+        // console.log('LAST ACTION');
+        // console.log(lastAction);
 
         const storeHold = store.getState()
 
-        if ((lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
-            || shouldWrite && currentWriteTime - lastWriteTime > 5000) && storeHold.cartState.masterCart.length > 0) {
+        // lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
+        //     || shouldWrite && currentWriteTime - lastWriteTime > 5000)
+
+        if (storeHold.cartState.masterCart.length > 0) {
         // console.log('writing to firebase')
         // console.log(store.getState())
         // console.log(JSON.parse(JSON.stringify(store.getState())))
@@ -69,19 +132,33 @@ const syncStore = ({ accountId }) => {
         // console.log('COMPRESSED STATE IN');
         // console.log(JSON.stringify(compress(store.getState())));
             
-            console.log('WRITING TO FIREABSE');
+                        // console.log(lastAction);
 
+        console.log('JUST RECEIVED ON SENSING STORE ACTION');
+        console.log(justReceived);
+
+            if (!justReceived && storeHold.cartState.masterCart.length > 0) {
+                console.log('WRITING TO FIREABSE');
+                console.log(lastAction);
+                console.log(storeHold.cartState);
+
+                const date = new Date()
             firebaseApp.database().ref('customers/' + accountId).set({
-                // state: JSON.parse(JSON.stringify(store.getState()))
+
+                lastAction: JSON.stringify(JSON.parse(JSON.stringify({...lastAction, timestamp: date.getTime()}))),
+                // state: JSON.parse(JSON.stringify(storeHold))
                 state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold)))) //remove undefines and compress
             })
 
             justWrote = true;
+        } else {
+            justReceived = false;
+        }
 
             // console.log('JUST WROTE AFTER CART WRITE');
             // console.log(justWrote);
 
-            lastWriteTime = currentWriteTime
+            // lastWriteTime = currentWriteTime
 
         }
     })
@@ -97,10 +174,35 @@ const syncStore = ({ accountId }) => {
     try {
     firebaseApp.database().ref('customers/' + accountId).on('value', data => {
 
+        // firebaseApp.database().ref('customers/' + accountId+'/lastAction').on('value', data => {
+
+
         //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
         //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) { 
 
-        console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
+        // console.log('JUST WROTE ON SENSING FIREBASE CHANGE');
+        // console.log(justWrote);
+
+        // if (!justWrote) {
+        // justReceived = true
+        // const syncAction = JSON.parse(data.val());
+        // console.log('FIREBASE CHANGE');    
+
+        // if (syncAction !== null) {
+        // console.log(syncAction);
+        // console.log(syncAction.payload);
+
+        // store.dispatch(syncAction)
+        // }
+            
+
+        // } else {
+        //     justWrote = false
+        // }   
+
+        
+
+            console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
         console.log(justWrote);
 
         if(!justWrote) {
@@ -128,8 +230,8 @@ const syncStore = ({ accountId }) => {
         justWrote = false;
     }
 
-    console.log('JUST WROTe AFTER CART CHANGE LSITEN');
-    console.log(justWrote);
+    // console.log('JUST WROTe AFTER CART CHANGE LSITEN');
+    // console.log(justWrote);
     })
 } catch(error) {
     //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
@@ -265,7 +367,13 @@ export class LoginScreen extends React.Component {
                // banner: { show: true, type: 'message', message: "Loading account details... " }
             })
             const account = await getAccount({ query: { id: accountId } })
+
+            // pullCart({accountId: accountId})
+
             this.props.setAccount(account)
+
+            // runCartSync({accountId: accountId})
+
         } catch {
             this.setState({
                 banner: {
@@ -359,9 +467,14 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return { setAccount: account => dispatch(actions.setAccount(account)) }
+    return (
+        {
+            addItem: addItemProps => dispatch(actions.addItem(addItemProps)),
+            subtractItem: subtractItemProps => dispatch(actions.subtractItem(subtractItemProps)),
+            setAccount: account => dispatch(actions.setAccount(account))
+        }
+    )
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
 
 //first time - unique code, sent to email?

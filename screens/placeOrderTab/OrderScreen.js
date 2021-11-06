@@ -81,7 +81,7 @@ const fakeCart = ({account}) => {
   console.log(compressedState)
 
 firebaseApp.database().ref('customers/urbangreensdemo').set({
-    // state: JSON.parse(JSON.stringify(store.getState()))
+    // state: JSON.parse(JSON.stringify(state))
     state: compressedState
 })
 
