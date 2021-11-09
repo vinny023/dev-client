@@ -74,15 +74,15 @@ class ViewOrderScreen extends React.Component {
 
     getOrders = async () => {  
             try {
-                // console.log('RUNNING GET ORDERS');
+                // // console.log('RUNNING GET ORDERS');
                 this.setState({ getOrdersLoading: true })
 
                 const orders = await getOrders({ query: { accountId: this.props.account.id }, sort: { createdDate: -1 } })
 
-                console.log('ORDERS');
-                console.log(orders.length);
-                console.log(orders);
+                // console.log('ORDERS');
+                // console.log(orders.length);
                 // console.log(orders);
+                // // console.log(orders);
                 const {openOrders, deliveredOrders} = this.setFilteredOrders({orderList: orders, supplierFilter: this.state.supplierFilter})           
                 this.setState({
                     orderList: orders,
@@ -92,7 +92,7 @@ class ViewOrderScreen extends React.Component {
                 })
             }
             catch (error) {
-                // console.log(error)               
+                // // console.log(error)               
                     //show errors if item is not loading, & try again
                     this.setState({
                         banner: {
@@ -113,8 +113,8 @@ class ViewOrderScreen extends React.Component {
     }
 
     handleFilterUpdate = (newSupplier) => {
-        console.log('running filter update')
-        console.log(newSupplier);
+        // console.log('running filter update')
+        // console.log(newSupplier);
 
 
         const index = this.state.supplierFilter.indexOf(newSupplier)
@@ -141,8 +141,8 @@ class ViewOrderScreen extends React.Component {
             showFilterModal: (newSupplier.length !== 0) //if supplierfilter is empty
         })
 
-        console.log(newSupplierFilter);
-        console.log(this.state);
+        // console.log(newSupplierFilter);
+        // console.log(this.state);
     }  
 
 
@@ -170,21 +170,21 @@ class ViewOrderScreen extends React.Component {
             }
         }
 
-        // console.log('SUPPLIER FILTER');
-        // console.log(supplierFilter);
+        // // console.log('SUPPLIER FILTER');
+        // // console.log(supplierFilter);
 
-        // console.log('OPEN ORDERS')
-        // // console.log(openOrders)
+        // // console.log('OPEN ORDERS')
+        // // // console.log(openOrders)
 
-        // console.log('DELIVERED ORDERS')
-        // console.log(deliveredOrders)
+        // // console.log('DELIVERED ORDERS')
+        // // console.log(deliveredOrders)
 
         return {openOrders: openOrders, deliveredOrders: deliveredOrders}
     }
 
     async componentdidUpdate(prevProps, prevState) {
 
-        console.log('ORDER SCREEN COMP DID UPDATE');
+        // console.log('ORDER SCREEN COMP DID UPDATE');
 
         if (prevProps.masterCart.length !== this.props.masterCart.length ) {
             await this.getOrders()
@@ -193,13 +193,13 @@ class ViewOrderScreen extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('ORDER comp did mount');
+        // console.log('ORDER comp did mount');
         await this.getOrders()
 
         this.props.navigation.addListener(
             'focus',
             () => {
-            console.log('ORDER running focus action');
+            // console.log('ORDER running focus action');
               this.getOrders()
             }
           );
@@ -217,8 +217,8 @@ class ViewOrderScreen extends React.Component {
         //     renderOrderList = orderList.filter(order => supplierFilter.indexOf(order.supplierDetail.displayName) !== -1)
         // }
 
-        // console.log('FILTERED LIST')
-        // console.log(renderOrderList)
+        // // console.log('FILTERED LIST')
+        // // console.log(renderOrderList)
         //group orders between open & completed, which sits on top of sorting 
  
         // renderOrderList.forEach(order => {
@@ -231,11 +231,11 @@ class ViewOrderScreen extends React.Component {
         //     }
         // })
 
-        // console.log('OPEN ORDERS')
-        // console.log(openOrders)
+        // // console.log('OPEN ORDERS')
+        // // console.log(openOrders)
 
-        // console.log('DELIVERED ORDERS')
-        // console.log(deliveredOrders)
+        // // console.log('DELIVERED ORDERS')
+        // // console.log(deliveredOrders)
 
         return (
 
@@ -268,7 +268,7 @@ class ViewOrderScreen extends React.Component {
                         </View>
                         <ScrollView style={[commonStyles.card, { padding: 5,marginTop:7, paddingBottom: 40 }]}>
                             {!!this.props.account.displaySuppliers && this.props.account.displaySuppliers.map(supplier => {
-                                // console.log(supplier)
+                                // // console.log(supplier)
                                 //CHECK IF SELECTED
                                 let selected = false;
                                 if (supplierFilter.indexOf(supplier) !== -1) {

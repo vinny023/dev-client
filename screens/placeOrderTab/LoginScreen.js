@@ -15,36 +15,40 @@ import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { compress, decompress } from 'compress-json'
 
-let shouldWrite = false;
+// let shouldWrite = false;
 
 let justWrote = false;
 
-let justReceived = true;
+let justReceived = false;
+
+let firstReceive = true;
 
 // let lastWriteTime = 0;
+
+const sessionCode = Math.random()
 
 
 
 const pullCart = async ({ accountId }) => {
 
 
-    console.log('PULLING CART');
+    // console.log('PULLING CART');
 
    firebaseApp.database().ref('customers/' + accountId).once('value', data => {
-    console.log('PULLING CART OUTPUT');
-    console.log(data);
-    console.log(data.val());
+    // console.log('PULLING CART OUTPUT');
+    // console.log(data);
+    // console.log(data.val());
         
 
         if (!data.val() || !data.val().state) {
                     return { error: 500 };
         }
         
-        // console.log('COMPRESSED STATE OUT');
-        // console.log(data.val().state);
+        // // console.log('COMPRESSED STATE OUT');
+        // // console.log(data.val().state);
         let decompressedState = decompress(JSON.parse(data.val().state))
-        // console.log('DECOMPRESSED STATE');
-        // console.log(decompressedState);
+        // // console.log('DECOMPRESSED STATE');
+        // // console.log(decompressedState);
 
      
         store.dispatch({
@@ -63,9 +67,9 @@ const pullCart = async ({ accountId }) => {
 let cartSync = true
 
 const runCartSync = ({accountId }) => {
-    console.log('RUNNING CART SYNC');
+    // console.log('RUNNING CART SYNC');
     setInterval(() => {
-        console.log('WRITING TO CART TO FIREBASE');
+        // console.log('WRITING TO CART TO FIREBASE');
         const storeHold = store.getState()
        
         firebaseApp.database().ref('customers/' + accountId).set({
@@ -83,7 +87,7 @@ return true
 
 
 
-const syncStore = ({ accountId }) => {
+const syncStore = ({ accountId, account }) => {
 
     //should write needs to instantiate as true on first login or else it won't write to firebase
     //shouldwrite needs to instantiate as false on later logins in order to not to clear the cart
@@ -94,148 +98,141 @@ const syncStore = ({ accountId }) => {
     //     shouldWrite = true;
     // }
 
-    // console.log('FIREBASE SYNC STORE');
-    // console.log(shouldWrite);
+    // // console.log('FIREBASE SYNC STORE');
+    // // console.log(shouldWrite);
 
     //WRITE CHANGES TO FIREBASE
     try {
     store.subscribe(() => {
-
-        
-        // console.log('JUST WROTE BEFORE CART WRITE');
-        // console.log(justWrote);
-
-
+         // // console.log('JUST WROTE BEFORE CART WRITE');
+        // // console.log(justWrote)
         // let currentWriteTime = new Date()
         // currentWriteTime = currentWriteTime.getTime()
-        // console.log('CURRENT WRITE TIME');
-        // console.log(currentWriteTime);
-        // console.log(lastWriteTime);
-        // console.log(currentWriteTime - lastWriteTime);
+        // // console.log('CURRENT WRITE TIME');
+        // // console.log(currentWriteTime);
+        // // console.log(lastWriteTime);
+        // // console.log(currentWriteTime - lastWriteTime);
 
-        let lastAction = getLastAction()
-        // console.log('LAST ACTION');
-        // console.log(lastAction);
+        const lastAction = getLastAction()
+        // // console.log('LAST ACTION');
+        // // console.log(lastAction);
 
         const storeHold = store.getState()
 
-        // lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
-        //     || shouldWrite && currentWriteTime - lastWriteTime > 5000)
-
-        if (storeHold.cartState.masterCart.length > 0) {
-        // console.log('writing to firebase')
-        // console.log(store.getState())
-        // console.log(JSON.parse(JSON.stringify(store.getState())))
+        // if ((lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
+        //     || shouldWrite && currentWriteTime - lastWriteTime > 5000) && storeHold.cartState.masterCart.length > 0) {
+        // // console.log('writing to firebase')
+        // // console.log(store.getState())
+        // // console.log(JSON.parse(JSON.stringify(store.getState())))
         
-        // console.log('PRE COMPRESSED STATE IN');
-          // console.log(store.getState());
-        // console.log('COMPRESSED STATE IN');
-        // console.log(JSON.stringify(compress(store.getState())));
+        // // console.log('PRE COMPRESSED STATE IN');
+          // // console.log(store.getState());
+        // // console.log('COMPRESSED STATE IN');
+        // // console.log(JSON.stringify(compress(store.getState())));
             
-                        // console.log(lastAction);
+            // console.log('LAST ACTION READ'); 
+            // console.log(lastAction)
+            // console.log(!lastAction.payload.timestamp);
 
-        console.log('JUST RECEIVED ON SENSING STORE ACTION');
-        console.log(justReceived);
 
-            if (!justReceived && storeHold.cartState.masterCart.length > 0) {
-                console.log('WRITING TO FIREABSE');
-                console.log(lastAction);
-                console.log(storeHold.cartState);
-
+            if (lastAction.type !== 'SYNC_CART' && !lastAction.payload.timestamp && storeHold.cartState.masterCart.length > 0) {
+                // console.log('WRITING TO FIREABSE');
+                // console.log(storeHold.cartState);
                 const date = new Date()
+
+                let newLastAction = JSON.parse(JSON.stringify(lastAction))
+                newLastAction.payload.timestamp = date.getTime()
+                newLastAction.payload.sessionCode = sessionCode
+           
             firebaseApp.database().ref('customers/' + accountId).set({
 
-                lastAction: JSON.stringify(JSON.parse(JSON.stringify({...lastAction, timestamp: date.getTime()}))),
+                lastAction: JSON.stringify(JSON.parse(JSON.stringify(newLastAction))),
                 // state: JSON.parse(JSON.stringify(storeHold))
                 state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold)))) //remove undefines and compress
             })
 
-            justWrote = true;
+            // justWrote = true;
         } else {
-            justReceived = false;
+            // justReceived = false;
         }
 
-            // console.log('JUST WROTE AFTER CART WRITE');
-            // console.log(justWrote);
+            // // console.log('JUST WROTE AFTER CART WRITE');
+            // // console.log(justWrote);
 
             // lastWriteTime = currentWriteTime
 
-        }
+        // }
     })
 
    
     }
     catch (error) {
-        // console.log('non-critical firebase error')
+        // // console.log('non-critical firebase error')
     }
 
     //LISTEN TO FIREBASE FOR STATE CHAGNES
 
     try {
-    firebaseApp.database().ref('customers/' + accountId).on('value', data => {
-
-        // firebaseApp.database().ref('customers/' + accountId+'/lastAction').on('value', data => {
-
+    firebaseApp.database().ref('customers/' + accountId+'/lastAction').on('value', data => {
 
         //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
-        //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) { 
-
-        // console.log('JUST WROTE ON SENSING FIREBASE CHANGE');
-        // console.log(justWrote);
-
-        // if (!justWrote) {
-        // justReceived = true
-        // const syncAction = JSON.parse(data.val());
-        // console.log('FIREBASE CHANGE');    
-
-        // if (syncAction !== null) {
-        // console.log(syncAction);
-        // console.log(syncAction.payload);
-
-        // store.dispatch(syncAction)
-        // }
-            
-
-        // } else {
-        //     justWrote = false
-        // }   
-
+        //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) {  
+        const syncAction = JSON.parse(data.val());  
         
+        // console.log('READING FIREBASE CHANGE');    
+        // console.log(syncAction);
 
-            console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
-        console.log(justWrote);
+        if (!firstReceive && syncAction !== null && syncAction.type !== 'SYNC_CART' && syncAction.payload && syncAction.payload.sessionCode && syncAction.payload.sessionCode !== sessionCode) {
 
-        if(!justWrote) {
+        store.dispatch(syncAction)
+        } else {
 
-            console.log('running update script');
-
-        if (!data.val() || !data.val().state) {
-            return { error: 500 };
+            // console.log('NOT DISPATCHING');
+        }
+            
+        if (firstReceive) {
+            firstReceive = false;
         }
 
-        // console.log('COMPRESSED STATE OUT');
-        // console.log(data.val().state);
-        let decompressedState = decompress(JSON.parse(data.val().state))
-        // console.log('DECOMPRESSED STATE');
-        // console.log(decompressedState);
+  
+        // // console.log('FIRNG ACTION AFTER READING CART');
+        // store.dispatch(actions.addItem(syncAction.payload))
+        
+    
+        //     // console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
+    //     // console.log(justWrote);
 
-        shouldWrite = false;
-        store.dispatch({
-            type: 'SYNC_CART',
-            payload: decompressedState
-        })
-        shouldWrite = true;
+    //     if(!justWrote) {
 
-    } else {
-        justWrote = false;
-    }
+    //         // console.log('running update script');
 
-    // console.log('JUST WROTe AFTER CART CHANGE LSITEN');
-    // console.log(justWrote);
+    //     if (!data.val() || !data.val().state) {
+    //         return { error: 500 };
+    //     }
+
+    //     // // console.log('COMPRESSED STATE OUT');
+    //     // // console.log(data.val().state);
+    //     let decompressedState = decompress(JSON.parse(data.val().state))
+    //     // // console.log('DECOMPRESSED STATE');
+    //     // // console.log(decompressedState);
+
+    //     shouldWrite = false;
+    //     store.dispatch({
+    //         type: 'SYNC_CART',
+    //         payload: decompressedState
+    //     })
+    //     shouldWrite = true;
+
+    // } else {
+    //     justWrote = false;
+    // }
+
+    // // console.log('JUST WROTe AFTER CART CHANGE LSITEN');
+    // // console.log(justWrote);
     })
 } catch(error) {
     //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
-    // console.log(error)
+    // // console.log(error)
 }
 
 }
@@ -247,7 +244,7 @@ const storeData = async (key, value) => {
         await AsyncStorage.setItem(key, value)
         return { success: 'success' }
     } catch (e) {
-        // console.log('store data error')
+        // // console.log('store data error')
         return { error: e }
     }
 }
@@ -292,22 +289,22 @@ export class LoginScreen extends React.Component {
                 banner: { show: true, type: 'message', message: "Verifying your passcode... " }
             })
             const account = await getAccount({ query: { code: this.state.code } })  //query for id by code
-            // console.log("CDD")
-            // console.log(this.state.code)
-            // console.log("ACCOUNT")
-            // console.log(account)
+            // // console.log("CDD")
+            // // console.log(this.state.code)
+            // // console.log("ACCOUNT")
+            // // console.log(account)
 
             if (account !== 'account not found') { //if code query returns an undefined
                 
                 //handle if first Login - (set shouldWrite = true)
-                shouldWrite = true
+                // shouldWrite = true
                 //set redux store
 
                 this.props.setAccount(account)
                 //store data to asyncstorage
                 const storeResponse = await storeData('accountId', account.id)
-                // console.log('STore Data repsose')
-                // console.log(storeResponse)
+                // // console.log('STore Data repsose')
+                // // console.log(storeResponse)
                 if (storeResponse.error) {
                     this.setState({
                         getAccountLoading: false,
@@ -368,7 +365,7 @@ export class LoginScreen extends React.Component {
             })
             const account = await getAccount({ query: { id: accountId } })
 
-            // pullCart({accountId: accountId})
+            pullCart({accountId: accountId})
 
             this.props.setAccount(account)
 

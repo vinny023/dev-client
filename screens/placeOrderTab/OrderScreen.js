@@ -30,16 +30,16 @@ const fakeCart = ({account}) => {
 
   if (counter === 0) {
 
-  console.log('BUILDLING FAKE STATE');
+  // console.log('BUILDLING FAKE STATE');
 
   let masterCart = []
-  for (let i = 1; i < 21; i++) { 
+  for (let i = 1; i < 0; i++) { 
     masterCart.push({supplierId:'supplier'+i, cart:[]})
   }
 
-  for (let i = 1; i < 5000; i++) {
+  for (let i = 1; i < 0; i++) {
 
-    masterCart[i%20].cart.push({
+    masterCart[i%5].cart.push({
     "aisle": 1,
     "arvindsdeli-orderGuide": "yes",
     "brand": "Test Brand",
@@ -59,10 +59,10 @@ const fakeCart = ({account}) => {
     "price": 44.43
     })
   }
-  console.log('FiNISHED CART')
-  console.log(masterCart)
+  // console.log('FiNISHED CART')
+  // console.log(masterCart)
 
-  console.log('ACOUNT');
+  // console.log('ACOUNT');
 
 
   let state = {
@@ -73,12 +73,12 @@ const fakeCart = ({account}) => {
       }
     
   
-  console.log('FiNISHED STATE')
-  console.log(state);
+  // console.log('FiNISHED STATE')
+  // console.log(state);
 
-  console.log('Compressed State')
+  // console.log('Compressed State')
   let compressedState = JSON.stringify(compress(JSON.parse(JSON.stringify(state))))
-  console.log(compressedState)
+  // console.log(compressedState)
 
 firebaseApp.database().ref('customers/urbangreensdemo').set({
     // state: JSON.parse(JSON.stringify(state))
@@ -86,8 +86,8 @@ firebaseApp.database().ref('customers/urbangreensdemo').set({
 })
 
 
-  console.log('PARSED COMPRESSED STATE');
-  console.log(JSON.parse(compressedState));
+  // console.log('PARSED COMPRESSED STATE');
+  // console.log(JSON.parse(compressedState));
 
   counter = 1;
 }
@@ -188,7 +188,7 @@ export class OrderScreen extends React.Component {
   }
 
   clearFilter() {
-    // console.log('RUNNING CLEAR FILTER ORDERSCREEN');
+    // // console.log('RUNNING CLEAR FILTER ORDERSCREEN');
     this.setState({
       filter: [],
       sort: [],
@@ -274,7 +274,7 @@ export class OrderScreen extends React.Component {
     // let isNew = true;
     // let matchIndex = -1
     // let sortList = this.state.sort.map((sortEntry, i) => {
-    //   console.log({ ...sortEntry, ...newSort })
+    //   // console.log({ ...sortEntry, ...newSort })
     //   if (_.isEqual({ ...sortEntry, ...newSort }, newSort) || _.isEqual({ ...sortEntry, ...newSort }, sortEntry)) {
     //     isNew = false
     //     matchIndex = i
@@ -300,8 +300,8 @@ export class OrderScreen extends React.Component {
 
   async componentDidMount() {
     //BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    // console.log("CURRENT SEARCH------", this.state.search)
-    // console.log("CURRENT SEARCH SUGGESTION------", this.state.isSuggestionSet)
+    // // console.log("CURRENT SEARCH------", this.state.search)
+    // // console.log("CURRENT SEARCH SUGGESTION------", this.state.isSuggestionSet)
 
     await this.getProducts()
   }
@@ -310,9 +310,9 @@ export class OrderScreen extends React.Component {
   //HANDLE ANY CHANGES IN SEARCH, FILTER OR STATE BY REPULLING PRODUCTLIST
   async componentDidUpdate(prevProps, prevState) {
 
-    // console.log('COMPONENT DID UPDATE')
-    // console.log(prevState.filter)
-    // console.log(this.state.filter)
+    // // console.log('COMPONENT DID UPDATE')
+    // // console.log(prevState.filter)
+    // // console.log(this.state.filter)
 
     if (!_.isEqual([prevState.search, prevState.initialFilter, prevState.filter, prevState.sort],
       [this.state.search, this.state.initialFilter, this.state.filter, this.state.sort])) {
@@ -321,11 +321,11 @@ export class OrderScreen extends React.Component {
   }
 
   bannerAction = (action, actionParam) => {
-    // console.log('RUNNING ACTION PARAM')
-    // console.log(action)
+    // // console.log('RUNNING ACTION PARAM')
+    // // console.log(action)
     switch (action) {
         case 'clearFilter':    
-            // console.log('RUNNING ACTION CLEAR FILTER')        
+            // // console.log('RUNNING ACTION CLEAR FILTER')        
           this.clearFilter()
     }
 }
@@ -333,11 +333,11 @@ export class OrderScreen extends React.Component {
 
   getProducts = async () => {
 
-    // console.log("RUNING GET PRODUCTS")
+    // // console.log("RUNING GET PRODUCTS")
 
     this.setState({ loading: true })
     try {
-      // console.log('STARTING API')
+      // // console.log('STARTING API')
       const productList = await getProducts(this.state)
       this.setState({
         loading: false,
@@ -345,7 +345,7 @@ export class OrderScreen extends React.Component {
         numPages: productList.nbPages,
         currentPage: 0
       })
-      // console.log('FINSIHED SETTING STATE')
+      // // console.log('FINSIHED SETTING STATE')
     }
     catch (error) {
       this.setState({
@@ -357,7 +357,7 @@ export class OrderScreen extends React.Component {
                   duration: 10000
                 },               
       })
-      // console.log(error)
+      // // console.log(error)
     }
   }
   //   <SearchableList list={this.state.itemList} liFstType={"PlusMinusList"} navigation={this.props.navigation}/>

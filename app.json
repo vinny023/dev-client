@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.getweys.truffle",
-      "buildNumber": "127"
+      "buildNumber": "141"
     },
     "android": {
       "adaptiveIcon": {

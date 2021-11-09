@@ -18,17 +18,17 @@ import AppButton from './AppButton'
 
 const updateQuantity = (masterCart, product, reorderOnly) => {
 
-    // console.log('RUNNING UPDATE QUANTITY');
-    // console.log(product.sku);
-    // console.log(masterCart);
-    // console.log(reorderOnly)
+    // // console.log('RUNNING UPDATE QUANTITY');
+    // // console.log(product.sku);
+    // // console.log(masterCart);
+    // // console.log(reorderOnly)
     if (reorderOnly) {
         return product.quantity
     }
     for (const supplierCart of masterCart) {
         for (const cartItem of supplierCart.cart) {
             if (cartItem.sku === product.sku) {
-                // console.log(cartItem.quantity);
+                // // console.log(cartItem.quantity);
                 return cartItem.quantity
             }
         }
@@ -55,10 +55,10 @@ class ProductListItem extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // console.log('SHOULD COMPONENT UPDATE');
-        // console.log(this.props.item.sku);
-        // console.log(this.state.quantity);
-        // console.log(prevState.quantity);
+        // // console.log('SHOULD COMPONENT UPDATE');
+        // // console.log(this.props.item.sku);
+        // // console.log(this.state.quantity);
+        // // console.log(prevState.quantity);
 
         if (this.props.reorderOnly) {
             return false
@@ -74,14 +74,14 @@ class ProductListItem extends React.Component {
         //if size of cart changed, don't update
 
         //if quantity of item has changed, 
-        // console.log('SHOULD COMPONENT UPDATE');
-        // console.log(getLastAction());
+        // // console.log('SHOULD COMPONENT UPDATE');
+        // // console.log(getLastAction());
 
         let lastAction = getLastAction()
-        // console.log(lastAction);
-        // console.log(this.state.quantity !== nextState.quantity);
-        // console.log((lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku));
-        // console.log((lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART"));
+        // // console.log(lastAction);
+        // // console.log(this.state.quantity !== nextState.quantity);
+        // // console.log((lastAction.payload.item && lastAction.payload.item.sku === this.props.item.sku));
+        // // console.log((lastAction.type === "REMOVE_ORDERED_CART" || lastAction.type === "SYNC_CART"));
 
         // if (this.state.quantity !== nextState.quantity) {
         //     justUpdated = true
@@ -92,21 +92,21 @@ class ProductListItem extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        // console.log('RUNNING COMPONENT DID UPDATE');
+        // // console.log('RUNNING COMPONENT DID UPDATE');
         //ONLY DO THIS IF THE CHANGE DOESNT COME FROM THIS COMPONENT
 
-        // console.log('RUNNING ITEM COMP UPDATE');
-        // console.log(prevProps.item);
-        // console.log(this.props.item);
+        // // console.log('RUNNING ITEM COMP UPDATE');
+        // // console.log(prevProps.item);
+        // // console.log(this.props.item);
 
         // if (!_.isEqual(prevProps.item, this.props.item)) {
-        //     console.log('SENSED ITEM CHANGE');    
+        //     // console.log('SENSED ITEM CHANGE');    
         //     this.setState({
         //         quantity: updateQuantity(this.props.masterCart, this.props.item, this.props.reorderOnly)
         //     })
         // }
         if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
-            // console.log('executing first cart change');
+            // // console.log('executing first cart change');
 
             if (this.state.quantity !== '') {
             this.setState({
@@ -129,9 +129,9 @@ class ProductListItem extends React.Component {
     }
 
     addItemQty = (payload) => { 
-        // console.log('FINRING ADD ITEM QTY ON REORDER');
-        // console.log(this.props.item);
-        // console.log(this.state.quantity)       
+        // // console.log('FINRING ADD ITEM QTY ON REORDER');
+        // // console.log(this.props.item);
+        // // console.log(this.state.quantity)       
         this.props.addItem({ item: { ...this.props.item }, amount: this.state.quantity })
     }
 
@@ -176,8 +176,8 @@ class ProductListItem extends React.Component {
 
     setCounterValue = (val) => {
 
-        console.log('FIRING ON TEXT CHANGE')
-        console.log(val);
+        // console.log('FIRING ON TEXT CHANGE')
+        // console.log(val);
 
 
         //IF BLANK WAS ENTERED
@@ -260,18 +260,18 @@ class ProductListItem extends React.Component {
     }
 
     onTextSubmit = (val) => {
-        console.log('FIRING ON TEXTS BUMIT')
-        // console.log('VAL');
+        // console.log('FIRING ON TEXTS BUMIT')
+        // // console.log('VAL');
         // if (val === '') {
-        //     // console.log('FOUND EMTPY TEXT INPUT')
+        //     // // console.log('FOUND EMTPY TEXT INPUT')
         //     this.props.subtractItem({ item: { ...this.props.item }, amount: this.props.item.quantity})
         // }
     }
 
     render() {
 
-        // console.log('PROD LIST ITEM RENDERING');
-        // console.log(this.props.item.sku);
+        // // console.log('PROD LIST ITEM RENDERING');
+        // // console.log(this.props.item.sku);
 
         const { item } = this.props
         const today = new Date()
@@ -291,8 +291,8 @@ class ProductListItem extends React.Component {
             offerString = item.offer+"  ·  "
         }
 
-        // console.log(item);
-        // console.log(priceString);
+        // // console.log(item);
+        // // console.log(priceString);
 
         if (!item.displayName || item.displayName === '') {
             return (
@@ -301,7 +301,7 @@ class ProductListItem extends React.Component {
             )
         }
 
-        //  console.log('PRODUCT LIST ITEM RENDERING')
+        //  // console.log('PRODUCT LIST ITEM RENDERING')
 
         // <TextInput value={this.state.quantity} onSubmitEditing={this.setItemQty(text => parseInt(text,10))}></TextInput>
         return (

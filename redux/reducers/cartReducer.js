@@ -15,7 +15,7 @@ const cartReducer = (state={}, action) => {
         }
 
         case('REMOVE_ORDERED_CART'): {
-            const newMasterCart = state.masterCart.filter(supplierCart => supplierCart.supplierId !== action.payload)                          
+            const newMasterCart = state.masterCart.filter(supplierCart => supplierCart.supplierId !== action.payload.supplierId)                          
             return {...state, masterCart: newMasterCart}
         }
 

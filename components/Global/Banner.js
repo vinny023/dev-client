@@ -18,7 +18,7 @@ export default class Banner extends React.Component {
     //     const {buttonAction} = this.props.banner
     //     switch(buttonAction.title) {
     //         case 'Refresh':
-    //             console.log('TRYING TO REFRESH')
+    //             // console.log('TRYING TO REFRESH')
     //             RNRestart.Restart();
     //     }
     // }
@@ -45,11 +45,11 @@ export default class Banner extends React.Component {
 
     render() {
 
-        console.log('BANNER MESSAGE');
+        // console.log('BANNER MESSAGE');
 
 
         let { show, type, message, action, actionParam, duration } = this.props.banner
-        // console.log(message);
+        // // console.log(message);
         
         if (!duration) {
             duration = 2000

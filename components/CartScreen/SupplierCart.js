@@ -11,6 +11,7 @@ import { RadioButton } from 'react-native-paper';
 import Modal from 'react-native-modal'
 import { createIconSetFromFontello, Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
+import {store, getLastAction} from '../../redux/store'
 
 class SpecialNotesBox extends React.Component {
     constructor(props) {
@@ -64,15 +65,15 @@ class SpecialNotesBox extends React.Component {
 
 const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
-    //     //console.log('SHIPPING Cuttoff')
-    //     //console.log(shippingCutoff)
+    //     //// console.log('SHIPPING Cuttoff')
+    //     //// console.log(shippingCutoff)
 
-    //    //console.log('SHIPPING DAYS')
-    //    //console.log(shippingDays)
+    //    //// console.log('SHIPPING DAYS')
+    //    //// console.log(shippingDays)
 
 
-    //    //console.log('DOW')
-    //    //console.log(DoW)
+    //    //// console.log('DOW')
+    //    //// console.log(DoW)
 
     const millisecondsInDays = 86400000
 
@@ -90,8 +91,8 @@ const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
 
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-    //console.log('NEXT 7')
-    //console.log(next7)
+    //// console.log('NEXT 7')
+    //// console.log(next7)
 
     //if it fits the category - in DoW and within 7 days
     const returnVal = next7.filter((val, i) => DoW.indexOf(val.getDay()) !== -1 && val.getTime() - now.getTime() < 7 * millisecondsInDays)
@@ -99,8 +100,8 @@ const createDaySelection = ({ DoW, shippingCutoff, shippingDays }) => {
             return { day: daysOfWeek[val.getDay()], date: (val.getMonth() + 1).toString() + '/' + val.getDate() }
         })
 
-    //console.log('RETURN VAL')
-    //console.log(returnVal)
+    //// console.log('RETURN VAL')
+    //// console.log(returnVal)
 
     return returnVal
 }
@@ -121,15 +122,15 @@ export class SupplierCart extends React.Component {
 
         this.updateOrderDetails = this.updateOrderDetails.bind(this)
 
-        //console.log('OCNSTRUCTIONS UPPLIER CART')
-        //console.log(this.props.supplierDeliverySettings)
+        //// console.log('OCNSTRUCTIONS UPPLIER CART')
+        //// console.log(this.props.supplierDeliverySettings)
 
     }
 
     //WRITE ORDER UPDATE TO STORE
     updateOrderDetails = ({ update }) => {
-        //console.log('Running update order details')
-        //console.log(update)
+        //// console.log('Running update order details')
+        //// console.log(update)
         this.props.updateOrderDetails({ supplierId: this.props.masterCart[this.props.index].id, update: update })
 
     }
@@ -192,14 +193,18 @@ export class SupplierCart extends React.Component {
 
         // if there was a checkout:
 
-        // console.log('COMPONENT DID UPDATE');
-        // console.log(this.props.masterCart[this.props.index].cart[0].supplierId);
+        // // console.log('COMPONENT DID UPDATE');
+        // // console.log(this.props.masterCart[this.props.index].cart[0].supplierId);
 
-        // console.log(prevProps)
-        // console.log(prevProps.mastercart[prevProps.index].cart[0].supplierId);
+        // // console.log(prevProps)
+        // // console.log(prevProps.mastercart[prevProps.index].cart[0].supplierId);
 
         // if (!!prevProps.masterCart) {
         //     if (!!prevProps.masterCart[prevProps.index].cart) {
+
+            if(this.props.index >= this.props.masterCart.length) {
+               return false
+            }
 
 
         //update Flastlist with new supplier change OR if list of products has changed
@@ -219,28 +224,41 @@ export class SupplierCart extends React.Component {
 
         shouldComponentUpdate(prevProps, prevState) {
 
-            // console.log('Supplier Cart CARTS -  '+this.props.masterCart[this.props.index].cart[0].supplierId);
-            // console.log(this.props.masterCart[this.props.index]);
-            // console.log(prevProps.masterCart[prevProps.index]);
+            // // console.log('Supplier Cart CARTS -  '+this.props.masterCart[this.props.index].cart[0].supplierId);
+            // // console.log(this.props.masterCart[this.props.index]);
+            // // console.log(prevProps.masterCart[prevProps.index]);
 
-            // console.log(!_.isEqual(this.props.masterCart[this.props.index],prevProps.masterCart[prevProps.index]));
+            // // console.log(!_.isEqual(this.props.masterCart[this.props.index],prevProps.masterCart[prevProps.index]));
             
             // return true
 
-            return((this.props.masterCart[this.props.index].cart.length !== prevProps.masterCart[prevProps.index].cart.length ) ||
-            !_.isEqual(this.state, prevState))
+            const lastAction = getLastAction()
+
+            if(this.props.index >= this.props.masterCart.length) {
+                return false
+            }
+
+            // // console.log('SHOULD CARTUPDATEON DATE CHANGE?');
+
+            // // console.log( (lastAction.payload.supplierId && lastAction.payload.supplierId === this.props.masterCart[this.props.index].supplierId));
+
+            return( 
+            !_.isEqual(this.state, prevState) || (lastAction.payload.id && lastAction.payload.id === this.props.masterCart[this.props.index].supplierId)  ||
+            (lastAction.payload.item && lastAction.payload.item.supplierId === this.props.masterCart[this.props.index].supplierId) ||
+            (lastAction.payload.supplierId && lastAction.payload.supplierId === this.props.masterCart[this.props.index].supplierId) 
+            || lastAction.type === 'REMOVE_ORDERED_CART' || lastAction.type === 'BULK_UPDATE_ORDER_DETAILS' )
 
             // return (!_.isEqual(this.props.masterCart[this.props.index],prevProps.masterCart[prevProps.index]) || 
             //!_.isEqual(this.state, prevState)) 
         
         }
     
-        // console.log('Supplier Cart comp. did update');
-        // console.log(prevProps.masterCart);
-        // console.log(this.props.masterCart);
-        // console.log(_.isEqual(prevProps.supplierOrder, this.props.supplierOrder));
-        // //console.log('COMPONTENT DID UPDATE')
-        // //console.log(this.props)
+        // // console.log('Supplier Cart comp. did update');
+        // // console.log(prevProps.masterCart);
+        // // console.log(this.props.masterCart);
+        // // console.log(_.isEqual(prevProps.supplierOrder, this.props.supplierOrder));
+        // //// console.log('COMPONTENT DID UPDATE')
+        // //// console.log(this.props)
   
         // const prevOrder = prevProps.masterCart[prevProps.index]
         // const thisOrder = this.props.masterCart[this.props.index]
@@ -252,8 +270,8 @@ export class SupplierCart extends React.Component {
         // }
 
     componentDidMount() {
-        //console.log('COMPONTENT DID MOUNT')
-        //console.log(this.props)
+        //// console.log('COMPONTENT DID MOUNT')
+        //// console.log(this.props)
         // this.setDefaultDelivery()
 
     }
@@ -264,16 +282,23 @@ export class SupplierCart extends React.Component {
         // console.log(this.props.masterCart);
         // console.log(this.props.index);
 
+
+        if (this.props.index >= this.props.masterCart.length) {
+            return (
+                <></>
+            )
+        }
+  
         const supplierOrder = this.props.masterCart[this.props.index]
 
         let orderTotal = 0
         supplierOrder.cart.forEach(item => item.price ? orderTotal = orderTotal + item.price*item.quantity : orderTotal = orderTotal)
-        // console.log('ORDER TOTAL');
-        // console.log(orderTotal);
+        // // console.log('ORDER TOTAL');
+        // // console.log(orderTotal);
 
-        // console.log(supplierOrder);
+        // // console.log(supplierOrder);
 
-        // console.log(supplierOrder.cart);
+        // // console.log(supplierOrder.cart);
 
         const { navigation, index } = this.props
         let checkoutString = 'Checkout'
@@ -290,14 +315,18 @@ export class SupplierCart extends React.Component {
         //     ({ orderTotal } = this.props.supplierOrder)            
         // }
         
-        //console.log('DELIVERY FEE');
-        //console.log(deliveryFee);
+        //// console.log('DELIVERY FEE');
+        //// console.log(deliveryFee);
 
         // }    
         const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
         const date = new Date()
-        //console.log(this.props.supplierOrder.cart, "this is the cart we are getting")
+        //// console.log(this.props.supplierOrder.cart, "this is the cart we are getting")
+
+     
+
+
         return (
             <View>
 

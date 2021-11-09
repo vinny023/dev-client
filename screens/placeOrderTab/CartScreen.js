@@ -51,8 +51,8 @@ export class CartScreen extends React.Component {
     constructor(props) {
         super(props)
 
-        //console.log('PROPS')
-        //console.log(this.props)
+        //// console.log('PROPS')
+        //// console.log(this.props)
 
         this.state = {
             getSuppliersLoading: true,
@@ -75,7 +75,7 @@ export class CartScreen extends React.Component {
     }
 
     // updateOrderDetails = ({ index, update }) => {
-    //     //console.log('Running order detail updates')
+    //     //// console.log('Running order detail updates')
     //     //HANDLE PASSING UP OF ORDER DETAILS FROM CHILD SUPPLIER CARTS (SHIPPING DAY & SHIPPING TIME)
     //     const newMasterOrder = [...this.state.masterOrder]
     //     newMasterOrder[index] = { ...this.state.masterOrder[index], ...update }
@@ -111,8 +111,8 @@ export class CartScreen extends React.Component {
             
                     }}
 
-                    // console.log('DATE UPDATE');
-                    // console.log(dateUpdate);
+                    // // console.log('DATE UPDATE');
+                    // // console.log(dateUpdate);
 
                     bulkOrderUpdate.push({...accountUpdate, ...dateUpdate, ...supplierOrder, ...supplierDetail[i]})
                 
@@ -126,7 +126,7 @@ export class CartScreen extends React.Component {
             })
 
 
-            // console.log('RUNNING BULK UPDATE FROM CART SCREEN - SET ORDER DETAIKLS');
+            // // console.log('RUNNING BULK UPDATE FROM CART SCREEN - SET ORDER DETAIKLS');
 
             this.props.bulkUpdateOrderDetails({bulkUpdate: bulkOrderUpdate})
 
@@ -138,21 +138,21 @@ export class CartScreen extends React.Component {
 
         if (supplierDetail) {
 
-            // console.log('SET DEFAULT DELIVERY SUPPLIER ORDER');
-            // console.log(supplierOrder);
+            // // console.log('SET DEFAULT DELIVERY SUPPLIER ORDER');
+            // // console.log(supplierOrder);
 
             const { selectedDeliveryDate, selectedDeliveryTimeSlot } = supplierOrder
 
-            // console.log('ALREADY SET DELIVERY DATE & TIME');
-            // console.log(selectedDeliveryDate);
-            // console.log(selectedDeliveryTimeSlot);
+            // // console.log('ALREADY SET DELIVERY DATE & TIME');
+            // // console.log(selectedDeliveryDate);
+            // // console.log(selectedDeliveryTimeSlot);
 
 
             //this line aggregates shipping info from two sources, local account DELIVER SETTINGS & global supplier delivery settings
             const deliveryDays = createDaySelection({ DoW: account.supplierDeliverySettings[supplierOrder.supplierId].DoW, ...supplierDetail })
 
-            // console.log('DELIVERY DAYS');
-            // console.log(deliveryDays);
+            // // console.log('DELIVERY DAYS');
+            // // console.log(deliveryDays);
 
             let update = {}
 
@@ -176,14 +176,14 @@ export class CartScreen extends React.Component {
                     }
                 }
                 if (!selectedDateInRange) {
-                    // console.log('OPTION 2');
+                    // // console.log('OPTION 2');
 
                     
-                    // console.log('********CHECK THIS COMAIRPSIN*************');
-                    // console.log(selectedDeliveryDate);
-                    // console.log(day);
-                    // console.log(deliveryDays);
-                    // console.log(deliveryDays[day]);
+                    // // console.log('********CHECK THIS COMAIRPSIN*************');
+                    // // console.log(selectedDeliveryDate);
+                    // // console.log(day);
+                    // // console.log(deliveryDays);
+                    // // console.log(deliveryDays[day]);
                     
                     update = { selectedDeliveryDate: deliveryDays[0], }
                 }
@@ -238,7 +238,7 @@ export class CartScreen extends React.Component {
         try {
             const supplierDetail = await getCartSuppliers({ suppliers: suppliers })
 
-            //console.log(supplierDetail)
+            //// console.log(supplierDetail)
             this.setState({
                 supplierDetail: supplierDetail,
                 getSuppliersLoading: false,    
@@ -257,7 +257,7 @@ export class CartScreen extends React.Component {
             
         }
         catch (error) {
-            //console.log(error)
+            //// console.log(error)
             this.setState({
                 banner: {show:true,type:'error', message: 'Issue loading suppliers. Please exit cart and come back.' },
                 getSuppliersLoading: false,
@@ -285,27 +285,27 @@ export class CartScreen extends React.Component {
     placeOrder = async ({ index, supplierOrder, fullOrder }) => {
 
          
-        //console.log('RUNNING PLACE ORDER')
-        //console.log(index)
-        //console.log((index))
-        //console.log((supplierOrder))
+        //// console.log('RUNNING PLACE ORDER')
+        //// console.log(index)
+        //// console.log((index))
+        //// console.log((supplierOrder))
 
         let order = {}
         if (supplierOrder) {
             order = { ...supplierOrder }
         } else {
-            //console.log('Place Order' + index)
+            //// console.log('Place Order' + index)
             order = { ...this.props.masterCart[index] }
         }
 
-        //console.log('SELECTED ORDER')
-        //console.log(order)
+        //// console.log('SELECTED ORDER')
+        //// console.log(order)
 
         //set current order baed on index
-        //console.log("PLACING ORDER")
-        //console.log(order)
-        //console.log(!order.selectedDeliveryDate)
-        //console.log(!order.selectedDeliveryTimeSlot)
+        //// console.log("PLACING ORDER")
+        //// console.log(order)
+        //// console.log(!order.selectedDeliveryDate)
+        //// console.log(!order.selectedDeliveryTimeSlot)
         //check that shipping is selected => if not - show banner error message   
 
         if (!order.selectedDeliveryDate || !order.selectedDeliveryTimeSlot) {
@@ -322,10 +322,10 @@ export class CartScreen extends React.Component {
         order.cart.forEach(item => item.price ? total = total + item.price*item.quantity : total = total)
         order.orderTotal = total+order.deliveryFee
 
-        //console.log('ORDER TOTALS');
-        //console.log(order.orderTotal);
-        //console.log(order.supplierDetail.orderMinimum);
-        //console.log((order.orderTotal < order.supplierDetail.orderMinimum));
+        //// console.log('ORDER TOTALS');
+        //// console.log(order.orderTotal);
+        //// console.log(order.supplierDetail.orderMinimum);
+        //// console.log((order.orderTotal < order.supplierDetail.orderMinimum));
 
         if (total !== 0 && total < order.orderMinimum && !order.confirmBelowMinimum) {
             this.setState({
@@ -342,7 +342,7 @@ export class CartScreen extends React.Component {
            return null
         }
 
-        //console.log('Running rest of place order')
+        //// console.log('Running rest of place order')
         //set state to loading (pass state down?)
         // order = { ...order, placingOrder: true }
         // let newMasterOrder = [...this.state.masterOrder] //NEED TO DO THESE 2 LINES THIS EVERYTIME TO TRIGGER RERENDER       
@@ -355,7 +355,7 @@ export class CartScreen extends React.Component {
         try {
             if (!fullOrder) { //don't show individual order banners when placing full order
                 
-                console.log('running banner set state')
+                // console.log('running banner set state')
                 this.setState({
                 banner: {
                     show: true, type: 'message',
@@ -364,21 +364,21 @@ export class CartScreen extends React.Component {
             })
         }
             const response = await placeOrder({ supplierOrder: order })
-            //console.log(response)
+            //// console.log(response)
             const body = response.data
-            //console.log('Success')
+            //// console.log('Success')
            
             justPlaced = true;
 
-            this.props.removeOrderedCart(order.supplierId)
+            this.props.removeOrderedCart({supplierId: order.supplierId})
 
             
-            console.log('FUll ORDER');
-            console.log(fullOrder);
-        console.log((!fullOrder));
+            // console.log('FUll ORDER');
+            // console.log(fullOrder);
+        // console.log((!fullOrder));
 
             if (!fullOrder) {
-                console.log('TRYING TO SHOW SUCCESS');
+                // console.log('TRYING TO SHOW SUCCESS');
             this.setState({ //don't show individual order banners when placing full order
                 banner: {
                     show: true, type: 'success',
@@ -391,7 +391,7 @@ export class CartScreen extends React.Component {
         return order.displayName
 
         } catch (err) { //500 error means that email has not yet been sent - let user try again. That means you need to clean duplicate carts from db.
-            //console.log(err)
+            // console.log(err)
             this.setState({
                 banner: {
                     show: true, type: 'error',
@@ -409,7 +409,7 @@ export class CartScreen extends React.Component {
     placeFullOrder = async () => {
         const initOrders = [...this.state.masterOrder]
         let ordersPlaced = [];
-        //console.log('Starting place full order');
+        //// console.log('Starting place full order');
 
         // let bannerString = 'Placing order to '+initOrders.map(order => order.displayName).join(', ')
         // bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
@@ -424,14 +424,14 @@ export class CartScreen extends React.Component {
             }
         })
         for (let i = 0; i < initOrders.length; i++) {
-            //console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
+            //// console.log('PLACINR ORDER TO ' + initOrders[i].supplierId)
             let successSupplier = await this.placeOrder({ supplierOrder: initOrders[i] , fullOrder: true})
             if (successSupplier) {
                 ordersPlaced.push(successSupplier);
             }
-            //console.log('first place order done')
+            //// console.log('first place order done')
 
-            // setTimeout(() => //console.log('Running next place order'), 2000)
+            // setTimeout(() => //// console.log('Running next place order'), 2000)
         }
            if (ordersPlaced.length === 0) {
             // this.setState({ //don't show individual order banners when placing full order
@@ -444,7 +444,7 @@ export class CartScreen extends React.Component {
             
            } else {
         
-           bannerString = 'Placed order to '+ordersPlaced.length+" suppliers!"
+           bannerString = 'Placed order to all suppliers!'
         //    bannerString = bannerString.slice(0, bannerString.lastIndexOf(', '))+ ' and ' + bannerString.slice(bannerString.lastIndexOf(', ')+2, bannerString.length)
            this.setState({ //don't show individual order banners when placing full order
                 placingFullOrder: false,
@@ -462,8 +462,17 @@ export class CartScreen extends React.Component {
         const firstCartPull = (this.props.masterCart.length === 0 && nextProps.masterCart.length !== 0)
         const supplierListChanged = (this.props.masterCart.length !== nextProps.masterCart.length)
 
+        // console.log('CART SHOULD cOMPOENT UPDATE');
+        // console.log(nextProps.masterCart);
+        // console.log(this.props.masterCart);
+        // console.log(this.state);
+        // console.log(nextState.placingFullOrder);
+        // console.log(justPlaced);
+
+
         return (!_.isEqual(nextProps.masterCart, this.props.masterCart) && 
-        ((firstCartPull || supplierListChanged) && !this.state.placingFullOrder && !justPlaced) || !_.isEqual(nextState, this.state))
+        ((firstCartPull || supplierListChanged) && !nextState.placingFullOrder && !justPlaced) || !_.isEqual(nextState, this.state) || 
+        nextProps.masterCart.length === 0 && this.state.placingFullOrder)
 
     }
 
@@ -474,10 +483,10 @@ export class CartScreen extends React.Component {
         if (!_.isEqual(prevProps.masterCart, this.props.masterCart)) {
             const firstCartPull = (prevProps.masterCart.length === 0 && this.props.masterCart.length !== 0)
             const supplierListChanged = (prevProps.masterCart.length !== this.props.masterCart.length)
-            //console.log("Seeing Change")
+            //// console.log("Seeing Change")
             if ((firstCartPull || supplierListChanged) && !this.state.placingFullOrder && !justPlaced) {
-                console.log("UPDATING WITH SUPPLIER CHANGED")
-                console.log(justPlaced);
+                // console.log("UPDATING WITH SUPPLIER CHANGED")
+                // console.log(justPlaced);
                 return await this.pullSuppliersAndSetOrders()
             } else if (justPlaced){
                 justPlaced = false;
@@ -485,12 +494,12 @@ export class CartScreen extends React.Component {
 
                 //IF THE QUNATITY HAS CHANGED I ONLY NEED TO UPDATE THAT CARTS ORDER DETAILS
 
-                //console.log(this.props.masterCart)
+                //// console.log(this.props.masterCart)
 
-                // console.log('REREDING CART ON UPDATE');
-                // console.log(prevProps.masterCart);
-                // console.log(this.props.masterCart)
-                // console.log(this.state.masterOrder)
+                // // console.log('REREDING CART ON UPDATE');
+                // // console.log(prevProps.masterCart);
+                // // console.log(this.props.masterCart)
+                // // console.log(this.state.masterOrder)
             
                 //I NEED THIS TO FORCE A RESET ON CART CHANGES?
                 // this.setState({
@@ -509,8 +518,8 @@ export class CartScreen extends React.Component {
             //         })
 
             //  })
-                //console.log('only cart item change')
-                //console.log(this.props.masterCart)
+                //// console.log('only cart item change')
+                //// console.log(this.props.masterCart)
             }
 
         }
@@ -521,23 +530,23 @@ export class CartScreen extends React.Component {
         //if firebase cart hasn't been gotten - don't bother calling:
 
 
-        console.log('CART SCREENDID MOUNT SUPPLIER DETAIL');
+        // console.log('CART SCREENDID MOUNT SUPPLIER DETAIL');
 
-        console.log('RUNNIGNG CART SCREEN DID MOUNT');
-        console.log(this.state);
+        // console.log('RUNNIGNG CART SCREEN DID MOUNT');
+        // console.log(this.state);
 
         if (this.props.masterCart.length === 0 || this.state.supplierDetail.length > 0) {
             //HANLDE NO CART?
             return
         } else {
-            console.log("RUNNIGN MOUNT")
+            // console.log("RUNNIGN MOUNT")
             return await this.pullSuppliersAndSetOrders()
         }
     }
 
     handleFilterUpdate = (newSupplier) => {
-        console.log('running filter update')
-        console.log(newSupplier);
+        // console.log('running filter update')
+        // console.log(newSupplier);
         const index = this.state.supplierFilter.indexOf(newSupplier)
         let newSupplierFilter = []
         if (index === -1) {
@@ -549,15 +558,15 @@ export class CartScreen extends React.Component {
         this.setState({
             supplierFilter: newSupplierFilter,
         })
-        // console.log(this.state.supplierFilter)
+        // // console.log(this.state.supplierFilter)
 
-        console.log(newSupplierFilter);
+        // console.log(newSupplierFilter);
     }  
 
 
     render() {
 
-        console.log('RErendering Cart Screeh');
+        // console.log('RErendering Cart Screeh');
         const {showFilterModal, supplierFilter} = this.state
 
         // let cartDollarAmount = this.state.masterOrder.reduce((total, order) => total + order.orderTotal, 0)
@@ -621,7 +630,7 @@ export class CartScreen extends React.Component {
                    </View>
                    <ScrollView style={[commonStyles.card, { padding: 5,marginTop:7, paddingBottom: 40 }]}>
                        {!!this.props.masterCart[0].displayName && this.props.masterCart.map(supplier => {
-                           // console.log(supplier)
+                           // // console.log(supplier)
                            //CHECK IF SELECTED
                            let selected = false;
                            if (supplierFilter.indexOf(supplier.displayName) !== -1) {
@@ -665,14 +674,18 @@ export class CartScreen extends React.Component {
                                     this.props.masterCart.map((supplierOrder, index) => {
 
                                         if (supplierFilter.length > 0 && supplierOrder.displayName && supplierFilter.indexOf(supplierOrder.displayName) === -1) {
+
+                                            // console.log('MASTER CART LENGHT');
+                                            // console.log(this.props.masterCart);
+                                            // console.log(index);
                                             return (
                                                 <></>
                                                 )
 
                                         }
 
-                                        // //console.log('PASSING IN SUPPLIER DETAIL')
-                                        // //console.log(this.state.supplierDetail[index])
+                                        // //// console.log('PASSING IN SUPPLIER DETAIL')
+                                        // //// console.log(this.state.supplierDetail[index])
                                         return (
                                             <View key={index} style={{ flex: 1, flexDirection: 'column', marginBottom: 5, justifyContent: "flex-start", }}>
                                                 {/* <Text style={styles.text}>Supplier </Text> */}
