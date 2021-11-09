@@ -1,56 +1,97 @@
 import axios from 'axios'
 import { NETLIFY, headers} from '../env.js'
 
+const apiTries = 3
+
 export const getAccount = async({query}) => { 
     console.log(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))
-    const returnval = await axios.get(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))    
-    if (returnval.status === 200 && returnval.data.account) {
-        return returnval.data.account[0]
-    }  else {
+
+    for (let i = 0; i< apiTries; i++) {
+        const returnval = await axios.get(NETLIFY+'getAccount?query='+encodeURI(JSON.stringify(query)))    
+        if (returnval.status === 200) {   
+            console.log('RETURNE ACCOUNT');
+            console.log(returnval.data.account)                 
+            if (returnval.data.account.length > 0) {
+                return returnval.data.account[0]
+            }
+             else {
+                return 'account not found'
+             }
+        }  else if (i === apiTries-1) {
+            throw 500
+        } 
+    }
+
+}
+
+export const setAccount = async({id, update}) => { 
+    console.log(NETLIFY+'setAccount?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    
+    for (let i = 0; i< apiTries; i++) {
+    const returnval = await axios.get(NETLIFY+'setAccount?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    if (returnval.status === 200 && returnval.data.response) {
+        return returnval.data.response             
+    }  else if (i === apiTries-1) {
         throw 500
     } 
+}
 }
 
 export const setOrder = async({id, update}) => { 
     console.log(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
+    
+    for (let i = 0; i< apiTries; i++) {
     const returnval = await axios.get(NETLIFY+'setOrder?id='+id+'&update='+encodeURI(JSON.stringify(update)))
     if (returnval.status === 200 && returnval.data.response) {
+
         return returnval.data.response             
-    }  else {
+    }  else if (i === apiTries-1) {
         throw 500
     } 
+}
 }
 
 export const getOrders = async({query, sort}) => { 
     console.log(NETLIFY+'getOrders?query='+encodeURI(JSON.stringify(query))+"&sort="+encodeURI(JSON.stringify(sort)))
+ 
+    for (let i = 0; i< apiTries; i++) {
     const returnval = await axios.get(NETLIFY+'getOrders?query='+encodeURI(JSON.stringify(query))+"&sort="+encodeURI(JSON.stringify(sort)))    
-    if (returnval.status === 200 && returnval.data.orders) {
+    if (returnval.status === 200 && returnval.data.orders) {     
         return returnval.data.orders             
-    }  else {
+    }  else if (i === apiTries-1) {
         throw 500
     } 
+}
 }
 
 
 export const placeOrder = async({supplierOrder})  => {
-    console.log(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
-    const returnval = await axios.get(NETLIFY+'placeOrder?supplierOrder='+encodeURI(JSON.stringify(supplierOrder)))
-    if (returnval.status === 200 && returnval.data.orderSent) {
+    console.log(NETLIFY+'placeOrder?supplierId='+supplierOrder.supplierId+'&accountId='+supplierOrder.accountId)
+  
+    for (let i = 0; i< apiTries; i++) {
+    const returnval = await axios.get(NETLIFY+'placeOrder?supplierId='+supplierOrder.supplierId+'&accountId='+supplierOrder.accountId)
+    
+    if (returnval.status === 200 && returnval.data.orderSent) {       
         return returnval.data.orderSent   
-    }  else {
+    } else if (i === apiTries-1) {
         throw 500
-    }    
+    }   
+    } 
 }
 
 export const getCartSuppliers = async({suppliers}) => {
 
     console.log(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)))
-    const supplierList = await axios.get(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)), headers)
-    if (supplierList.status === 200 && supplierList.data.suppliers) {
-        return supplierList.data.suppliers
-    } else {
-        throw 500       
-    }    
+    
+    for (let i = 0; i< apiTries; i++) {
+        const supplierList = await axios.get(NETLIFY+'getCartSuppliers?suppliers='+encodeURI(JSON.stringify(suppliers)), headers)
+        
+        if (supplierList.status === 200 && supplierList.data.suppliers) {        
+            return supplierList.data.suppliers
+        } else if (i === apiTries-1) {
+            throw 500       
+        }   
+    } 
 }
 
 export const getProducts = async({search, filter, sort, initialFilter, accountId}) => {
@@ -59,7 +100,8 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
     //PUT QUOTES AROUND STRING VALUES FOR FILTER SO ALGOLIA CAN ACCEPT THEM
     const modFilter = filter.map(filter => {
         const moddedFilter = {...filter}
-        if (filter.field === 'supplierDisplayName' || filter.field === 'units') {
+        
+        if (['supplierDisplayName', 'units', 'qtyString', 'sku', 'brand'].indexOf(filter.field) !== -1 || filter.field.includes('orderGuide')) {
             moddedFilter.values = moddedFilter.values.map(value => `"${value}"`)
         }
         return moddedFilter
@@ -75,11 +117,13 @@ export const getProducts = async({search, filter, sort, initialFilter, accountId
     console.log(NETLIFY+'getProducts'+queryString)
 
     //GET PRODUCTS BASED ON QUERY   
+    for (let i = 0; i< apiTries; i++) {
     const productList = await axios.get(NETLIFY+'getProducts'+queryString, headers)
-    if (productList.status === 200 && productList.data.products) {
+    if (productList.status === 200 && productList.data.products) {    
         return productList.data
-    } else {
+    } else if (i === apiTries-1) {
         throw 500     
+    }
     }
 
     

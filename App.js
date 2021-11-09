@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View ,Image} from 'react-native';
+import { StyleSheet, View ,Image, Text, TouchableWithoutFeedback } from 'react-native';
 import store from './redux/store'
 import {useFonts} from 'expo-font'
 // import * as eva from '@eva-design/eva';
@@ -11,6 +11,10 @@ import { Provider } from 'react-redux'
 import Navigation from './navigation/Navigation'
 //import * as Sentry from 'sentry-expo';
 import syncCartStateToDB from './redux/firebaseActions'
+import { colors, commonStyles, sizes } from './theme';
+import AppButton from './components/Global/AppButton';
+import ErrorBoundary from 'react-native-error-boundary'
+import * as Updates from 'expo-updates';
 
 // Sentry.init({
 //   dsn: "https://801dcaccf1754731ac6162c4603087ad@o578775.ingest.sentry.io/5735190",
@@ -19,6 +23,29 @@ import syncCartStateToDB from './redux/firebaseActions'
 //"@sentry/react-native": "^2.4.1",
 //"sentry-expo": "^3.1.0",
 
+//DEFINE ERROR BOUNDARY LOGIC
+const CustomFallback = () => {
+
+  return (
+    <View style={commonStyles.errorBoundary}>
+         <Text style={[commonStyles.lightText, { textAlign: 'center' }]}>Sorry, we’re running into an error. Please tap the button below to restart the app.</Text>
+        <AppButton text={"Restart App"} style={{width:'100%'}} onPress={async () => await Updates.reloadAsync()} />
+  </View>  
+  )
+}
+
+const errorHandler = (error, stackTrace) => {
+  /* Log the error to an error reporting service */
+}
+
+
+//KEYBOARD DISMISS
+
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 
 
 export default function App() {
@@ -32,13 +59,20 @@ export default function App() {
   if (!loaded) {
     return null;
   }
-
+    try {
     return (
+      <ErrorBoundary FallbackComponent = {CustomFallback}>
+      <DismissKeyboard>
       <Provider store={store}>
         <Navigation />
         <FlashMessage position="top" />
       </Provider>
+      </DismissKeyboard>
+      </ErrorBoundary>
     );
+    } catch(err) {
+
+    }
 }
 
 

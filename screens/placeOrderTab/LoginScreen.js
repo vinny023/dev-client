@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text, Button, TextInput } from 'react-native';
+import { View, Text, Button, TextInput,} from 'react-native';
 import Banner from '../../components/Global/Banner'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
+import {getLastAction} from '../../redux/store'
 import firebaseApp from '../../firebaseConfig'
 import * as actions from '../../redux/actions.js'
 import * as data from '../../databaseMock'
@@ -12,48 +13,238 @@ import _ from 'lodash'
 import AppButton from '../../components/Global/AppButton';
 import { colors, commonStyles, sizes } from '../../theme';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { compress, decompress } from 'compress-json'
+
+// let shouldWrite = false;
+
+let justWrote = false;
+
+let justReceived = false;
+
+let firstReceive = true;
+
+// let lastWriteTime = 0;
+
+const sessionCode = Math.random()
 
 
 
-const syncStore = ({ accountId }) => {
-    let shouldWrite = false;
+const pullCart = async ({ accountId }) => {
 
-    //WRITE CHANGES TO FIREBASE
-    store.subscribe(() => {
-        if (shouldWrite) {
-        console.log('writing to firebase')
-        console.log(store.getState())
-            firebaseApp.database().ref('customers/' + accountId).set({
-                state: store.getState()
-            })
-        }
-    })
 
-    //LISTEN TO FIREBASE FOR STATE CHAGNES
-    firebaseApp.database().ref('customers/' + accountId).on('value', data => {
+    // console.log('PULLING CART');
 
-        //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
-        //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) { 
+   firebaseApp.database().ref('customers/' + accountId).once('value', data => {
+    // console.log('PULLING CART OUTPUT');
+    // console.log(data);
+    // console.log(data.val());
+        
+
         if (!data.val() || !data.val().state) {
-            return { error: 500 };
+                    return { error: 500 };
         }
+        
+        // // console.log('COMPRESSED STATE OUT');
+        // // console.log(data.val().state);
+        let decompressedState = decompress(JSON.parse(data.val().state))
+        // // console.log('DECOMPRESSED STATE');
+        // // console.log(decompressedState);
 
-        shouldWrite = false;
+     
         store.dispatch({
             type: 'SYNC_CART',
-            payload: data.val()
+            // payload: data.val().state
+            payload: decompressedState
         })
-        shouldWrite = true;
-    })
+
+    }  )
+}
+
+
+
+//UPDATE CART EVERY 30 seconds?
+
+let cartSync = true
+
+const runCartSync = ({accountId }) => {
+    // console.log('RUNNING CART SYNC');
+    setInterval(() => {
+        // console.log('WRITING TO CART TO FIREBASE');
+        const storeHold = store.getState()
+       
+        firebaseApp.database().ref('customers/' + accountId).set({
+             state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold))))
+
+        })
+
+    }, 2000)
+
+    // cartSync = false
+return true
 
 }
+
+
+
+
+const syncStore = ({ accountId, account }) => {
+
+    //should write needs to instantiate as true on first login or else it won't write to firebase
+    //shouldwrite needs to instantiate as false on later logins in order to not to clear the cart
+
+    //so every manual login should assume shouldWrite - or every time device isn't found in store no its based on account object & then ?
+    // let shouldWrite = false;
+    // if (shouldWrite) {
+    //     shouldWrite = true;
+    // }
+
+    // // console.log('FIREBASE SYNC STORE');
+    // // console.log(shouldWrite);
+
+    //WRITE CHANGES TO FIREBASE
+    try {
+    store.subscribe(() => {
+         // // console.log('JUST WROTE BEFORE CART WRITE');
+        // // console.log(justWrote)
+        // let currentWriteTime = new Date()
+        // currentWriteTime = currentWriteTime.getTime()
+        // // console.log('CURRENT WRITE TIME');
+        // // console.log(currentWriteTime);
+        // // console.log(lastWriteTime);
+        // // console.log(currentWriteTime - lastWriteTime);
+
+        const lastAction = getLastAction()
+        // // console.log('LAST ACTION');
+        // // console.log(lastAction);
+
+        const storeHold = store.getState()
+
+        // if ((lastAction.type.indexOf['BULK_ORDER_UPDATE_DETAILS', 'REMOVE_ORDERED_CART'] !== -1 
+        //     || shouldWrite && currentWriteTime - lastWriteTime > 5000) && storeHold.cartState.masterCart.length > 0) {
+        // // console.log('writing to firebase')
+        // // console.log(store.getState())
+        // // console.log(JSON.parse(JSON.stringify(store.getState())))
+        
+        // // console.log('PRE COMPRESSED STATE IN');
+          // // console.log(store.getState());
+        // // console.log('COMPRESSED STATE IN');
+        // // console.log(JSON.stringify(compress(store.getState())));
+            
+            // console.log('LAST ACTION READ'); 
+            // console.log(lastAction)
+            // console.log(!lastAction.payload.timestamp);
+
+
+            if (lastAction.type !== 'SYNC_CART' && !lastAction.payload.timestamp && storeHold.cartState.masterCart.length > 0) {
+                // console.log('WRITING TO FIREABSE');
+                // console.log(storeHold.cartState);
+                const date = new Date()
+
+                let newLastAction = JSON.parse(JSON.stringify(lastAction))
+                newLastAction.payload.timestamp = date.getTime()
+                newLastAction.payload.sessionCode = sessionCode
+           
+            firebaseApp.database().ref('customers/' + accountId).set({
+
+                lastAction: JSON.stringify(JSON.parse(JSON.stringify(newLastAction))),
+                // state: JSON.parse(JSON.stringify(storeHold))
+                state: JSON.stringify(compress(JSON.parse(JSON.stringify(storeHold)))) //remove undefines and compress
+            })
+
+            // justWrote = true;
+        } else {
+            // justReceived = false;
+        }
+
+            // // console.log('JUST WROTE AFTER CART WRITE');
+            // // console.log(justWrote);
+
+            // lastWriteTime = currentWriteTime
+
+        // }
+    })
+
+   
+    }
+    catch (error) {
+        // // console.log('non-critical firebase error')
+    }
+
+    //LISTEN TO FIREBASE FOR STATE CHAGNES
+
+    try {
+    firebaseApp.database().ref('customers/' + accountId+'/lastAction').on('value', data => {
+
+        //checks if accountid exists, if state exists and if shape of Firebase state is the same as the current state (which comes from Strapi or local)
+        //   if (!data.val() || !data.val().state   || !isEqual(keys(data.val().state), keys(store.getState()))) {  
+        const syncAction = JSON.parse(data.val());  
+        
+        // console.log('READING FIREBASE CHANGE');    
+        // console.log(syncAction);
+
+        if (!firstReceive && syncAction !== null && syncAction.type !== 'SYNC_CART' && syncAction.payload && syncAction.payload.sessionCode && syncAction.payload.sessionCode !== sessionCode) {
+
+        store.dispatch(syncAction)
+        } else {
+
+            // console.log('NOT DISPATCHING');
+        }
+            
+        if (firstReceive) {
+            firstReceive = false;
+        }
+
+  
+        // // console.log('FIRNG ACTION AFTER READING CART');
+        // store.dispatch(actions.addItem(syncAction.payload))
+        
+    
+        //     // console.log('JUST WROTe BEFORE CART CHANGE LSITEN');
+    //     // console.log(justWrote);
+
+    //     if(!justWrote) {
+
+    //         // console.log('running update script');
+
+    //     if (!data.val() || !data.val().state) {
+    //         return { error: 500 };
+    //     }
+
+    //     // // console.log('COMPRESSED STATE OUT');
+    //     // // console.log(data.val().state);
+    //     let decompressedState = decompress(JSON.parse(data.val().state))
+    //     // // console.log('DECOMPRESSED STATE');
+    //     // // console.log(decompressedState);
+
+    //     shouldWrite = false;
+    //     store.dispatch({
+    //         type: 'SYNC_CART',
+    //         payload: decompressedState
+    //     })
+    //     shouldWrite = true;
+
+    // } else {
+    //     justWrote = false;
+    // }
+
+    // // console.log('JUST WROTe AFTER CART CHANGE LSITEN');
+    // // console.log(justWrote);
+    })
+} catch(error) {
+    //NON CRITICAL ERROR IF CANT CONNECT TO FIREBASE CART JUST WON'T PERSIST
+    // // console.log(error)
+}
+
+}
+
+let updateCounter = 0;
 
 const storeData = async (key, value) => {
     try {
         await AsyncStorage.setItem(key, value)
         return { success: 'success' }
     } catch (e) {
-        console.log('store data error')
+        // // console.log('store data error')
         return { error: e }
     }
 }
@@ -87,24 +278,33 @@ export class LoginScreen extends React.Component {
     manualLogin = async () => {
         // ADD QUERY VALIDATION - [TAG]
 
+
+        if (this.state.accountId !== '') {
+            this.login(this.state.accountId)
+        } else {
+
         try {
             this.setState({
                 getAccountLoading: true,
-                banner: { show: true, type: 'message', message: "Verifying your unique codee... " }
+                banner: { show: true, type: 'message', message: "Verifying your passcode... " }
             })
             const account = await getAccount({ query: { code: this.state.code } })  //query for id by code
-            console.log("CDD")
-            console.log(this.state.code)
-            console.log("ACCOUNT")
-            console.log(account)
+            // // console.log("CDD")
+            // // console.log(this.state.code)
+            // // console.log("ACCOUNT")
+            // // console.log(account)
 
-            if (account) { //if code query returns non-empty array
+            if (account !== 'account not found') { //if code query returns an undefined
+                
+                //handle if first Login - (set shouldWrite = true)
+                // shouldWrite = true
                 //set redux store
+
                 this.props.setAccount(account)
                 //store data to asyncstorage
                 const storeResponse = await storeData('accountId', account.id)
-                console.log('STore Data repsose')
-                console.log(storeResponse)
+                // // console.log('STore Data repsose')
+                // // console.log(storeResponse)
                 if (storeResponse.error) {
                     this.setState({
                         getAccountLoading: false,
@@ -116,7 +316,7 @@ export class LoginScreen extends React.Component {
                 //success message
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'message', message: "Success. Logging in.. " + account.displayName + "..." }
+                    banner: { show: true, type: 'success', message: "Welcome " + account.displayName + "!" }
                 })
 
                 this.login(account.id)
@@ -126,16 +326,17 @@ export class LoginScreen extends React.Component {
             } else {
                 this.setState({
                     getAccountLoading: false,
-                    banner: { show: true, type: 'error', message: "Incorrect code, please try again" }
+                    banner: { show: true, type: 'error', message: "Sorry! Looks like your code is invalid. Please try again." }
                 })
                
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             this.setState({
                 getAccountLoading: false,
-                banner: { show: true, type: 'error', message: "Sorry! Looks like your code is invalid. Please try again." }
+                banner: { show: true, type: 'error', message: "Sorry! we're having trouble with this request Please try again." }
             })
+        }
         }
     }
     login = async (accountId) => {
@@ -143,13 +344,15 @@ export class LoginScreen extends React.Component {
         //SYNC ACCOUNT ID WITH FIREBASE         
         try {
            // this.setState({ banner: { show: true, type: 'error', message: 'Syncing Store' } })
-            syncStore({ accountId: accountId })
+            
+           
+           syncStore({ accountId: accountId })
         } catch {
             this.setState({
                 banner: {
                     show: true,
                     type: 'error',
-                    message: 'Trouble logging in. Please close and reopen app'
+                    message: 'Trouble logging in automatically - please tap login button below. If error persists - please contact support'
                 }
             })
 
@@ -161,21 +364,26 @@ export class LoginScreen extends React.Component {
                // banner: { show: true, type: 'message', message: "Loading account details... " }
             })
             const account = await getAccount({ query: { id: accountId } })
+
+            pullCart({accountId: accountId})
+
             this.props.setAccount(account)
+
+            // runCartSync({accountId: accountId})
+
         } catch {
             this.setState({
                 banner: {
                     show: true,
                     type: 'error',
-                    message: 'Trouble logging in. Please close and reopen app'
+                    message: 'Trouble logging in automatically - please tap login button below. If error persists - please contact support'
                 }
-            })
-            
+            })           
 
             return
         }
         //IF ABLE TO PULL ACCOUNT & SAVE -> NAVIGATE TO ORDER SCREEN
-        this.props.navigation.navigate('OrderScreen')
+        this.props.navigation.navigate('Tabs',{screen:'OrderScreen'})
     }
 
     autoLogin = async () => {
@@ -188,13 +396,14 @@ export class LoginScreen extends React.Component {
                 banner: { show: true, type: 'success', message: 'Device not recongized. Use your unique code to log in' }
             })
         } else {
+            this.setState({accountId: accountId})
             await this.login(accountId)
         }
 
     }
     async componentDidMount() {
         
-        this.autoLogin()
+         this.autoLogin()
     }
 
 
@@ -211,30 +420,35 @@ export class LoginScreen extends React.Component {
 //     title ="Automatic Login"9450
     render() {
         return (
-            <View style={[commonStyles.container, { flex: 1 }]}>
+            <View style={[commonStyles.container, { flex: 1}]}>
                 <Banner banner={this.state.banner} hideBanner={this.hideBanner} />
-                <View style={{ paddingLeft: 10 }}>
+                <View style={{ paddingTop:100 }}>
                     <Text style={{ fontSize: sizes.s25-2, fontFamily: 'bold', color: colors.text }}>Login to SupplyHero</Text>
                 </View>
-                <View style={{ marginTop: 60, marginBottom: 5 }}>
 
+                <View style={{ marginTop: 60,}}>
+                
                     <TextInput 
                     onChangeText={text => this.setState({ code: text })} 
                     placeholder="Enter your unique login code"
-                    style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s15 }}
+                    style={{ backgroundColor: colors.white, paddingHorizontal: 11, borderRadius: 10, fontFamily: 'regular', fontSize: sizes.s14,height:36 }}
                    // secureTextEntry 
-                    />
+                    />                
+        
                 </View>
                 <AppButton
+                style={commonStyles.shadow}
                     text="Login"
                     onPress={this.manualLogin}
                 />
 
 
-                {/* <Button
-            title="Remove Key"
+            {/*   <Button
+            title="Remove Key"  
             onPress={async() => AsyncStorage.removeItem('accountId')}
-        /> */}
+        /> 
+            */}
+            
             </View>
         )
     }
@@ -250,9 +464,14 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return { setAccount: account => dispatch(actions.setAccount(account)) }
+    return (
+        {
+            addItem: addItemProps => dispatch(actions.addItem(addItemProps)),
+            subtractItem: subtractItemProps => dispatch(actions.subtractItem(subtractItemProps)),
+            setAccount: account => dispatch(actions.setAccount(account))
+        }
+    )
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
 
 //first time - unique code, sent to email?

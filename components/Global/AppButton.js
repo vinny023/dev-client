@@ -4,7 +4,7 @@ import { commonStyles } from '../../theme'
 
 export default function AppButton({text, onPress, isLoading=false, style={},textStyle}) {
     return (
-        <TouchableOpacity style={[commonStyles.btnContainer,style]} onPress= {onPress}>
+        <TouchableOpacity activeOpacity={.8} style={[commonStyles.btnContainer,style]} onPress= {onPress}>
             {
                 isLoading?
                 <ActivityIndicator color ={'white'} />

@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "expo-v2",
-    "slug": "expo-v2",
-    "version": "1.0.0",
+    "name": "SupplyHero",
+    "slug": "SupplyHero",
+    "version": "2.05",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/SupplyHeroLogo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0666EB"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,11 +17,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.getweys.truffle",
+      "buildNumber": "141"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/SupplyHeroLogo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
@@ -33,20 +35,6 @@
       "ios",
       "android",
       "web"
-    ],
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "SupplyHero",
-            "project": "SupplyHero Client",
-            "authToken": "e3a3d149339743e2ae905c6dfc53c993adaad8d0754e4a8683dab6a2a97b2fdf"
-          }
-        }
-      ]
-    }
-    
+    ]
   }
-  
 }

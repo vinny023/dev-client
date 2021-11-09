@@ -1,9 +1,9 @@
 const cartReducer = (state={}, action) => {
     switch (action.type) {
         case ('SYNC_CART'): {
-            if (action.payload.state.cartState) {
+            if (action.payload.cartState) {
                 //master cart exists:
-                const {masterCart} = action.payload.state.cartState     
+                const {masterCart} = action.payload.cartState     
                                 
                 //make sure proper shape (every supplier has a cart - if not remove supplier)
                 return {...state, masterCart:masterCart.filter(supplierCart => supplierCart.cart)}     
@@ -15,8 +15,41 @@ const cartReducer = (state={}, action) => {
         }
 
         case('REMOVE_ORDERED_CART'): {
-            const newMasterCart = state.masterCart.filter(supplierCart => supplierCart.supplierId !== action.payload)                          
+            const newMasterCart = state.masterCart.filter(supplierCart => supplierCart.supplierId !== action.payload.supplierId)                          
             return {...state, masterCart: newMasterCart}
+        }
+
+        case('UPDATE_ORDER_DETAILS'): {
+
+            // console.log('udpate shipping order reducter')
+            // console.log(action.payload)
+            const {supplierId, update} = action.payload
+            const newMasterCart = state.masterCart.map(supplierCart => {
+                if (supplierCart.supplierId === supplierId) {
+                    // console.log({...supplierCart, ...update})
+                    return {...supplierCart, ...update}
+                } else {
+                    return {...supplierCart}
+                }
+            })
+            return {...state, masterCart:newMasterCart}
+        }
+
+        case('BULK_UPDATE_ORDER_DETAILS'): {
+
+            // console.log('bulk update shipping order reducter')
+            // console.log(action.payload)
+            const {bulkUpdate} = action.payload
+            const newMasterCart = state.masterCart.map(supplierCart => {
+                const supplierUpdate = bulkUpdate.filter(update => update.supplierId === supplierCart.supplierId)
+                if (supplierUpdate.length > 0) {
+                    // console.log({...supplierCart, ...supplierUpdate[0]})
+                    return {...supplierCart, ...supplierUpdate[0]}
+                } else {
+                    return {...supplierCart}
+                }
+            })
+            return {...state, masterCart:newMasterCart}
         }
         
         case('SET_SHIPPING_OPTION'): {
@@ -93,7 +126,7 @@ const cartReducer = (state={}, action) => {
                 newCart = supplierCart.cart.map((cartItem,i) => {                   
        
                     if (cartItem.sku === item.sku) {
-                        if (cartItem.quantity - action.payload.amount <= 0) {
+                        if (cartItem.quantity - action.payload.amount <= 0 && !action.payload.dontRemove) {
                             removeItemIndex = i;
                         }
                         return {...cartItem, quantity: cartItem.quantity - action.payload.amount}
@@ -107,7 +140,7 @@ const cartReducer = (state={}, action) => {
                     // let testCart=newCart;
                     // console.log(testCart,"NEW CART")
                     temp = newCart.splice(removeItemIndex,1)
-                    console.log('temp', temp);
+                    // console.log('temp', temp);
                     // console.log(newCart,"NEW CART IS THIS")
                     if (newCart.length === 0) {
                         removeSupplierIndex = j
@@ -118,19 +151,19 @@ const cartReducer = (state={}, action) => {
                 return {...supplierCart, cart: newCart}
             })
 
-            console.log('INITIAL MASTERCART')
-            console.log(state.masterCart)
-            console.log('MASTERCAR TBVEFOFE SUPPLIER SPLICE')
-            console.log(newMasterCart)
-            console.log('REMOVE SUPPLIER INDEX')
-            console.log(removeSupplierIndex)
+            // console.log('INITIAL MASTERCART')
+            // console.log(state.masterCart)
+            // console.log('MASTERCAR TBVEFOFE SUPPLIER SPLICE')
+            // console.log(newMasterCart)
+            // console.log('REMOVE SUPPLIER INDEX')
+            // console.log(removeSupplierIndex)
 
             if (removeSupplierIndex !== -1) {
                 newMasterCart.splice(removeSupplierIndex,1)
             }
 
             // console.log('MASTERCART AFTER SPLICE')
-            console.log(newMasterCart, 'MASTERCART AFTER SPLICE')
+            // console.log(newMasterCart, 'MASTERCART AFTER SPLICE')
                     
             // return {...state, masterCart: newMasterCart} 
             return {masterCart: newMasterCart};
